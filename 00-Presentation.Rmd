@@ -34,7 +34,7 @@ Pour installer RStudio, rendez-vous sur la page suivante et téléchargez la ver
 
 ## Remerciements {-}
 
-Ce document a bénéficié de la relecture et des suggestions... des étudiants qui en ont été les cobayes des premières versions.
+Ce document a bénéficié des suggestions des étudiants qui en ont été les cobayes les premières années.
 
 Ce document est généré par l'extension [bookdown](https://bookdown.org/) de [Yihui Xie](https://yihui.name/) et se base sur le template proposé par Julien Barnier pour introduire des exercices interactifs dans son cours de tidyverse.
 
