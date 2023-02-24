@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 1 Récupération de la base de données | DATA MINING</title>
+  <meta name="description" content="Titre du cours" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 1 Récupération de la base de données | DATA MINING" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Titre du cours" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 1 Récupération de la base de données | DATA MINING" />
+  
+  <meta name="twitter:description" content="Titre du cours" />
+  
+
+<meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
+
+
+<meta name="date" content="2023-02-24" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="00-Presentation.html"/>
+<link rel="next" href="02-Manipulation-base.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Mining :  <em>Camille Signoretto</em></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html"><i class="fa fa-check"></i>Présentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#à-propos-de-ce-document"><i class="fa fa-check"></i>À propos de ce document</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#prérequis"><i class="fa fa-check"></i>Prérequis</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#remerciements"><i class="fa fa-check"></i>Remerciements</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 1 : Data Wrangling</b></span></li>
+<li class="chapter" data-level="1" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html"><i class="fa fa-check"></i><b>1</b> Récupération de la base de données</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html#les-données-du-recensement-de-la-population-rp"><i class="fa fa-check"></i><b>1.1</b> Les données du Recensement de la Population (RP)</a></li>
+<li class="chapter" data-level="1.2" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html#quelles-informations-intéressantes-dans-cette-base"><i class="fa fa-check"></i><b>1.2</b> Quelles informations intéressantes dans cette base ?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html"><i class="fa fa-check"></i><b>2</b> Manipulation de la base</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html#format-des-données---wide-ou-long"><i class="fa fa-check"></i><b>2.1</b> Format des données - WIDE ou LONG</a></li>
+<li class="chapter" data-level="2.2" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html#sélectionner-un-champ-réduit-de-la-base-séparer-les-données"><i class="fa fa-check"></i><b>2.2</b> Sélectionner un champ réduit de la base, séparer les données</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html"><i class="fa fa-check"></i><b>3</b> Manipulation des variables</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#manipulation-des-variables-qualitatives"><i class="fa fa-check"></i><b>3.1</b> Manipulation des variables qualitatives</a></li>
+<li class="chapter" data-level="3.2" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#manipulation-des-variables-quantitatives"><i class="fa fa-check"></i><b>3.2</b> Manipulation des variables quantitatives</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#détecter-et-visualiser-les-valeurs-manquantes"><i class="fa fa-check"></i><b>3.2.1</b> Détecter et “visualiser” les valeurs manquantes</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#gérer-les-valeurs-manquantes"><i class="fa fa-check"></i><b>3.2.2</b> Gérer les valeurs manquantes</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#détecter-et-visualiser-les-valeurs-aberrantes"><i class="fa fa-check"></i><b>3.2.3</b> Détecter et “visualiser” les valeurs aberrantes</a></li>
+<li class="chapter" data-level="3.2.4" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#découper-en-classes-une-variable-quantitative"><i class="fa fa-check"></i><b>3.2.4</b> Découper en classes une variable quantitative</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html"><i class="fa fa-check"></i><b>4</b> Récapitulatig séance 1 - Data Wrangling</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#ce-quon-a-appris"><i class="fa fa-check"></i><b>4.1</b> Ce qu’on a appris</a></li>
+<li class="chapter" data-level="4.2" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#enregistrement-des-tables"><i class="fa fa-check"></i><b>4.2</b> Enregistrement des tables</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DATA MINING</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="c01-Base-de-donnees" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Section 1</span> Récupération de la base de données<a href="01-Base-de-donnees.html#c01-Base-de-donnees" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div align="justify">
+
+<p>On va travailler cette année sur les données du Recensement de la Population (RP). C’est une base de données riche en informations, qui s’appuie sur les enquêtes annuelles du recensement et est produite par l’Insee. Les fichiers mis à disposition sur leur site sont au nombre de 9 : ils rassemblent des informations différentes, sur des espaces géographiques différents (canton ou ville, région), et à des niveaux d’analyse différents (individus, ménages/logements). Les derniers fichiers disponibles portent sur l’année 2019.</p>
+<p>Avant de rentrer plus dans les détails, on va charger les librairies principales que l’on va utiliser lors de cette séance (si elles ne sont pas installées sur votre RStudio, il faut le faire avant en utilisant la commande <code>install.packages("nom.du.package")</code>), on pourra en appeler d’autres dans les deux sections suivantes.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="01-Base-de-donnees.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement des librairies</span></span>
+<span id="cb1-2"><a href="01-Base-de-donnees.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="01-Base-de-donnees.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-4"><a href="01-Base-de-donnees.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code></pre></div>
+<div id="les-données-du-recensement-de-la-population-rp" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Les données du Recensement de la Population (RP)<a href="01-Base-de-donnees.html#les-données-du-recensement-de-la-population-rp" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>On va travailler plus précisément à partir du fichier “Logements ordinaires” qui décrit les caractéristiques des logements et celles des ménages qui les occupent. Les données sont localisées au niveau de la commune et de l’IRIS. On ne va pas s’intéresser à l’ensemble de la France, pour des questions d’intérêt et d’analyse, ainsi que des questions pratiques (ces fichiers étant lourds). On va donc télécharger uniquement ce fichier pour la zone A, c’est-à-dire l’Île-de-France.</p>
+<p>Le mieux est de télécharger le fichier puis le dézipper directement dans <code>R</code> comme ci-dessous en copiant le lien URL sur le site de l’Insee. Sinon, il reste possible de le télécharger <em>via</em> internet et de l’enregistrer dans un de vos dossiers bien spécifiés pour le “dézipper” ensuite.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="01-Base-de-donnees.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url=</span><span class="st">&quot;https://www.insee.fr/fr/statistiques/fichier/6544344/RP2019_LOGEMTZA_csv.zip&quot;</span>,</span>
+<span id="cb2-2"><a href="01-Base-de-donnees.html#cb2-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="st">&quot;data/RP2019_INDCVIZA_csv.zip&quot;</span>)</span>
+<span id="cb2-3"><a href="01-Base-de-donnees.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="01-Base-de-donnees.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Le fichier a donc été téléchargé dans le dossier intitulé &quot;data&quot; du projet R, on va  </span></span>
+<span id="cb2-5"><a href="01-Base-de-donnees.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># maintenant le dézipper et enregistrer les fichiers extraits dans le même dossier.</span></span>
+<span id="cb2-6"><a href="01-Base-de-donnees.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">&quot;data/RP2019_INDCVIZA_csv.zip&quot;</span>, <span class="at">exdir =</span> <span class="st">&quot;data&quot;</span>)</span></code></pre></div>
+<p>Il nous reste plus qu’à charger les données dans R : pour cela on utilise la commande <code>fread</code> du package <strong><code>data.table</code></strong> (à installer avant), car cela va bien plus vite que les fonctions habituelles du type <code>read.csv</code> lorsqu’on a de gros fichiers. On indique également l’option <code>stringsAsFactors=TRUE</code> pour que les variables caractères soient directement transformées en variables “factor” (dont l’utilité est indéniable dans <code>R</code>), et on transforme l’objet obtenu en <code>data.frame</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="01-Base-de-donnees.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;data.table&quot;)</span></span>
+<span id="cb3-2"><a href="01-Base-de-donnees.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb3-3"><a href="01-Base-de-donnees.html#cb3-3" aria-hidden="true" tabindex="-1"></a>RP <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">&quot;data/FD_LOGEMTZA_2019.csv&quot;</span>, <span class="at">stringsAsFactors=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-4"><a href="01-Base-de-donnees.html#cb3-4" aria-hidden="true" tabindex="-1"></a>RP <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(RP)</span></code></pre></div>
+<p>On a donc 69 variables et 2 850 830 observations.</p>
+<p>Pour se renseigner sur les variables de la table, on peut télécharger également le fichier des métadonnées, avec la commande <code>read.csv</code> cette fois, ce qui nous permet de voir quelles options sont utiles ici : l’argument <code>sep =</code> nous permet d’indiquer comment sont séparées les informations dans le fichier initial, l’argument <code>encoding =</code> permet que les accents aigus soient compris par <code>R</code> comme tel, et enfin la même option <code>stringsAsFactors=TRUE</code> peut être utilisée ici.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="01-Base-de-donnees.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lecture du fichier de métadonnées</span></span>
+<span id="cb4-2"><a href="01-Base-de-donnees.html#cb4-2" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&#39;data/Varmod_LOGEMT_2019.csv&#39;</span>,</span>
+<span id="cb4-3"><a href="01-Base-de-donnees.html#cb4-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>,</span>
+<span id="cb4-4"><a href="01-Base-de-donnees.html#cb4-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>,</span>
+<span id="cb4-5"><a href="01-Base-de-donnees.html#cb4-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>On peut enregistrer ce fichier, ainsi que celui contenant les métadonnées, dans le dossier <code>R</code> au format RDS.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="01-Base-de-donnees.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Enregistrement des fichiers</span></span>
+<span id="cb5-2"><a href="01-Base-de-donnees.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="at">object =</span> RP, <span class="at">file =</span> <span class="st">&quot;data/menages2019.Rdata&quot;</span>)</span>
+<span id="cb5-3"><a href="01-Base-de-donnees.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="at">object =</span> meta, <span class="at">file =</span> <span class="st">&quot;data/menages2019_meta.Rdata&quot;</span>)</span></code></pre></div>
+</div>
+<div id="quelles-informations-intéressantes-dans-cette-base" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Quelles informations intéressantes dans cette base ?<a href="01-Base-de-donnees.html#quelles-informations-intéressantes-dans-cette-base" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>On peut regarder plus précisément les variables disponibles dans cette base de données à partir de la table de métadonnées : on peut le faire avec la fonction <code>view()</code> et dans ce cas la table s’affichera dans un nouvel onglet dans votre RStudio ; sinon pour l’afficher sur notre document html (notebook ou markdown), on peut utiliser la fonction <code>head()</code> et/ou <code>tail()</code> qui affiche respectivement les premières lignes et les dernières lignes de la table.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="01-Base-de-donnees.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># view(meta)</span></span>
+<span id="cb6-2"><a href="01-Base-de-donnees.html#cb6-2" aria-hidden="true" tabindex="-1"></a>meta <span class="sc">%&gt;%</span> <span class="fu">head</span>() <span class="sc">%&gt;%</span> <span class="fu">gt</span>() <span class="co">#La fonction gt() permet un affichage plus joli pour le document html</span></span></code></pre></div>
+<div id="jawueegdka" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#jawueegdka .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#jawueegdka .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jawueegdka .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#jawueegdka .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jawueegdka .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jawueegdka .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jawueegdka .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jawueegdka .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jawueegdka .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jawueegdka .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jawueegdka .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jawueegdka .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jawueegdka .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#jawueegdka .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jawueegdka .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jawueegdka .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jawueegdka .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jawueegdka .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jawueegdka .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#jawueegdka .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#jawueegdka .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jawueegdka .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#jawueegdka .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#jawueegdka .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jawueegdka .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jawueegdka .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#jawueegdka .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#jawueegdka .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jawueegdka .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jawueegdka .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jawueegdka .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jawueegdka .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jawueegdka .gt_left {
+  text-align: left;
+}
+
+#jawueegdka .gt_center {
+  text-align: center;
+}
+
+#jawueegdka .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jawueegdka .gt_font_normal {
+  font-weight: normal;
+}
+
+#jawueegdka .gt_font_bold {
+  font-weight: bold;
+}
+
+#jawueegdka .gt_font_italic {
+  font-style: italic;
+}
+
+#jawueegdka .gt_super {
+  font-size: 65%;
+}
+
+#jawueegdka .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#jawueegdka .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#jawueegdka .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#jawueegdka .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#jawueegdka .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#jawueegdka .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#jawueegdka .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="X.U.FEFF.COD_VAR">X.U.FEFF.COD_VAR</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="LIB_VAR">LIB_VAR</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="COD_MOD">COD_MOD</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="LIB_MOD">LIB_MOD</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="TYPE_VAR">TYPE_VAR</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="LONG_VAR">LONG_VAR</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="X.U.FEFF.COD_VAR" class="gt_row gt_center">COMMUNE</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Département et commune du lieu de résidence</td>
+<td headers="COD_MOD" class="gt_row gt_center">1001</td>
+<td headers="LIB_MOD" class="gt_row gt_center">L'Abergement-Clémenciat (01001)</td>
+<td headers="TYPE_VAR" class="gt_row gt_center">CHAR</td>
+<td headers="LONG_VAR" class="gt_row gt_right">5</td></tr>
+    <tr><td headers="X.U.FEFF.COD_VAR" class="gt_row gt_center">COMMUNE</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Département et commune du lieu de résidence</td>
+<td headers="COD_MOD" class="gt_row gt_center">1002</td>
+<td headers="LIB_MOD" class="gt_row gt_center">L'Abergement-de-Varey (01002)</td>
+<td headers="TYPE_VAR" class="gt_row gt_center">CHAR</td>
+<td headers="LONG_VAR" class="gt_row gt_right">5</td></tr>
+    <tr><td headers="X.U.FEFF.COD_VAR" class="gt_row gt_center">COMMUNE</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Département et commune du lieu de résidence</td>
+<td headers="COD_MOD" class="gt_row gt_center">1004</td>
+<td headers="LIB_MOD" class="gt_row gt_center">Ambérieu-en-Bugey (01004)</td>
+<td headers="TYPE_VAR" class="gt_row gt_center">CHAR</td>
+<td headers="LONG_VAR" class="gt_row gt_right">5</td></tr>
+    <tr><td headers="X.U.FEFF.COD_VAR" class="gt_row gt_center">COMMUNE</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Département et commune du lieu de résidence</td>
+<td headers="COD_MOD" class="gt_row gt_center">1005</td>
+<td headers="LIB_MOD" class="gt_row gt_center">Ambérieux-en-Dombes (01005)</td>
+<td headers="TYPE_VAR" class="gt_row gt_center">CHAR</td>
+<td headers="LONG_VAR" class="gt_row gt_right">5</td></tr>
+    <tr><td headers="X.U.FEFF.COD_VAR" class="gt_row gt_center">COMMUNE</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Département et commune du lieu de résidence</td>
+<td headers="COD_MOD" class="gt_row gt_center">1006</td>
+<td headers="LIB_MOD" class="gt_row gt_center">Ambléon (01006)</td>
+<td headers="TYPE_VAR" class="gt_row gt_center">CHAR</td>
+<td headers="LONG_VAR" class="gt_row gt_right">5</td></tr>
+    <tr><td headers="X.U.FEFF.COD_VAR" class="gt_row gt_center">COMMUNE</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Département et commune du lieu de résidence</td>
+<td headers="COD_MOD" class="gt_row gt_center">1007</td>
+<td headers="LIB_MOD" class="gt_row gt_center">Ambronay (01007)</td>
+<td headers="TYPE_VAR" class="gt_row gt_center">CHAR</td>
+<td headers="LONG_VAR" class="gt_row gt_right">5</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<p>On va corriger le nom de la 1ère colonne qui n’a pas été bien importée, avec la fonction <code>rename()</code> ; puis on va établir la liste des variables en utilisant la fonction <code>levels</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="01-Base-de-donnees.html#cb7-1" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> meta <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">COD_VAR=</span>X.U.FEFF.COD_VAR)</span>
+<span id="cb7-2"><a href="01-Base-de-donnees.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(meta<span class="sc">$</span>COD_VAR) </span></code></pre></div>
+<pre><code> [1] &quot;ACHL&quot;       &quot;AEMM&quot;       &quot;AEMMR&quot;      &quot;AGEMEN8&quot;    &quot;ANEM&quot;      
+ [6] &quot;ANEMR&quot;      &quot;ARM&quot;        &quot;ASCEN&quot;      &quot;BAIN&quot;       &quot;BATI&quot;      
+[11] &quot;CATIRIS&quot;    &quot;CATL&quot;       &quot;CHAU&quot;       &quot;CHFL&quot;       &quot;CHOS&quot;      
+[16] &quot;CLIM&quot;       &quot;CMBL&quot;       &quot;COMMUNE&quot;    &quot;CUIS&quot;       &quot;DEROU&quot;     
+[21] &quot;DIPLM&quot;      &quot;EAU&quot;        &quot;EGOUL&quot;      &quot;ELEC&quot;       &quot;EMPLM&quot;     
+[26] &quot;GARL&quot;       &quot;HLML&quot;       &quot;ILETUDM&quot;    &quot;ILTM&quot;       &quot;IMMIM&quot;     
+[31] &quot;INAIM&quot;      &quot;INEEM&quot;      &quot;INP11M&quot;     &quot;INP15M&quot;     &quot;INP17M&quot;    
+[36] &quot;INP19M&quot;     &quot;INP24M&quot;     &quot;INP3M&quot;      &quot;INP5M&quot;      &quot;INP60M&quot;    
+[41] &quot;INP65M&quot;     &quot;INP75M&quot;     &quot;INPAM&quot;      &quot;INPER&quot;      &quot;INPER1&quot;    
+[46] &quot;INPER2&quot;     &quot;INPOM&quot;      &quot;INPSM&quot;      &quot;IPONDL&quot;     &quot;IRANM&quot;     
+[51] &quot;IRIS&quot;       &quot;METRODOM&quot;   &quot;NBPI&quot;       &quot;RECHM&quot;      &quot;REGION&quot;    
+[56] &quot;SANI&quot;       &quot;SANIDOM&quot;    &quot;SEXEM&quot;      &quot;STAT_CONJM&quot; &quot;STOCD&quot;     
+[61] &quot;SURF&quot;       &quot;TACTM&quot;      &quot;TPM&quot;        &quot;TRANSM&quot;     &quot;TRIRIS&quot;    
+[66] &quot;TYPC&quot;       &quot;TYPL&quot;       &quot;VOIT&quot;       &quot;WC&quot;        </code></pre>
+<p>Les codes des variables n’étant pas très parlant, on va les afficher avec leur intitulé : pour cela, il suffit de repartir de la table <code>meta</code> en sélectionnant les 2 colonnes qui nous intéressent et en n’affichant pas les valeurs dupliquées avec la fonction <code>unique()</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="01-Base-de-donnees.html#cb9-1" aria-hidden="true" tabindex="-1"></a>meta <span class="sc">%&gt;%</span> <span class="fu">select</span>(COD_VAR, LIB_VAR) <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">gt</span>()</span></code></pre></div>
+<div id="pqidefutck" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#pqidefutck .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pqidefutck .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pqidefutck .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pqidefutck .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pqidefutck .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pqidefutck .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pqidefutck .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pqidefutck .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pqidefutck .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pqidefutck .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pqidefutck .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pqidefutck .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pqidefutck .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#pqidefutck .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pqidefutck .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pqidefutck .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pqidefutck .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pqidefutck .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqidefutck .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pqidefutck .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pqidefutck .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqidefutck .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#pqidefutck .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pqidefutck .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pqidefutck .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqidefutck .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pqidefutck .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pqidefutck .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pqidefutck .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pqidefutck .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqidefutck .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pqidefutck .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqidefutck .gt_left {
+  text-align: left;
+}
+
+#pqidefutck .gt_center {
+  text-align: center;
+}
+
+#pqidefutck .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pqidefutck .gt_font_normal {
+  font-weight: normal;
+}
+
+#pqidefutck .gt_font_bold {
+  font-weight: bold;
+}
+
+#pqidefutck .gt_font_italic {
+  font-style: italic;
+}
+
+#pqidefutck .gt_super {
+  font-size: 65%;
+}
+
+#pqidefutck .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#pqidefutck .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pqidefutck .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#pqidefutck .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#pqidefutck .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#pqidefutck .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#pqidefutck .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="COD_VAR">COD_VAR</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="LIB_VAR">LIB_VAR</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="COD_VAR" class="gt_row gt_center">COMMUNE</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Département et commune du lieu de résidence</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ARM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Arrondissement municipal de résidence (Paris,Lyon et Marseille)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">IRIS</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Code IRIS du lieu de résidence</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ACHL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Période d'achèvement de la construction de la maison ou de l'immeuble</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">AEMM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Année d'emménagement dans le logement (détaillée)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">AEMMR</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Année d'emménagement dans le logement (regroupée)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">AGEMEN8</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Âge regroupé de la personne de référence du ménage en 8 classes d'âge</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ANEM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Ancienneté d'emménagement dans le logement (détaillée)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ANEMR</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Ancienneté d'emménagement dans le logement (regroupée)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ASCEN</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Desserte par un ascenseur</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">BAIN</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Baignoire ou douche (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">BATI</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Aspect du bâti (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CATIRIS</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Catégorie de l'IRIS</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CATL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Catégorie de logement</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CHAU</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Moyen de chauffage du logement (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CHFL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Chauffage central du logement (France métropolitaine)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CHOS</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Chauffe-eau solaire (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CLIM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Existence d'au moins une pièce climatisée (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CMBL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Combustible principal du logement (France métropolitaine)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">CUIS</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Cuisine intérieure avec évier (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">DEROU</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de deux-roues à moteur du ménage (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">DIPLM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Diplôme le plus élevé obtenu (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">EAU</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Point d'eau potable à l'intérieur du logement (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">EGOUL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Mode d'évacuation des eaux usées (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ELEC</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Électricité dans le logement (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">EMPLM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Condition d'emploi (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">GARL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Emplacement réservé de stationnement</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">HLML</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Appartenance du logement à un organisme HLM</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ILETUDM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Indicateur du lieu d'études (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">ILTM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Indicateur de lieu de travail (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">IMMIM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Situation quant à l'immigration (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INAIM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Indicateur du lieu de naissance (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INEEM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre d'élèves, étudiants ou stagiaires âgés de 14 ans ou plus du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP11M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 11 ans ou moins du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP15M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 15 ans ou moins du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP17M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 17 ans ou moins du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP19M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 19 ans ou plus du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP24M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 24 ans ou moins du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP3M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 3 ans ou moins du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP5M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 5 ans ou moins du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP60M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 60 ans ou plus du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP65M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 65 ans ou plus du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INP75M</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes âgées de 75 ans ou plus du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INPAM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes actives du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INPER</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INPER1</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes du ménage, de sexe masculin</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INPER2</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes du ménage, de sexe féminin</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INPOM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes actives ayant un emploi du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">INPSM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de personnes scolarisées du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">IPONDL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Poids du logement</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">IRANM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Indicateur du lieu de résidence antérieure au 1er janvier de l'annéee précédente de la personne de référence du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">METRODOM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Indicateur Métropole ou DOM du lieu de résidence</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">NBPI</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de pièces du logement</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">RECHM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Ancienneté de recherche d'emploi (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">REGION</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Région du lieu de résidence</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">SANI</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Installations sanitaires (France métropolitaine)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">SANIDOM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Installations sanitaires (DOM)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">SEXEM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Sexe de la personne de référence du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">STAT_CONJM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Statut conjugal de la personne de référence du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">STOCD</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Statut d'occupation détaillé du logement</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">SURF</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Superficie du logement</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">TACTM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Type d'activité de la personne de référence du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">TPM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Temps de travail (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">TRANSM</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Mode de transport principal le plus souvent utilisé pour aller travailler (personne de référence du ménage)</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">TRIRIS</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Code TRIRIS du lieu de résidence</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">TYPC</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Type de construction</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">TYPL</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Type de logement</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">VOIT</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Nombre de voitures du ménage</td></tr>
+    <tr><td headers="COD_VAR" class="gt_row gt_center">WC</td>
+<td headers="LIB_VAR" class="gt_row gt_center">Présence de W.-C. à l'intérieur du logement (DOM)</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<p>Ou si on veut les afficher par ordre alphabétique selon le nom de la variable, on peut utiliser la fonction <code>arrange()</code> qui permet de trier une table de données selon la variable indiquée :</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="01-Base-de-donnees.html#cb10-1" aria-hidden="true" tabindex="-1"></a>meta <span class="sc">%&gt;%</span> <span class="fu">select</span>(COD_VAR, LIB_VAR) <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(COD_VAR) <span class="sc">%&gt;%</span> <span class="fu">gt</span>()</span></code></pre></div>
+<p>Pour une analyse des logements, on peut retenir les variables suivantes qui nous donnent des informations intéressantes :</p>
+<ul>
+<li>l’ancienneté d’emménagement dans le logement, la catégorie de logement, l’appartenance du logement à un organisme HLM, le nombre de personnes du ménage, le nombre de pièces du logement, le statut d’occupation détaillé du logement, la superficie du logement, le type de logement ;</li>
+<li>ainsi que les variables géographiques qui nous serviront pour la suite : département et commune du lieu de résidence, arrondissement le cas échéant, code IRIS, code TRIRIS du lieu de résidence ;</li>
+<li>et éventuellement : l’existence ou non d’un ascenseur, le moyen de chauffage, l’emplacement réservé de stationnement, l’indicateur de lieu de travail de la personne de référence du ménage, le mode de transport principal le plus souvent utilisé pour aller travailler de la personne de référence, et le nombre de voitures du ménage (auquel on peut ajouter dans ce cas le nombre de deux-roues à moteur du ménage) ;</li>
+<li>il ne faut pas oublier non plus l’existence d’une variable nommée “poids du logement” qui constitue la pondération.</li>
+</ul>
+
+</div>
+</div>
+<script src="js/tidyverse.js"></script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="00-Presentation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="02-Manipulation-base.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/Camille-Sisi/github.io-Data-Mining-2023/master/01-Base-de-donnees.Rmd",
+"text": "Source"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

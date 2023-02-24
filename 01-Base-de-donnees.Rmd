@@ -1,0 +1,98 @@
+
+# (PART\*) Séance 1 : Data Wrangling {-}
+
+
+# Récupération de la base de données {#c01-Base-de-donnees}
+
+<div align="justify">
+
+On va travailler cette année sur les données du Recensement de la Population (RP). C'est une base de données riche en informations, qui s'appuie sur les enquêtes annuelles du recensement et est produite par l'Insee. Les fichiers mis à disposition sur leur site sont au nombre de 9 : ils rassemblent des informations différentes, sur des espaces géographiques différents (canton ou ville, région), et à des niveaux d'analyse différents (individus, ménages/logements). Les derniers fichiers disponibles portent sur l'année 2019.
+
+Avant de rentrer plus dans les détails, on va charger les librairies principales que l'on va utiliser lors de cette séance (si elles ne sont pas installées sur votre RStudio, il faut le faire avant en utilisant la commande `install.packages("nom.du.package")`), on pourra en appeler d'autres dans les deux sections suivantes.
+
+```{r message=FALSE, warning=FALSE}
+# Chargement des librairies
+library(tidyverse)
+library(data.table)
+library(gt)
+```
+
+
+## Les données du Recensement de la Population (RP)
+```{r include=FALSE}
+RP <- readRDS(file ="data/menages2019.Rdata") 
+meta <- readRDS(file="data/menages2019_meta.Rdata")
+```
+On va travailler plus précisément à partir du fichier "Logements ordinaires" qui décrit les caractéristiques des logements et celles des ménages qui les occupent. Les données sont localisées au niveau de la commune et de l'IRIS. On ne va pas s'intéresser à l'ensemble de la France, pour des questions d'intérêt et d'analyse, ainsi que des questions pratiques (ces fichiers étant lourds). On va donc télécharger uniquement ce fichier pour la zone A, c'est-à-dire l'Île-de-France.  
+
+Le mieux est de télécharger le fichier puis le dézipper directement dans `R` comme ci-dessous en copiant le lien URL sur le site de l'Insee. Sinon, il reste possible de le télécharger *via* internet et de l'enregistrer dans un de vos dossiers bien spécifiés pour le "dézipper" ensuite. 
+```{r eval=FALSE}
+download.file(url="https://www.insee.fr/fr/statistiques/fichier/6544344/RP2019_LOGEMTZA_csv.zip",
+              destfile = "data/RP2019_INDCVIZA_csv.zip")
+
+# Le fichier a donc été téléchargé dans le dossier intitulé "data" du projet R, on va  
+# maintenant le dézipper et enregistrer les fichiers extraits dans le même dossier.
+unzip("data/RP2019_INDCVIZA_csv.zip", exdir = "data")
+
+```
+
+  
+Il nous reste plus qu'à charger les données dans R : pour cela on utilise la commande `fread` du package **`data.table`** (à installer avant), car cela va bien plus vite que les fonctions  habituelles du type `read.csv` lorsqu'on a de gros fichiers. On indique également l'option `stringsAsFactors=TRUE` pour que les variables caractères soient directement transformées en variables "factor" (dont l'utilité est indéniable dans `R`), et on transforme l'objet obtenu en `data.frame`. 
+```{r eval=FALSE}
+# install.packages("data.table")
+library(data.table)
+RP <- fread("data/FD_LOGEMTZA_2019.csv", stringsAsFactors=TRUE)
+RP <- as.data.frame(RP)
+```
+On a donc `r ncol(RP)` variables et `r format(nrow(RP), big.mark=" ")` observations.  
+
+
+Pour se renseigner sur les variables de la table, on peut télécharger également le fichier des métadonnées, avec la commande `read.csv` cette fois, ce qui nous permet de voir quelles options sont utiles ici : l'argument `sep = ` nous permet d'indiquer comment sont séparées les informations dans le fichier initial, l'argument `encoding = ` permet que les accents aigus soient compris par `R` comme tel, et enfin la même option `stringsAsFactors=TRUE` peut être utilisée ici.
+```{r eval=FALSE}
+# Lecture du fichier de métadonnées
+meta <- read.csv(file = 'data/Varmod_LOGEMT_2019.csv',
+                 sep = ";",
+                 encoding = "UTF-8",
+                 stringsAsFactors = TRUE)
+```
+
+
+On peut enregistrer ce fichier, ainsi que celui contenant les métadonnées, dans le dossier `R` au format RDS.
+```{r  eval=FALSE}
+# Enregistrement des fichiers
+saveRDS(object = RP, file = "data/menages2019.Rdata")
+saveRDS(object = meta, file = "data/menages2019_meta.Rdata")
+```
+
+
+
+## Quelles informations intéressantes dans cette base ?
+On peut regarder plus précisément les variables disponibles dans cette base de données à partir de la table de métadonnées : on peut le faire avec la fonction `view()` et dans ce cas la table s'affichera dans un nouvel onglet dans votre RStudio ; sinon pour l'afficher sur notre document html (notebook ou markdown), on peut utiliser la fonction `head()` et/ou `tail()` qui affiche respectivement les premières lignes et les dernières lignes de la table.
+```{r}
+# view(meta)
+meta %>% head() %>% gt() #La fonction gt() permet un affichage plus joli pour le document html
+```
+
+On va corriger le nom de la 1ère colonne qui n'a pas été bien importée, avec la fonction `rename()` ; puis on va établir la liste des variables en utilisant la fonction `levels`.
+```{r}
+meta <- meta %>% rename(COD_VAR=X.U.FEFF.COD_VAR)
+levels(meta$COD_VAR) 
+```
+Les codes des variables n'étant pas très parlant, on va les afficher avec leur intitulé : pour cela, il suffit de repartir de la table `meta` en sélectionnant les 2 colonnes qui nous intéressent et en n'affichant pas les valeurs dupliquées avec la fonction `unique()`.
+```{r}
+meta %>% select(COD_VAR, LIB_VAR) %>% unique() %>% gt()
+```
+
+Ou si on veut les afficher par ordre alphabétique selon le nom de la variable, on peut utiliser la fonction `arrange()` qui permet de trier une table de données selon la variable indiquée :
+```{r eval=FALSE}
+meta %>% select(COD_VAR, LIB_VAR) %>% unique() %>% arrange(COD_VAR) %>% gt()
+```
+
+Pour une analyse des logements, on peut retenir les variables suivantes qui nous donnent des informations intéressantes :
+
+- l'ancienneté d'emménagement dans le logement, la catégorie de logement, l'appartenance du logement à un organisme HLM, le nombre de personnes du ménage, le nombre de pièces du logement, le statut d'occupation détaillé du logement, la superficie du logement, le type de logement ;
+- ainsi que les variables géographiques qui nous serviront pour la suite : département et commune du lieu de résidence, arrondissement le cas échéant, code IRIS, code TRIRIS du lieu de résidence ; 
+- et éventuellement : l'existence ou non d'un ascenseur, le moyen de chauffage, l'emplacement réservé de stationnement, l'indicateur de lieu de travail de la personne de référence du ménage, le mode de transport principal le plus souvent utilisé pour aller travailler de la personne de référence, et le nombre de voitures du ménage (auquel on peut ajouter dans ce cas le nombre de deux-roues à moteur du ménage) ;
+- il ne faut pas oublier non plus l'existence d'une variable nommée "poids du logement" qui constitue la pondération.
+
+

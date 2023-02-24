@@ -1,0 +1,16 @@
+c01-Base-de-donnees
+les-données-du-recensement-de-la-population-rp
+quelles-informations-intéressantes-dans-cette-base
+c02-Manipulation-base
+format-des-données---wide-ou-long
+sélectionner-un-champ-réduit-de-la-base-séparer-les-données
+c03-Manipulation-variables
+manipulation-des-variables-qualitatives
+manipulation-des-variables-quantitatives
+détecter-et-visualiser-les-valeurs-manquantes
+gérer-les-valeurs-manquantes
+détecter-et-visualiser-les-valeurs-aberrantes
+découper-en-classes-une-variable-quantitative
+c04-Récapitulatif
+ce-quon-a-appris
+enregistrement-des-tables
