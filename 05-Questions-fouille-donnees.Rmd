@@ -14,7 +14,7 @@ D'abord, on pourrait caractériser les logements fanciliens selon le type de log
 Pour manipuler cette base et répondre à quelques-unes de ces questions, nous allons nous concentrer sur la commune de Paris, et allons chercher à reproduire des statistiques publiées sur le site de l'Insee. Nous produirons principalement, lors de cette séance, des tableaux de statistiques, l'analyse graphique fera en effet l'objet d'une séance entière car elle nécessite la présentation détaillée de la "grammaire" **`Ggplot`**.  
   
 Avant cela, si les tables de données ("RP" et "meta") ne sont plus dans votre environnement local, il faut de nouveau les importer à partir de l'enregistrement précédemment effectué dans le dossier 'data' de votre projet. Pour cela, il faut utiliser la fonction `readRDS()`, comme ci-dessous :
-```{r}
+```{r eval=FALSE, include=FALSE}
 RP <- readRDS(file = "data/menages2019.Rdata")
 meta <- readRDS(file = "data/menages2019_meta.Rdata")
 ```

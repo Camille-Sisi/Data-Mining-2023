@@ -15,7 +15,7 @@ L'usage pour cette phase du langage `dplyr` ou plus généralement du `tidyverse
   
 ## Enregistrement des tables 
 Et voilà, on a bien "trituré" ces deux bases de données, maintenant on peut les enregistrer dans notre projet pour pouvoir les réutiliser lors de la prochaine séance.
-```{r}
+```{r eval=FALSE, include=FALSE}
 # On enregistre la table de données pour l'utiliser ultérieurement
 saveRDS(object = RP,  file = "data/menages2019.Rdata")
 saveRDS(object = meta,  file = "data/menages2019_meta.Rdata")
