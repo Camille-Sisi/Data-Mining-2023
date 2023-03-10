@@ -147,8 +147,8 @@ On peut également demander dans `gg_miss_var()` à ce que les valeurs soient en
   
 On peut aussi réaliser des graphiques montrant le nombre de valeurs manquantes pour l’ensemble des variables numériques de la base, en fonction d’une autre variable de nature 'factor', avec l'argument `fct=` dans `gg_miss_fct()`. Cela est intéressant pour voir si certaines valeurs manquantes des variables se retrouvent davantage dans des modalités précises d’une autre variable. Par exemple, ici, selon le type de logement :
 ``` {r}
-RP %>% select(where(is.numeric), TYPL) %>%
-  gg_miss_fct(fct = TYPL)
+RP %>% select(where(is.numeric), TYPL_moda) %>%
+  gg_miss_fct(fct = TYPL_moda)
 ```
 On voit que les valeurs manquantes sont plus nombreuses en proportion pour la modalité "5" et sont moins nombreuses dans les modalités "1" et "3" ; elles ne se distribuent ainsi pas de manière uniforme selon la variable du type de logement.  
   
@@ -186,7 +186,7 @@ Dans le cas de valeurs manquantes entièrement dues au hasard (MCAR) et/ou d’u
 ```{r }
 RP_sansNA <- na.omit(RP)
 # OU : 
-# RP_sansNA <- PassageL1L2[complete.cases(RP), ]
+# RP_sansNA <- RP[complete.cases(RP), ]
 
 # Pour vérification : 
 colSums(is.na(RP_sansNA))

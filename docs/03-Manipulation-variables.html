@@ -23,7 +23,7 @@
 <meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
 
 
-<meta name="date" content="2023-02-24" />
+<meta name="date" content="2023-03-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -172,6 +172,11 @@ code span.wa { color: #bf0303; } /* Warning */
 <ul>
 <li class="chapter" data-level="4.1" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#ce-quon-a-appris"><i class="fa fa-check"></i><b>4.1</b> Ce qu’on a appris</a></li>
 <li class="chapter" data-level="4.2" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#enregistrement-des-tables"><i class="fa fa-check"></i><b>4.2</b> Enregistrement des tables</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 2 : Data Mining - Analyse descriptive</b></span></li>
+<li class="chapter" data-level="5" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html"><i class="fa fa-check"></i><b>5</b> Quelles questions intéressantes pour une “fouille de données” sur cette base ?</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html#caractéristiques-des-logements-de-la-commune-de-paris"><i class="fa fa-check"></i><b>5.1</b> Caractéristiques des logements de la commune de Paris</a></li>
 </ul></li>
 </ul>
 
@@ -916,8 +921,8 @@ Commençons ici par l’étape <em>DATA</em> :</p>
 <p><img src="Data-Mining_files/figure-html/unnamed-chunk-32-1.svg" width="672" /></p>
 <p>On peut également demander dans <code>gg_miss_var()</code> à ce que les valeurs soient en pourcentage, avec l’argument <code>show_pct=TRUE</code>.</p>
 <p>On peut aussi réaliser des graphiques montrant le nombre de valeurs manquantes pour l’ensemble des variables numériques de la base, en fonction d’une autre variable de nature ‘factor’, avec l’argument <code>fct=</code> dans <code>gg_miss_fct()</code>. Cela est intéressant pour voir si certaines valeurs manquantes des variables se retrouvent davantage dans des modalités précises d’une autre variable. Par exemple, ici, selon le type de logement :</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="03-Manipulation-variables.html#cb56-1" aria-hidden="true" tabindex="-1"></a>RP <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric), TYPL) <span class="sc">%&gt;%</span></span>
-<span id="cb56-2"><a href="03-Manipulation-variables.html#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gg_miss_fct</span>(<span class="at">fct =</span> TYPL)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="03-Manipulation-variables.html#cb56-1" aria-hidden="true" tabindex="-1"></a>RP <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric), TYPL_moda) <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="03-Manipulation-variables.html#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gg_miss_fct</span>(<span class="at">fct =</span> TYPL_moda)</span></code></pre></div>
 <p><img src="Data-Mining_files/figure-html/unnamed-chunk-33-1.svg" width="672" />
 On voit que les valeurs manquantes sont plus nombreuses en proportion pour la modalité “5” et sont moins nombreuses dans les modalités “1” et “3” ; elles ne se distribuent ainsi pas de manière uniforme selon la variable du type de logement.</p>
 <p>Plus généralement, la fonction <code>gg_miss_upset()</code> de ce même package <strong><code>naniar</code></strong> permet de visualiser des dépendances entre les valeurs manquantes des variables qui en ont, <em>ici</em>, cela ne marchera donc pas puisque nous n’avons qu’une variable avec valeurs manquantes. Voici le code néanmoins :</p>
@@ -942,7 +947,7 @@ On voit que les valeurs manquantes sont plus nombreuses en proportion pour la mo
 <p>Dans le cas de valeurs manquantes entièrement dues au hasard (MCAR) et/ou d’une faible proportion des valeurs manquantes dans le total de la table de données, on peut décider de supprimer toutes les lignes qui contiennent au moins une valeur manquante, afin d’avoir une table de données complètes, on peut utiliser la fonction <code>na.omit()</code> ou <code>complete.cases()</code> ; attention à ne pas remplacer votre table de données initiale en réalisant cette procédure.</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="03-Manipulation-variables.html#cb59-1" aria-hidden="true" tabindex="-1"></a>RP_sansNA <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(RP)</span>
 <span id="cb59-2"><a href="03-Manipulation-variables.html#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co"># OU : </span></span>
-<span id="cb59-3"><a href="03-Manipulation-variables.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co"># RP_sansNA &lt;- PassageL1L2[complete.cases(RP), ]</span></span>
+<span id="cb59-3"><a href="03-Manipulation-variables.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co"># RP_sansNA &lt;- RP[complete.cases(RP), ]</span></span>
 <span id="cb59-4"><a href="03-Manipulation-variables.html#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-5"><a href="03-Manipulation-variables.html#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour vérification : </span></span>
 <span id="cb59-6"><a href="03-Manipulation-variables.html#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(RP_sansNA))</span></code></pre></div>

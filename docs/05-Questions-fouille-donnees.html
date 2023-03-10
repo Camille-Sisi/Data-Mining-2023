@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 5 Quelles questions intéressantes pour une “fouille de données” sur cette base ? | DATA MINING</title>
+  <meta name="description" content="Titre du cours" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 5 Quelles questions intéressantes pour une “fouille de données” sur cette base ? | DATA MINING" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Titre du cours" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 5 Quelles questions intéressantes pour une “fouille de données” sur cette base ? | DATA MINING" />
+  
+  <meta name="twitter:description" content="Titre du cours" />
+  
+
+<meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
+
+
+<meta name="date" content="2023-03-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="04-Récapitulatif.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Mining :  <em>Camille Signoretto</em></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html"><i class="fa fa-check"></i>Présentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#à-propos-de-ce-document"><i class="fa fa-check"></i>À propos de ce document</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#prérequis"><i class="fa fa-check"></i>Prérequis</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#remerciements"><i class="fa fa-check"></i>Remerciements</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 1 : Data Wrangling</b></span></li>
+<li class="chapter" data-level="1" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html"><i class="fa fa-check"></i><b>1</b> Récupération de la base de données</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html#les-données-du-recensement-de-la-population-rp"><i class="fa fa-check"></i><b>1.1</b> Les données du Recensement de la Population (RP)</a></li>
+<li class="chapter" data-level="1.2" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html#quelles-informations-intéressantes-dans-cette-base"><i class="fa fa-check"></i><b>1.2</b> Quelles informations intéressantes dans cette base ?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html"><i class="fa fa-check"></i><b>2</b> Manipulation de la base</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html#format-des-données---wide-ou-long"><i class="fa fa-check"></i><b>2.1</b> Format des données - WIDE ou LONG</a></li>
+<li class="chapter" data-level="2.2" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html#sélectionner-un-champ-réduit-de-la-base-séparer-les-données"><i class="fa fa-check"></i><b>2.2</b> Sélectionner un champ réduit de la base, séparer les données</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html"><i class="fa fa-check"></i><b>3</b> Manipulation des variables</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#manipulation-des-variables-qualitatives"><i class="fa fa-check"></i><b>3.1</b> Manipulation des variables qualitatives</a></li>
+<li class="chapter" data-level="3.2" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#manipulation-des-variables-quantitatives"><i class="fa fa-check"></i><b>3.2</b> Manipulation des variables quantitatives</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#détecter-et-visualiser-les-valeurs-manquantes"><i class="fa fa-check"></i><b>3.2.1</b> Détecter et “visualiser” les valeurs manquantes</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#gérer-les-valeurs-manquantes"><i class="fa fa-check"></i><b>3.2.2</b> Gérer les valeurs manquantes</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#détecter-et-visualiser-les-valeurs-aberrantes"><i class="fa fa-check"></i><b>3.2.3</b> Détecter et “visualiser” les valeurs aberrantes</a></li>
+<li class="chapter" data-level="3.2.4" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#découper-en-classes-une-variable-quantitative"><i class="fa fa-check"></i><b>3.2.4</b> Découper en classes une variable quantitative</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html"><i class="fa fa-check"></i><b>4</b> Récapitulatig séance 1 - Data Wrangling</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#ce-quon-a-appris"><i class="fa fa-check"></i><b>4.1</b> Ce qu’on a appris</a></li>
+<li class="chapter" data-level="4.2" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#enregistrement-des-tables"><i class="fa fa-check"></i><b>4.2</b> Enregistrement des tables</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 2 : Data Mining - Analyse descriptive</b></span></li>
+<li class="chapter" data-level="5" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html"><i class="fa fa-check"></i><b>5</b> Quelles questions intéressantes pour une “fouille de données” sur cette base ?</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html#caractéristiques-des-logements-de-la-commune-de-paris"><i class="fa fa-check"></i><b>5.1</b> Caractéristiques des logements de la commune de Paris</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DATA MINING</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="c05-Questions-fouille-donnees" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Section 5</span> Quelles questions intéressantes pour une “fouille de données” sur cette base ?<a href="05-Questions-fouille-donnees.html#c05-Questions-fouille-donnees" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div align="justify">
+
+<p>Quelles sont les questions intéressantes que l’on peut se poser ? Qu’est-ce qu’on va pouvoir mettre en évidence à partir de ces données ?</p>
+<p>D’abord, on pourrait caractériser les logements fanciliens selon le type de logement (appartement, maison, HLM, …), la superficie, le nombre de pièces, le nombre de personnes y habitant, le statut d’occupation (propriétaire, locataire, …). Ensuite, on pourrait décrire plus précisément les pièces du logement en termes de confort (baignoire / douche, salle climatisée, moyen de chauffage), ainsi que les parties communes de l’immeuble (ascenseur, place de stationnement). Enfin, on pourrait étudier les caractéristiques des occupants de ces logements, et en premier lieu ici ce que l’Insee appelle la “personne de référence du ménage”. Par ailleurs, toutes ces analyses peuvent être réalisées en comparant les différentes communes de la région, ou à un niveau géographique plus fin par quartiers, arrondissements ou encore IRIS.</p>
+<p>Pour manipuler cette base et répondre à quelques-unes de ces questions, nous allons nous concentrer sur la commune de Paris, et allons chercher à reproduire des statistiques publiées sur le site de l’Insee. Nous produirons principalement, lors de cette séance, des tableaux de statistiques, l’analyse graphique fera en effet l’objet d’une séance entière car elle nécessite la présentation détaillée de la “grammaire” <strong><code>Ggplot</code></strong>.</p>
+<p>Avant cela, si les tables de données (“RP” et “meta”) ne sont plus dans votre environnement local, il faut de nouveau les importer à partir de l’enregistrement précédemment effectué dans le dossier ‘data’ de votre projet. Pour cela, il faut utiliser la fonction <code>readRDS()</code>, comme ci-dessous :</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="05-Questions-fouille-donnees.html#cb77-1" aria-hidden="true" tabindex="-1"></a>RP <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">&quot;data/menages2019.Rdata&quot;</span>)</span>
+<span id="cb77-2"><a href="05-Questions-fouille-donnees.html#cb77-2" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="st">&quot;data/menages2019_meta.Rdata&quot;</span>)</span></code></pre></div>
+<div id="caractéristiques-des-logements-de-la-commune-de-paris" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Caractéristiques des logements de la commune de Paris<a href="05-Questions-fouille-donnees.html#caractéristiques-des-logements-de-la-commune-de-paris" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Sur le site de l’Insee, vous pouvez trouver les statistiques générales sur les logements à Paris en 2019 <a href="https://www.insee.fr/fr/statistiques/2011101?geo=DEP-75#chiffre-cle-3" target="_blank">ici</a>.</p>
+<p>Comme nous devons utiliser la pondération pour avoir des statistiques représentatives de la population française, une manière de faire est d’utiliser une méthode de comptage par variable catégorielle en indiquant la pondération à utiliser. La fonction <code>count()</code> avec l’argument <code>wt=</code> est un des moyens assez efficace d’y arriver. Cela nous donnera le nombre de ménages concernés par la caractéristique étudiée (par défaut, la variable créée s’appelle “n”, on peut la renommer dans une étape ultérieure avec la fonction <code>rename()</code>). Souvent, c’est aussi les pourcentages que l’on souhaite avoir, il faudra alors créer une variable faisant la proportion de chaque catégorie sur le nombre total de logements, en utilisant la fonction <code>mutate()</code> et la fonction <code>prop.table()</code>. Le package <strong><code>janitor</code></strong> permet enfin d’ajouter une ligne totale (ou une colonne totale selon ce qu’on souhaite faire) avec la fonction <code>adorn_totals()</code>, argument “row” pour avoir le total en ligne.</p>
+<p>A partir de ces indications, afficher le tableau suivant à partir d’un code utilisant le langage <strong>tidyverse</strong> et en une seule procédure (sans nécessairement créer de table dans votre environnement) :</p>
+<div id="doehulahww" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#doehulahww .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#doehulahww .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#doehulahww .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#doehulahww .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#doehulahww .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#doehulahww .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#doehulahww .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#doehulahww .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#doehulahww .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#doehulahww .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#doehulahww .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#doehulahww .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#doehulahww .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#doehulahww .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#doehulahww .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#doehulahww .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#doehulahww .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#doehulahww .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#doehulahww .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#doehulahww .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#doehulahww .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#doehulahww .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#doehulahww .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#doehulahww .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#doehulahww .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#doehulahww .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#doehulahww .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#doehulahww .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#doehulahww .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#doehulahww .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#doehulahww .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#doehulahww .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#doehulahww .gt_left {
+  text-align: left;
+}
+
+#doehulahww .gt_center {
+  text-align: center;
+}
+
+#doehulahww .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#doehulahww .gt_font_normal {
+  font-weight: normal;
+}
+
+#doehulahww .gt_font_bold {
+  font-weight: bold;
+}
+
+#doehulahww .gt_font_italic {
+  font-style: italic;
+}
+
+#doehulahww .gt_super {
+  font-size: 65%;
+}
+
+#doehulahww .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#doehulahww .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#doehulahww .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#doehulahww .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#doehulahww .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#doehulahww .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#doehulahww .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Type de logement">Type de logement</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Effectif">Effectif</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Pourcentage">Pourcentage</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Type de logement" class="gt_row gt_center">Maison</td>
+<td headers="Effectif" class="gt_row gt_right">11 260</td>
+<td headers="Pourcentage" class="gt_row gt_right">0.8</td></tr>
+    <tr><td headers="Type de logement" class="gt_row gt_center">Appartement</td>
+<td headers="Effectif" class="gt_row gt_right">1 346 430</td>
+<td headers="Pourcentage" class="gt_row gt_right">96.9</td></tr>
+    <tr><td headers="Type de logement" class="gt_row gt_center">Autres</td>
+<td headers="Effectif" class="gt_row gt_right">31 685</td>
+<td headers="Pourcentage" class="gt_row gt_right">2.3</td></tr>
+    <tr><td headers="Type de logement" class="gt_row gt_center">Total</td>
+<td headers="Effectif" class="gt_row gt_right">1 389 375</td>
+<td headers="Pourcentage" class="gt_row gt_right">100.0</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<div class="solution-exo">
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="05-Questions-fouille-donnees.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb78-2"><a href="05-Questions-fouille-donnees.html#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb78-3"><a href="05-Questions-fouille-donnees.html#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb78-4"><a href="05-Questions-fouille-donnees.html#cb78-4" aria-hidden="true" tabindex="-1"></a>RP <span class="sc">%&gt;%</span> </span>
+<span id="cb78-5"><a href="05-Questions-fouille-donnees.html#cb78-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb78-6"><a href="05-Questions-fouille-donnees.html#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(TYPL_moda, <span class="at">wt=</span>IPONDL) <span class="sc">%&gt;%</span> </span>
+<span id="cb78-7"><a href="05-Questions-fouille-donnees.html#cb78-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pourcentage=</span><span class="fu">round</span>(<span class="fu">prop.table</span>(n)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb78-8"><a href="05-Questions-fouille-donnees.html#cb78-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">&quot;row&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb78-9"><a href="05-Questions-fouille-donnees.html#cb78-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Effectif=</span>n, <span class="st">&#39;Type de logement&#39;</span><span class="ot">=</span>TYPL_moda) <span class="sc">%&gt;%</span> </span>
+<span id="cb78-10"><a href="05-Questions-fouille-donnees.html#cb78-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb78-11"><a href="05-Questions-fouille-donnees.html#cb78-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">sep_mark =</span> <span class="st">&quot; &quot;</span>, <span class="at">decimals =</span> <span class="dv">0</span>)</span></code></pre></div>
+</div>
+<p>Non sans grande surprise, la commune de Paris est constituée en majorité d’appartements, presque 97%.</p>
+<p>Cherchons maintenant la répartition des logements parisiens par type, est-ce plutôt des résidences principales ou secondaires ? combien y a-t-il de logements vacants ?</p>
+<div id="seyyneyhox" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#seyyneyhox .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#seyyneyhox .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#seyyneyhox .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#seyyneyhox .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#seyyneyhox .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#seyyneyhox .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#seyyneyhox .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#seyyneyhox .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#seyyneyhox .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#seyyneyhox .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#seyyneyhox .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#seyyneyhox .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#seyyneyhox .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#seyyneyhox .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#seyyneyhox .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#seyyneyhox .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#seyyneyhox .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#seyyneyhox .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#seyyneyhox .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#seyyneyhox .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#seyyneyhox .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#seyyneyhox .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#seyyneyhox .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#seyyneyhox .gt_left {
+  text-align: left;
+}
+
+#seyyneyhox .gt_center {
+  text-align: center;
+}
+
+#seyyneyhox .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#seyyneyhox .gt_font_normal {
+  font-weight: normal;
+}
+
+#seyyneyhox .gt_font_bold {
+  font-weight: bold;
+}
+
+#seyyneyhox .gt_font_italic {
+  font-style: italic;
+}
+
+#seyyneyhox .gt_super {
+  font-size: 65%;
+}
+
+#seyyneyhox .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#seyyneyhox .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#seyyneyhox .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#seyyneyhox .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#seyyneyhox .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#seyyneyhox .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#seyyneyhox .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Catégorie de logement">Catégorie de logement</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Effectif">Effectif</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Pourcentage">Pourcentage</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Catégorie de logement" class="gt_row gt_center">Résidences principales</td>
+<td headers="Effectif" class="gt_row gt_right">1 137 759</td>
+<td headers="Pourcentage" class="gt_row gt_right">81.9</td></tr>
+    <tr><td headers="Catégorie de logement" class="gt_row gt_center">Résidences secondaires</td>
+<td headers="Effectif" class="gt_row gt_right">85 675</td>
+<td headers="Pourcentage" class="gt_row gt_right">6.2</td></tr>
+    <tr><td headers="Catégorie de logement" class="gt_row gt_center">Logements vacants</td>
+<td headers="Effectif" class="gt_row gt_right">120 295</td>
+<td headers="Pourcentage" class="gt_row gt_right">8.7</td></tr>
+    <tr><td headers="Catégorie de logement" class="gt_row gt_center">Logements occasionnels</td>
+<td headers="Effectif" class="gt_row gt_right">45 645</td>
+<td headers="Pourcentage" class="gt_row gt_right">3.3</td></tr>
+    <tr><td headers="Catégorie de logement" class="gt_row gt_center">Total</td>
+<td headers="Effectif" class="gt_row gt_right">1 389 375</td>
+<td headers="Pourcentage" class="gt_row gt_right">100.1</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<div class="solution-exo">
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="05-Questions-fouille-donnees.html#cb79-1" aria-hidden="true" tabindex="-1"></a>RP <span class="sc">%&gt;%</span> </span>
+<span id="cb79-2"><a href="05-Questions-fouille-donnees.html#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-3"><a href="05-Questions-fouille-donnees.html#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CATL_moda=</span><span class="fu">case_when</span>(CATL <span class="sc">==</span> <span class="st">&quot;1&quot;</span> <span class="sc">~</span> <span class="st">&quot;Résidences principales&quot;</span>,</span>
+<span id="cb79-4"><a href="05-Questions-fouille-donnees.html#cb79-4" aria-hidden="true" tabindex="-1"></a>                             CATL <span class="sc">==</span> <span class="st">&quot;2&quot;</span> <span class="sc">~</span> <span class="st">&quot;Logements occasionnels&quot;</span>,</span>
+<span id="cb79-5"><a href="05-Questions-fouille-donnees.html#cb79-5" aria-hidden="true" tabindex="-1"></a>                             CATL <span class="sc">==</span> <span class="st">&quot;3&quot;</span> <span class="sc">~</span> <span class="st">&quot;Résidences secondaires&quot;</span>,</span>
+<span id="cb79-6"><a href="05-Questions-fouille-donnees.html#cb79-6" aria-hidden="true" tabindex="-1"></a>                             CATL <span class="sc">==</span> <span class="st">&quot;4&quot;</span> <span class="sc">~</span> <span class="st">&quot;Logements vacants&quot;</span>,</span>
+<span id="cb79-7"><a href="05-Questions-fouille-donnees.html#cb79-7" aria-hidden="true" tabindex="-1"></a>                             <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;Autres&quot;</span>),</span>
+<span id="cb79-8"><a href="05-Questions-fouille-donnees.html#cb79-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">CATL_moda=</span><span class="fu">fct_relevel</span>(CATL_moda, <span class="fu">c</span>(<span class="st">&quot;Résidences principales&quot;</span>, <span class="st">&quot;Résidences secondaires&quot;</span>,</span>
+<span id="cb79-9"><a href="05-Questions-fouille-donnees.html#cb79-9" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">&quot;Logements vacants&quot;</span>, <span class="st">&quot;Logements occasionnels&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-10"><a href="05-Questions-fouille-donnees.html#cb79-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(CATL_moda, <span class="at">wt=</span>IPONDL) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-11"><a href="05-Questions-fouille-donnees.html#cb79-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pourcentage=</span><span class="fu">round</span>(<span class="fu">prop.table</span>(n)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-12"><a href="05-Questions-fouille-donnees.html#cb79-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">&quot;row&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-13"><a href="05-Questions-fouille-donnees.html#cb79-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Effectif=</span>n, <span class="st">&#39;Catégorie de logement&#39;</span><span class="ot">=</span>CATL_moda) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-14"><a href="05-Questions-fouille-donnees.html#cb79-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb79-15"><a href="05-Questions-fouille-donnees.html#cb79-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">sep_mark =</span> <span class="st">&quot; &quot;</span>, <span class="at">decimals =</span> <span class="dv">0</span>)</span></code></pre></div>
+</div>
+<p>La plupart des logements parisiens sont des résidences principales (81,9%), alors que 6,2% sont des résidences secondaires ; à noter que la part des logements vacants n’est pas négligeable, elle s’élève à 8,7%.</p>
+<p>Maintenant, affichons la seule colonne 2019 de ce tableau tiré de l’Insee , en mettant la ligne “Ensemble des résidences principales” plutôt en fin de tableau (ces 2 usages sont possibles, question de préférence…) ; attention au champ sur lequel porte ces moyennes…</p>
+<img src="images/Nb%20moyen%20pieces%20des%20residences%20principales.png" />
+<div class="solution-exo">
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="05-Questions-fouille-donnees.html#cb80-1" aria-hidden="true" tabindex="-1"></a>RP <span class="sc">%&gt;%</span> </span>
+<span id="cb80-2"><a href="05-Questions-fouille-donnees.html#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span> <span class="sc">&amp;</span> CATL<span class="sc">==</span> <span class="st">&quot;1&quot;</span> <span class="sc">&amp;</span> TYPL_moda <span class="sc">!=</span> <span class="st">&quot;Autres&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb80-3"><a href="05-Questions-fouille-donnees.html#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(TYPL_moda) <span class="sc">%&gt;%</span></span>
+<span id="cb80-4"><a href="05-Questions-fouille-donnees.html#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">&#39;2019&#39;</span> <span class="ot">=</span> <span class="fu">weighted.mean</span>(<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(NBPI)), IPONDL, <span class="at">na.rm=</span>T)) <span class="sc">%&gt;%</span></span>
+<span id="cb80-5"><a href="05-Questions-fouille-donnees.html#cb80-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">summarise</span>(<span class="at">TYPL_moda =</span> <span class="st">&quot;Ensemble des résidences principales&quot;</span>, </span>
+<span id="cb80-6"><a href="05-Questions-fouille-donnees.html#cb80-6" aria-hidden="true" tabindex="-1"></a>                      RP[RP<span class="sc">$</span>COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span> <span class="sc">&amp;</span> RP<span class="sc">$</span>CATL <span class="sc">==</span> <span class="st">&quot;1&quot;</span> <span class="sc">&amp;</span> RP<span class="sc">$</span>TYPL_moda <span class="sc">!=</span> <span class="st">&quot;Autres&quot;</span>,], </span>
+<span id="cb80-7"><a href="05-Questions-fouille-donnees.html#cb80-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;2019&#39;</span>  <span class="ot">=</span> <span class="fu">weighted.mean</span>(<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(NBPI)), IPONDL, <span class="at">na.rm=</span>T))) <span class="sc">%&gt;%</span></span>
+<span id="cb80-8"><a href="05-Questions-fouille-donnees.html#cb80-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&#39; &#39;</span> <span class="ot">=</span> TYPL_moda) <span class="sc">%&gt;%</span> </span>
+<span id="cb80-9"><a href="05-Questions-fouille-donnees.html#cb80-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb80-10"><a href="05-Questions-fouille-donnees.html#cb80-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">dec_mark =</span> <span class="st">&quot;,&quot;</span>, <span class="at">decimals =</span> <span class="dv">1</span>)</span></code></pre></div>
+</div>
+<p>A Paris, sur les seules résidences principales, les maisons comportent plus de pièces que les appartements, presque 2 pièces de plus en moyenne. Etant donné que la majorité des logements est constituée par des appartements, la moyenne de l’ensemble des résidences principales est la même que celle des appartements.</p>
+<p>Etudions maintenant les résidences principales et l’ancienneté d’emménagement selon le statut d’occupation. Attention, ici il faut procéder en plusieurs étapes : d’abord créer un tableau donnant la répartition en nombre et en pourcentage des ménages par statut d’occupation, puis créer un second tableau donnant la moyenne de l’ancienneté d’emménagement en années par statut d’occupation, puis fusionner ces deux tableaux.</p>
+<div id="zmcnftgdwa" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#zmcnftgdwa .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zmcnftgdwa .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zmcnftgdwa .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zmcnftgdwa .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zmcnftgdwa .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zmcnftgdwa .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zmcnftgdwa .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zmcnftgdwa .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zmcnftgdwa .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zmcnftgdwa .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zmcnftgdwa .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zmcnftgdwa .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zmcnftgdwa .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zmcnftgdwa .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zmcnftgdwa .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zmcnftgdwa .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zmcnftgdwa .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zmcnftgdwa .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zmcnftgdwa .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zmcnftgdwa .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zmcnftgdwa .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zmcnftgdwa .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zmcnftgdwa .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zmcnftgdwa .gt_left {
+  text-align: left;
+}
+
+#zmcnftgdwa .gt_center {
+  text-align: center;
+}
+
+#zmcnftgdwa .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zmcnftgdwa .gt_font_normal {
+  font-weight: normal;
+}
+
+#zmcnftgdwa .gt_font_bold {
+  font-weight: bold;
+}
+
+#zmcnftgdwa .gt_font_italic {
+  font-style: italic;
+}
+
+#zmcnftgdwa .gt_super {
+  font-size: 65%;
+}
+
+#zmcnftgdwa .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#zmcnftgdwa .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zmcnftgdwa .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zmcnftgdwa .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zmcnftgdwa .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zmcnftgdwa .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zmcnftgdwa .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Statut d'occupation">Statut d'occupation</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Nombre">Nombre</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Pourcentage">Pourcentage</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Ancienneté moyenne d'emménagement en année(s)">Ancienneté moyenne d'emménagement en année(s)</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Statut d'occupation" class="gt_row gt_left">Propriétaire</td>
+<td headers="Nombre" class="gt_row gt_right">379 745</td>
+<td headers="Pourcentage" class="gt_row gt_right">33.4</td>
+<td headers="Ancienneté moyenne d'emménagement en année(s)" class="gt_row gt_right">18.2</td></tr>
+    <tr><td headers="Statut d'occupation" class="gt_row gt_left">Locataire</td>
+<td headers="Nombre" class="gt_row gt_right">701 943</td>
+<td headers="Pourcentage" class="gt_row gt_right">61.7</td>
+<td headers="Ancienneté moyenne d'emménagement en année(s)" class="gt_row gt_right">10.3</td></tr>
+    <tr><td headers="Statut d'occupation" class="gt_row gt_left">Logé gratuitement</td>
+<td headers="Nombre" class="gt_row gt_right">56 071</td>
+<td headers="Pourcentage" class="gt_row gt_right">4.9</td>
+<td headers="Ancienneté moyenne d'emménagement en année(s)" class="gt_row gt_right">10.4</td></tr>
+    <tr><td headers="Statut d'occupation" class="gt_row gt_left">Total</td>
+<td headers="Nombre" class="gt_row gt_right">1 137 759</td>
+<td headers="Pourcentage" class="gt_row gt_right">100.0</td>
+<td headers="Ancienneté moyenne d'emménagement en année(s)" class="gt_row gt_right">13.0</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<div class="solution-exo">
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="05-Questions-fouille-donnees.html#cb81-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> RP <span class="sc">%&gt;%</span> </span>
+<span id="cb81-2"><a href="05-Questions-fouille-donnees.html#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span> <span class="sc">&amp;</span> CATL<span class="sc">==</span><span class="st">&quot;1&quot;</span> <span class="sc">&amp;</span> STOCD <span class="sc">!=</span> <span class="st">&quot;0&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-3"><a href="05-Questions-fouille-donnees.html#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">st_occupation=</span><span class="fu">case_when</span>(STOCD<span class="sc">==</span><span class="st">&quot;10&quot;</span> <span class="sc">~</span> <span class="st">&quot;Propriétaire&quot;</span>,</span>
+<span id="cb81-4"><a href="05-Questions-fouille-donnees.html#cb81-4" aria-hidden="true" tabindex="-1"></a>                                 STOCD <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;21&quot;</span>,<span class="st">&quot;22&quot;</span>,<span class="st">&quot;23&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Locataire&quot;</span>,</span>
+<span id="cb81-5"><a href="05-Questions-fouille-donnees.html#cb81-5" aria-hidden="true" tabindex="-1"></a>                                 STOCD<span class="sc">==</span><span class="st">&quot;30&quot;</span> <span class="sc">~</span> <span class="st">&quot;Logé gratuitement&quot;</span>),</span>
+<span id="cb81-6"><a href="05-Questions-fouille-donnees.html#cb81-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">st_occupation=</span><span class="fu">fct_relevel</span>(st_occupation, <span class="fu">c</span>(<span class="st">&quot;Propriétaire&quot;</span>, </span>
+<span id="cb81-7"><a href="05-Questions-fouille-donnees.html#cb81-7" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">&quot;Locataire&quot;</span>,</span>
+<span id="cb81-8"><a href="05-Questions-fouille-donnees.html#cb81-8" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">&quot;Logé gratuitement&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-9"><a href="05-Questions-fouille-donnees.html#cb81-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(st_occupation, <span class="at">wt=</span>IPONDL) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-10"><a href="05-Questions-fouille-donnees.html#cb81-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pourcentage=</span><span class="fu">round</span>(<span class="fu">prop.table</span>(n)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-11"><a href="05-Questions-fouille-donnees.html#cb81-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">&quot;row&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-12"><a href="05-Questions-fouille-donnees.html#cb81-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Nombre=</span>n) </span>
+<span id="cb81-13"><a href="05-Questions-fouille-donnees.html#cb81-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-14"><a href="05-Questions-fouille-donnees.html#cb81-14" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> RP <span class="sc">%&gt;%</span></span>
+<span id="cb81-15"><a href="05-Questions-fouille-donnees.html#cb81-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span> <span class="sc">&amp;</span> CATL<span class="sc">==</span><span class="st">&quot;1&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span>STOCD <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;ZZ&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-16"><a href="05-Questions-fouille-donnees.html#cb81-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">st_occupation=</span><span class="fu">case_when</span>(STOCD<span class="sc">==</span><span class="st">&quot;10&quot;</span> <span class="sc">~</span> <span class="st">&quot;Propriétaire&quot;</span>,</span>
+<span id="cb81-17"><a href="05-Questions-fouille-donnees.html#cb81-17" aria-hidden="true" tabindex="-1"></a>                                 STOCD <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;21&quot;</span>,<span class="st">&quot;22&quot;</span>,<span class="st">&quot;23&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Locataire&quot;</span>,</span>
+<span id="cb81-18"><a href="05-Questions-fouille-donnees.html#cb81-18" aria-hidden="true" tabindex="-1"></a>                                 STOCD<span class="sc">==</span><span class="st">&quot;30&quot;</span> <span class="sc">~</span> <span class="st">&quot;Logé gratuitement&quot;</span>),</span>
+<span id="cb81-19"><a href="05-Questions-fouille-donnees.html#cb81-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">st_occupation=</span><span class="fu">fct_relevel</span>(st_occupation, <span class="fu">c</span>(<span class="st">&quot;Propriétaire&quot;</span>, </span>
+<span id="cb81-20"><a href="05-Questions-fouille-donnees.html#cb81-20" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">&quot;Locataire&quot;</span>,</span>
+<span id="cb81-21"><a href="05-Questions-fouille-donnees.html#cb81-21" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">&quot;Logé gratuitement&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-22"><a href="05-Questions-fouille-donnees.html#cb81-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(st_occupation) <span class="sc">%&gt;%</span></span>
+<span id="cb81-23"><a href="05-Questions-fouille-donnees.html#cb81-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">anc_moy =</span> <span class="fu">weighted.mean</span>(ANEM, IPONDL, <span class="at">na.rm=</span>T)) <span class="sc">%&gt;%</span></span>
+<span id="cb81-24"><a href="05-Questions-fouille-donnees.html#cb81-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">summarise</span>(<span class="at">st_occupation =</span> <span class="st">&quot;Total&quot;</span>, RP[RP<span class="sc">$</span>COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span> <span class="sc">&amp;</span> RP<span class="sc">$</span>CATL<span class="sc">==</span><span class="st">&quot;1&quot;</span> <span class="sc">&amp;</span> <span class="sc">!</span>RP<span class="sc">$</span>STOCD <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;ZZ&quot;</span>),], </span>
+<span id="cb81-25"><a href="05-Questions-fouille-donnees.html#cb81-25" aria-hidden="true" tabindex="-1"></a>                      <span class="at">anc_moy =</span> <span class="fu">weighted.mean</span>(ANEM, IPONDL, <span class="at">na.rm=</span>T))) <span class="sc">%&gt;%</span></span>
+<span id="cb81-26"><a href="05-Questions-fouille-donnees.html#cb81-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">anc_moy=</span><span class="fu">round</span>(anc_moy, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-27"><a href="05-Questions-fouille-donnees.html#cb81-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&quot;Ancienneté moyenne d&#39;emménagement en année(s)&quot;</span><span class="ot">=</span>anc_moy)</span>
+<span id="cb81-28"><a href="05-Questions-fouille-donnees.html#cb81-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-29"><a href="05-Questions-fouille-donnees.html#cb81-29" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(t2, <span class="at">by=</span><span class="fu">join_by</span>(st_occupation)) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-30"><a href="05-Questions-fouille-donnees.html#cb81-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">&quot;Statut d&#39;occupation&quot;</span><span class="ot">=</span>st_occupation) <span class="sc">%&gt;%</span> </span>
+<span id="cb81-31"><a href="05-Questions-fouille-donnees.html#cb81-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>()  <span class="sc">%&gt;%</span> </span>
+<span id="cb81-32"><a href="05-Questions-fouille-donnees.html#cb81-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">sep_mark =</span> <span class="st">&quot; &quot;</span>, <span class="at">decimals =</span> <span class="dv">0</span>)</span></code></pre></div>
+</div>
+<p>Il y a donc 1/3 de propriétaires à Paris quand on se concentre sur les résidences principales, et les propriétaires y sont présents depuis plus longtemps que les locataires : 18,2 ans en moyenne contre 10,3 ans.</p>
+<p>Enfin, on peut vouloir comparer la moyenne des pièces des appartements parisiens par arrondissement par exemple.</p>
+<div id="cjyxzevxgx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#cjyxzevxgx .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#cjyxzevxgx .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#cjyxzevxgx .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#cjyxzevxgx .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#cjyxzevxgx .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#cjyxzevxgx .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#cjyxzevxgx .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#cjyxzevxgx .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#cjyxzevxgx .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#cjyxzevxgx .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#cjyxzevxgx .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#cjyxzevxgx .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#cjyxzevxgx .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#cjyxzevxgx .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cjyxzevxgx .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#cjyxzevxgx .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#cjyxzevxgx .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cjyxzevxgx .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#cjyxzevxgx .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cjyxzevxgx .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#cjyxzevxgx .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cjyxzevxgx .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cjyxzevxgx .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cjyxzevxgx .gt_left {
+  text-align: left;
+}
+
+#cjyxzevxgx .gt_center {
+  text-align: center;
+}
+
+#cjyxzevxgx .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#cjyxzevxgx .gt_font_normal {
+  font-weight: normal;
+}
+
+#cjyxzevxgx .gt_font_bold {
+  font-weight: bold;
+}
+
+#cjyxzevxgx .gt_font_italic {
+  font-style: italic;
+}
+
+#cjyxzevxgx .gt_super {
+  font-size: 65%;
+}
+
+#cjyxzevxgx .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#cjyxzevxgx .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#cjyxzevxgx .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#cjyxzevxgx .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#cjyxzevxgx .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#cjyxzevxgx .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#cjyxzevxgx .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Arrondissement">Arrondissement</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Nombre moyen de pièces">Nombre moyen de pièces</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75101</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,6</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75102</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,4</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75103</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,4</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75104</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,6</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75105</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,6</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75106</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,8</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75107</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">3,0</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75108</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">3,2</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75109</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,7</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75110</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,5</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75111</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,3</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75112</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,5</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75113</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,6</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75114</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,6</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75115</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,6</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75116</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">3,2</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75117</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,7</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75118</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,3</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75119</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,6</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">75120</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,5</td></tr>
+    <tr><td headers="Arrondissement" class="gt_row gt_left">Ensemble des appartements</td>
+<td headers="Nombre moyen de pièces" class="gt_row gt_right">2,2</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<div class="solution-exo">
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="05-Questions-fouille-donnees.html#cb82-1" aria-hidden="true" tabindex="-1"></a>RP <span class="sc">%&gt;%</span> </span>
+<span id="cb82-2"><a href="05-Questions-fouille-donnees.html#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span> <span class="sc">&amp;</span> CATL<span class="sc">==</span> <span class="st">&quot;1&quot;</span> <span class="sc">&amp;</span> TYPL_moda <span class="sc">==</span> <span class="st">&quot;Appartement&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb82-3"><a href="05-Questions-fouille-donnees.html#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ARM) <span class="sc">%&gt;%</span></span>
+<span id="cb82-4"><a href="05-Questions-fouille-donnees.html#cb82-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Moy_pieces =</span> <span class="fu">weighted.mean</span>(<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(NBPI)), IPONDL, <span class="at">na.rm=</span>T)) <span class="sc">%&gt;%</span></span>
+<span id="cb82-5"><a href="05-Questions-fouille-donnees.html#cb82-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">summarise</span>(<span class="at">ARM =</span> <span class="st">&quot;Ensemble des appartements&quot;</span>, </span>
+<span id="cb82-6"><a href="05-Questions-fouille-donnees.html#cb82-6" aria-hidden="true" tabindex="-1"></a>                      RP[RP<span class="sc">$</span>COMMUNE <span class="sc">==</span> <span class="st">&quot;75056&quot;</span> <span class="sc">&amp;</span> RP<span class="sc">$</span>CATL <span class="sc">==</span> <span class="st">&quot;1&quot;</span> <span class="sc">&amp;</span> RP<span class="sc">$</span>TYPL_moda <span class="sc">!=</span> <span class="st">&quot;Appartement&quot;</span>,], </span>
+<span id="cb82-7"><a href="05-Questions-fouille-donnees.html#cb82-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">Moy_pieces =</span> <span class="fu">weighted.mean</span>(<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(NBPI)), IPONDL, <span class="at">na.rm=</span>T))) <span class="sc">%&gt;%</span></span>
+<span id="cb82-8"><a href="05-Questions-fouille-donnees.html#cb82-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Arrondissement=</span>ARM, <span class="st">&#39;Nombre moyen de pièces&#39;</span><span class="ot">=</span>Moy_pieces) <span class="sc">%&gt;%</span> </span>
+<span id="cb82-9"><a href="05-Questions-fouille-donnees.html#cb82-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb82-10"><a href="05-Questions-fouille-donnees.html#cb82-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="dv">2</span>, <span class="at">dec_mark =</span> <span class="st">&quot;,&quot;</span>, <span class="at">decimals =</span> <span class="dv">1</span>)</span></code></pre></div>
+</div>
+<p>Ainsi, si l’on veut créer des tableaux de répartition à une seule variable, on peut utiliser ces procédures qui se structurent toujours de la même façon. Au lieu de faire un copié-collé du code et de changer le nom des variables, autrement dit pour systématiser nos procédures, une astuce est de créer ses propres fonctions. C’est ce que nous allons étudier maintenant.</p>
+
+</div>
+</div>
+
+
+
+
+
+
+<script src="js/tidyverse.js"></script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="04-Récapitulatif.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/Camille-Sisi/github.io-Data-Mining-2023/master/05-Questions-fouille-donnees.Rmd",
+"text": "Source"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

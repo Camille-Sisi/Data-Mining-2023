@@ -14,3 +14,5 @@ découper-en-classes-une-variable-quantitative
 c04-Récapitulatif
 ce-quon-a-appris
 enregistrement-des-tables
+c05-Questions-fouille-donnees
+caractéristiques-des-logements-de-la-commune-de-paris

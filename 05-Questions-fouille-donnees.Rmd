@@ -1,0 +1,337 @@
+
+
+# (PART\*) Séance 2 : Data Mining - Analyse descriptive {-}
+
+
+# Quelles questions intéressantes pour une "fouille de données" sur cette base ? {#c05-Questions-fouille-donnees}
+
+<div align="justify">
+
+Quelles sont les questions intéressantes que l'on peut se poser ? Qu'est-ce qu'on va pouvoir mettre en évidence à partir de ces données ?  
+
+D'abord, on pourrait caractériser les logements fanciliens selon le type de logement (appartement, maison, HLM, ...), la superficie, le nombre de pièces, le nombre de personnes y habitant, le statut d'occupation (propriétaire, locataire, ...). Ensuite, on pourrait décrire plus précisément les pièces du logement en termes de confort (baignoire / douche, salle climatisée, moyen de chauffage), ainsi que les parties communes de l'immeuble (ascenseur, place de stationnement). Enfin, on pourrait étudier les caractéristiques des occupants de ces logements, et en premier lieu ici ce que l'Insee appelle la "personne de référence du ménage". Par ailleurs, toutes ces analyses peuvent être réalisées en  comparant les différentes communes de la région, ou à un niveau géographique plus fin par quartiers, arrondissements ou encore IRIS.   
+
+Pour manipuler cette base et répondre à quelques-unes de ces questions, nous allons nous concentrer sur la commune de Paris, et allons chercher à reproduire des statistiques publiées sur le site de l'Insee. Nous produirons principalement, lors de cette séance, des tableaux de statistiques, l'analyse graphique fera en effet l'objet d'une séance entière car elle nécessite la présentation détaillée de la "grammaire" **`Ggplot`**.  
+  
+Avant cela, si les tables de données ("RP" et "meta") ne sont plus dans votre environnement local, il faut de nouveau les importer à partir de l'enregistrement précédemment effectué dans le dossier 'data' de votre projet. Pour cela, il faut utiliser la fonction `readRDS()`, comme ci-dessous :
+```{r}
+RP <- readRDS(file = "data/menages2019.Rdata")
+meta <- readRDS(file = "data/menages2019_meta.Rdata")
+```
+  
+
+## Caractéristiques des logements de la commune de Paris 
+Sur le site de l'Insee, vous pouvez trouver les statistiques générales sur les logements à Paris en 2019 <a href="https://www.insee.fr/fr/statistiques/2011101?geo=DEP-75#chiffre-cle-3" target="_blank">ici</a>.  
+
+Comme nous devons utiliser la pondération pour avoir des statistiques représentatives de la population française, une manière de faire est d'utiliser une méthode de comptage par variable catégorielle en indiquant la pondération à utiliser. La fonction `count()` avec l'argument `wt=` est un des moyens assez efficace d'y arriver. Cela nous donnera le nombre de ménages concernés par la caractéristique étudiée (par défaut, la variable créée s'appelle "n", on peut la renommer dans une étape ultérieure avec la fonction `rename()`). Souvent, c'est aussi les pourcentages que l'on souhaite avoir, il faudra alors créer une variable faisant la proportion de chaque catégorie sur le nombre total de logements, en utilisant la fonction `mutate()` et la fonction `prop.table()`. Le package **`janitor`** permet enfin d'ajouter une ligne totale (ou une colonne totale selon ce qu'on souhaite faire) avec la fonction `adorn_totals()`, argument "row" pour avoir le total en ligne.  
+
+A partir de ces indications, afficher le tableau suivant à partir d'un code utilisant le langage **tidyverse** et en une seule procédure (sans nécessairement créer de table dans votre environnement) :
+ 
+```{r echo=FALSE}
+library(tidyverse)
+library(janitor)
+library(gt)
+RP %>% 
+  filter(COMMUNE == "75056") %>% 
+  count(TYPL_moda, wt=IPONDL) %>% 
+  mutate(Pourcentage=round(prop.table(n)*100, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n, 'Type de logement'=TYPL_moda) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+ 
+ <div class="solution-exo">
+```{r message=FALSE, eval=FALSE}
+library(tidyverse)
+library(janitor)
+library(gt)
+RP %>% 
+  filter(COMMUNE == "75056") %>% 
+  count(TYPL_moda, wt=IPONDL) %>% 
+  mutate(Pourcentage=round(prop.table(n)*100, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n, 'Type de logement'=TYPL_moda) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+</div>
+\fi
+Non sans grande surprise, la commune de Paris est constituée en majorité d'appartements, presque 97%.  
+
+Cherchons maintenant la répartition des logements parisiens par type, est-ce plutôt des résidences principales ou secondaires ? combien y a-t-il de logements vacants ?
+ 
+```{r echo=FALSE}
+RP %>% 
+  filter(COMMUNE == "75056") %>% 
+  mutate(CATL_moda=case_when(CATL == "1" ~ "Résidences principales",
+                             CATL == "2" ~ "Logements occasionnels",
+                             CATL == "3" ~ "Résidences secondaires",
+                             CATL == "4" ~ "Logements vacants",
+                             TRUE ~ "Autres"),
+         CATL_moda=fct_relevel(CATL_moda, c("Résidences principales", "Résidences secondaires",
+                                            "Logements vacants", "Logements occasionnels"))) %>% 
+  count(CATL_moda, wt=IPONDL) %>% 
+  mutate(Pourcentage=round(prop.table(n)*100,1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n, 'Catégorie de logement'=CATL_moda) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+ 
+ <div class="solution-exo">
+```{r message=FALSE, eval=FALSE}
+RP %>% 
+  filter(COMMUNE == "75056") %>% 
+  mutate(CATL_moda=case_when(CATL == "1" ~ "Résidences principales",
+                             CATL == "2" ~ "Logements occasionnels",
+                             CATL == "3" ~ "Résidences secondaires",
+                             CATL == "4" ~ "Logements vacants",
+                             TRUE ~ "Autres"),
+         CATL_moda=fct_relevel(CATL_moda, c("Résidences principales", "Résidences secondaires",
+                                            "Logements vacants", "Logements occasionnels"))) %>% 
+  count(CATL_moda, wt=IPONDL) %>% 
+  mutate(Pourcentage=round(prop.table(n)*100, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n, 'Catégorie de logement'=CATL_moda) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+</div>
+\fi
+La plupart des logements parisiens sont des résidences principales (81,9%), alors que 6,2% sont des résidences secondaires ; à noter que la part des logements vacants n'est pas négligeable, elle s'élève à 8,7%.  
+  
+  
+Maintenant, affichons la seule colonne 2019 de ce tableau tiré de l'Insee , en mettant la ligne "Ensemble des résidences principales" plutôt en fin de tableau (ces 2 usages sont possibles, question de préférence...) ; attention au champ sur lequel porte ces moyennes...  
+
+![ ](images/Nb moyen pieces des residences principales.png)
+ <div class="solution-exo">
+```{r eval=FALSE}
+RP %>% 
+  filter(COMMUNE == "75056" & CATL== "1" & TYPL_moda != "Autres") %>% 
+  group_by(TYPL_moda) %>%
+  summarise('2019' = weighted.mean(as.numeric(as.character(NBPI)), IPONDL, na.rm=T)) %>%
+  bind_rows(summarise(TYPL_moda = "Ensemble des résidences principales", 
+                      RP[RP$COMMUNE == "75056" & RP$CATL == "1" & RP$TYPL_moda != "Autres",], 
+                      '2019'  = weighted.mean(as.numeric(as.character(NBPI)), IPONDL, na.rm=T))) %>%
+  rename(' ' = TYPL_moda) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, dec_mark = ",", decimals = 1)
+```
+</div>
+\fi
+
+A Paris, sur les seules résidences principales, les maisons comportent plus de pièces que les appartements, presque 2 pièces de plus en moyenne. Etant donné que la majorité des logements est constituée par des appartements, la moyenne de l'ensemble des résidences principales est la même que celle des appartements.   
+    
+  
+Etudions maintenant les résidences principales et l'ancienneté d'emménagement selon le statut d'occupation.  Attention, ici il faut procéder en plusieurs étapes : d'abord créer un tableau donnant la répartition en nombre et en pourcentage des ménages par statut d'occupation, puis créer un second tableau donnant la moyenne de l'ancienneté d'emménagement en années par statut d'occupation, puis fusionner ces deux tableaux.
+
+```{r echo=FALSE}
+t1 <- RP %>% 
+  filter(COMMUNE == "75056" & CATL=="1" & STOCD != "0") %>% 
+  mutate(st_occupation=case_when(STOCD=="10" ~ "Propriétaire",
+                                 STOCD %in% c("21","22","23") ~ "Locataire",
+                                 STOCD=="30" ~ "Logé gratuitement"),
+         st_occupation=fct_relevel(st_occupation, c("Propriétaire", 
+                                                    "Locataire",
+                                                    "Logé gratuitement"))) %>% 
+  count(st_occupation, wt=IPONDL) %>% 
+  mutate(Pourcentage=round(prop.table(n)*100, 1)) %>%
+  adorn_totals("row") %>% 
+  rename(Nombre=n) 
+
+t2 <- RP %>%
+  filter(COMMUNE == "75056" & CATL=="1" & !STOCD %in% c("0", "ZZ")) %>%
+  mutate(st_occupation=case_when(STOCD=="10" ~ "Propriétaire",
+                                 STOCD %in% c("21","22","23") ~ "Locataire",
+                                 STOCD=="30" ~ "Logé gratuitement"),
+         st_occupation=fct_relevel(st_occupation, c("Propriétaire", 
+                                                    "Locataire",
+                                                    "Logé gratuitement"))) %>% 
+  group_by(st_occupation) %>%
+  summarise(anc_moy = weighted.mean(ANEM, IPONDL, na.rm=T)) %>%
+  bind_rows(summarise(st_occupation = "Total", RP[RP$COMMUNE == "75056" & RP$CATL=="1" & !RP$STOCD %in% c("0", "ZZ"),], 
+                      anc_moy = weighted.mean(ANEM, IPONDL, na.rm=T))) %>%
+  mutate(anc_moy=round(anc_moy, 1)) %>% 
+  rename("Ancienneté moyenne d'emménagement en année(s)"=anc_moy)
+
+t1 %>% left_join(t2, by=join_by(st_occupation)) %>% 
+  rename("Statut d'occupation"=st_occupation) %>% 
+  gt()  %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+
+<div class="solution-exo">
+```{r eval=FALSE}
+t1 <- RP %>% 
+  filter(COMMUNE == "75056" & CATL=="1" & STOCD != "0") %>% 
+  mutate(st_occupation=case_when(STOCD=="10" ~ "Propriétaire",
+                                 STOCD %in% c("21","22","23") ~ "Locataire",
+                                 STOCD=="30" ~ "Logé gratuitement"),
+         st_occupation=fct_relevel(st_occupation, c("Propriétaire", 
+                                                    "Locataire",
+                                                    "Logé gratuitement"))) %>% 
+  count(st_occupation, wt=IPONDL) %>% 
+  mutate(Pourcentage=round(prop.table(n)*100, 1)) %>%
+  adorn_totals("row") %>% 
+  rename(Nombre=n) 
+
+t2 <- RP %>%
+  filter(COMMUNE == "75056" & CATL=="1" & !STOCD %in% c("0", "ZZ")) %>%
+  mutate(st_occupation=case_when(STOCD=="10" ~ "Propriétaire",
+                                 STOCD %in% c("21","22","23") ~ "Locataire",
+                                 STOCD=="30" ~ "Logé gratuitement"),
+         st_occupation=fct_relevel(st_occupation, c("Propriétaire", 
+                                                    "Locataire",
+                                                    "Logé gratuitement"))) %>% 
+  group_by(st_occupation) %>%
+  summarise(anc_moy = weighted.mean(ANEM, IPONDL, na.rm=T)) %>%
+  bind_rows(summarise(st_occupation = "Total", RP[RP$COMMUNE == "75056" & RP$CATL=="1" & !RP$STOCD %in% c("0", "ZZ"),], 
+                      anc_moy = weighted.mean(ANEM, IPONDL, na.rm=T))) %>%
+  mutate(anc_moy=round(anc_moy, 1)) %>% 
+  rename("Ancienneté moyenne d'emménagement en année(s)"=anc_moy)
+
+t1 %>% left_join(t2, by=join_by(st_occupation)) %>% 
+  rename("Statut d'occupation"=st_occupation) %>% 
+  gt()  %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+</div>
+\fi
+
+Il y a donc 1/3 de propriétaires à Paris quand on se concentre sur les résidences principales, et les propriétaires y sont présents depuis plus longtemps que les locataires : 18,2 ans en moyenne contre 10,3 ans.  
+  
+
+Enfin, on peut vouloir comparer la moyenne des pièces des appartements parisiens par arrondissement par exemple.  
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+RP %>% 
+  filter(COMMUNE == "75056" & CATL== "1" & TYPL_moda == "Appartement") %>% 
+  group_by(ARM) %>%
+  summarise(Moy_pieces = weighted.mean(as.numeric(as.character(NBPI)), IPONDL, na.rm=T)) %>%
+  bind_rows(summarise(ARM = "Ensemble des appartements", 
+                      RP[RP$COMMUNE == "75056" & RP$CATL == "1" & RP$TYPL_moda != "Appartement",], 
+                      Moy_pieces = weighted.mean(as.numeric(as.character(NBPI)), IPONDL, na.rm=T))) %>%
+  rename(Arrondissement=ARM, 'Nombre moyen de pièces'=Moy_pieces) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, dec_mark = ",", decimals = 1)
+```
+
+<div class="solution-exo">
+```{r eval=FALSE}
+RP %>% 
+  filter(COMMUNE == "75056" & CATL== "1" & TYPL_moda == "Appartement") %>% 
+  group_by(ARM) %>%
+  summarise(Moy_pieces = weighted.mean(as.numeric(as.character(NBPI)), IPONDL, na.rm=T)) %>%
+  bind_rows(summarise(ARM = "Ensemble des appartements", 
+                      RP[RP$COMMUNE == "75056" & RP$CATL == "1" & RP$TYPL_moda != "Appartement",], 
+                      Moy_pieces = weighted.mean(as.numeric(as.character(NBPI)), IPONDL, na.rm=T))) %>%
+  rename(Arrondissement=ARM, 'Nombre moyen de pièces'=Moy_pieces) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, dec_mark = ",", decimals = 1)
+```
+</div>
+\fi
+  
+  
+Ainsi, si l'on veut créer des tableaux de répartition à une seule variable, on peut utiliser ces procédures qui se structurent toujours de la même façon. Au lieu de faire un copié-collé du code et de changer le nom des variables, autrement dit pour systématiser nos procédures, une astuce est de créer ses propres fonctions. C'est ce que nous allons étudier maintenant.
+
+
+
+
+
+
+
+
+
+
+
+```{r eval=FALSE, include=FALSE}
+RP %>% 
+  filter(COMMUNE == "75056" & !SANI %in% c("X","Y","Z")) %>% 
+  mutate(SANI_moda=case_when(SANI=="0" ~ "Ni baignoire, ni douche",
+                             SANI=="1" ~ "Baignoire ou douche hors pièce réservée",
+                             SANI=="2" ~ "Salle de bain avec baignoire ou douche")) %>% 
+  count(SANI_moda, wt=IPONDL) %>% 
+  mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+t3 <- RP %>% 
+       mutate(SANI_moda=case_when(SANI=="0" ~ "Ni baignoire, ni douche",
+                             SANI=="1" ~ "Baignoire ou douche hors pièce réservée",
+                             SANI=="2" ~ "Salle de bain avec baignoire ou douche")) %>% 
+       tableau_bis(data=RP, COMMUNE == "75056" & !SANI %in% c("X","Y","Z"),
+              var_quali=SANI_moda) %>% 
+       select(SANI_moda=="Salle de bain avec baignoire ou douche") %>% 
+       gt() %>%
+       fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+# mes_filtres <- c("COMMUNE == '75056'", "!SANI %in% c('X','Y','Z')")
+# tableau_bis(RP, mes_filtres, SANI) %>% 
+#   gt() %>% 
+#   fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+RP %>% 
+  filter(COMMUNE == "75056" & !CHFL %in% c("X","Y","Z")) %>% 
+  count(CHFL, wt=IPONDL) %>% 
+  mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+# RP %>% filter(!CHFL %in% c("X","Y","Z")) %>%
+# tableau(filtre_com = "75056", var_quali=CHFL) %>%
+#   gt() %>%
+#   fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+RP %>%
+  filter(COMMUNE == "75056" & ANEMR != "99") %>%
+  mutate(anc_emm=case_when(ANEMR == "0" ~ "Depuis moins de 2 ans",
+                           ANEMR == "1" ~ "De 2 à 4 ans",
+                           ANEMR == "2" ~ "De 5 à 9 ans",
+                           TRUE ~ "10 ans ou plus"),
+         anc_emm = fct_relevel(anc_emm, c("Depuis moins de 2 ans", "De 2 à 4 ans",
+                                          "De 5 à 9 ans", "10 ans ou plus"))) %>% 
+  count(anc_emm, wt=IPONDL) %>% 
+  mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+# RP %>% filter(ANEMR != "99") %>%
+#   mutate(anc_emm=case_when(ANEMR == "0" ~ "Depuis moins de 2 ans",
+#                            ANEMR == "1" ~ "De 2 à 4 ans",
+#                            ANEMR == "2" ~ "De 5 à 9 ans",
+#                            TRUE ~ "10 ans ou plus"),
+#          anc_emm = fct_relevel(anc_emm, c("Depuis moins de 2 ans", "De 2 à 4 ans",
+#                                           "De 5 à 9 ans", "10 ans ou plus"))) %>% 
+# tableau(filtre_com="75056", var_quali=anc_emm) %>%
+#   gt() %>%
+#   fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+RP %>%
+  filter(COMMUNE == "75056" & ANEMR != "99") %>%
+  mutate(anc_emm=case_when(ANEMR == "0" ~ "Depuis moins de 2 ans",
+                           ANEMR == "1" ~ "De 2 à 4 ans",
+                           ANEMR == "2" ~ "De 5 à 9 ans",
+                           TRUE ~ "10 ans ou plus"),
+         anc_emm = fct_relevel(anc_emm, c("Depuis moins de 2 ans", "De 2 à 4 ans",
+                                          "De 5 à 9 ans", "10 ans ou plus")),
+         nb_pieces=as.numeric(as.character(NBPI))) %>%
+  group_by(anc_emm) %>%
+  summarise(Np_pieces_moy = weighted.mean(nb_pieces, IPONDL, na.rm=T)) %>%
+  bind_rows(summarise(anc_emm = "Total", RP[RP$ANEMR != "99" & RP$COMMUNE == "75056",], Np_pieces_moy = weighted.mean(as.numeric(as.character(NBPI)), IPONDL, na.rm=T))) %>%
+  mutate(Np_pieces_moy=round(Np_pieces_moy, 1)) 
+
+RP %>%
+  filter(COMMUNE == "75056" & STOCD == "10") %>%
+  group_by(IRIS) %>%
+  summarise(nb_proprietaires = round(sum(IPONDL))) %>% 
+  get_summary_stats(nb_proprietaires)
+  #ggplot() + aes(x=nb_proprietaires) + geom_histogram(bins=50)
+```
+
