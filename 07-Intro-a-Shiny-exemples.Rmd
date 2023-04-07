@@ -1,0 +1,495 @@
+
+
+# La création d'une application Shiny "pas à pas" avec l'une de nos bases de données{#c07-Intro-a-Shiny-exemples}
+<div align="justify">
+On va utiliser la base du RP sur laquelle nous travaillons depuis le début, mais en créant des tableaux de contingence à partir des fonctions sauvegardées dans la section précédente.
+
+
+## Application vide
+Faisons tourner une application vide et ajoutons au fur et à mesure les éléments qui construirons une vraie application : 
+```{r eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+                )
+
+server <- function(input, 
+                   output) {
+  
+                   }
+
+shinyApp(ui = ui, server = server)
+```
+
+## Ajout d'un titre et d'un widget
+Ajoutons un titre et un widget, par exemple une barre "slider" : 
+```{r eval=FALSE}
+#library(shiny)
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Nombre de propriétaires par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "Classes",
+                  label = "Nombres de classes : ",
+                  min = 1,
+                  max = 50,
+                  value = 25)
+      ),
+    
+  mainPanel(
+    plotOutput("histPlot")
+    
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+}
+
+shinyApp(ui = ui, server = server)
+```
+  
+
+## Ajout d'un graphique
+Ajoutons un graphique ; il faut pour cela charger la base de données sur laquelle nous allons travailler ; pour l'exemple ici, nous allons créer un tableau de contingence à partir des fonctions créées précédemment (que l'on appelle donc) et donnant le nombre de propriétaires par commune de l'Île-de-France, en considérant les arrondissements de Paris comme des communes : 
+```{r}
+# appel fonctions enregistrées
+source("fonctions/fonctions.R")
+
+# création de 2 tables de données
+tab_proprio_commune_horsparis <- somme(RP, COMMUNE != "75056" & STOCD == "10", 
+                                       var_gpe=COMMUNE, nom_var=nb_proprio,
+                                       var1=IPONDL)
+tab_proprio_arrdt_paris <- somme(RP, COMMUNE == "75056" & STOCD == "10", 
+                                 var_gpe=ARM, nom_var=nb_proprio,
+                                 var1=IPONDL)
+
+# on fusionne les 2 tables précédentes
+tab_proprio <- tab_proprio_arrdt_paris %>% 
+  rename(COMMUNE = ARM) %>% 
+  rbind(tab_proprio_commune_horsparis)
+
+# pour supprimer les tables intermédiaires
+rm(tab_proprio_commune_horsparis, tab_proprio_arrdt_paris)
+```
+
+
+```{r eval=FALSE}
+#library(shiny)
+
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Nombre de propriétaires par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput(inputId = "classes",
+                        label = "Nombres de classes",
+                        min = 1,
+                        max = 50,
+                        value = 25)
+        ),
+
+        # Graphe montré à l'utilisateur
+        mainPanel(
+           plotOutput("histPlot")
+        )
+  )
+)
+
+server <- function(input, 
+                   output) {
+output$histPlot <- renderPlot({
+  tab_proprio %>%  
+    ggplot() + aes(x=nb_proprio) + geom_histogram(bins=25)
+})
+
+  }
+
+shinyApp(ui = ui, server = server)
+```
+  
+
+
+On a bien maintenant le graphique qui s'affiche mais lorsqu'on change le nombre de classes dans la barre slider, rien ne se passe... C'est normal, nous n'avons pas encore introduit de réactivité dans l'application.  
+
+Pour cela, il va falloir modifier le code dans la fonction **`server`** et ainsi mettre en lien des informations indiquées dans la fonction **`UI`** avec les arguments utilisés dans le graphique développé dans la fonction **`server`**. Pour l'instant, on veut pouvoir modifier le nombre de classes, l'argument pour cela dans la fonction `geom_histogram()` dans le `ggplot()` est `bins=` ; on a indiqué '100' jusqu'ici ; maintenant il faut lui indiquer le nombre que l'utilisateur va lui-même indiquer dans la barre slider ; cela se fait avec l'argument `input$...`, les "..." devant être remplacés par le nom que l'on a donné à l'`inputId` dans le `sliderInput()`, donc ici "classes".
+```{r eval=FALSE}
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Nombre de propriétaires par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "classes",
+                  label = "Nombres de classes",
+                  min = 1,
+                  max = 50,
+                  value = 25)
+    ),
+    
+    # Graphe montré à l'utilisateur
+    mainPanel(
+      plotOutput("histPlot")
+    )
+  )
+)
+
+  server <- function(input, output) {
+  
+    output$histPlot <- renderPlot({
+      tab_proprio %>%  
+        ggplot() + aes(x=nb_proprio) + geom_histogram(bins=input$classes)
+    })
+    
+  }
+  
+shinyApp(ui = ui, server = server)
+```
+  
+
+  
+Ça y est, maintenant lorsqu'on modifie le curseur dans la barre slider, le graphique change !
+  
+
+## Modification du graphique : filtrer selon une variable
+Essayons ensuite d'ajouter un filtre sur le département pour n'avoir que la distribution du nombre de propriétaires pour un département donné.  Comme on n'a pas de variable de département, il faut la créer, ce que l'on peut faire assez facilement à partir des deux premiers chiffres de la commune, et ensuite il suffit d'ajouter un filtre sur cette nouvelle variable créée.   
+
+De même, on peut procéder par étapes : présentons d'abord le graphique pour le seul département de la Seine-et-Marne (77) car c'est là où il y a le plus de communes.
+```{r eval=FALSE}
+
+# Création de la variable et donc remplacement de la table de données
+tab_proprio <- tab_proprio %>%
+  mutate(dept=substr(COMMUNE, 1,2))
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Nombre de propriétaires par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "classes",
+                  label = "Nombres de classes",
+                  min = 1,
+                  max = 50,
+                  value = 25)
+    ),
+    
+    # Graphe montré à l'utilisateur
+    mainPanel(
+      plotOutput("histPlot")
+    )
+  )
+)
+
+  server <- function(input, output) {
+  
+    output$histPlot <- renderPlot({
+      tab_proprio %>%  
+        filter(dept == "77") %>% 
+        ggplot() + aes(x=nb_proprio) + geom_histogram(bins=input$classes)
+    })
+    
+  }
+  
+shinyApp(ui = ui, server = server)
+```
+
+
+  
+Ensuite, donnons la possibilité à l'utilisateur de choisir le département qu'il veut : il faut pour cela ajouter un widget dans la fonction **`UI`** ; comme on ne veut laisser qu'un choix de département à l'utilisateur, on peut utiliser un "Radio buttons" ; on regarde alors quels sont les arguments de la fonction `radioButtons()`, on  voit qu'il faut indiquer les choix possibles donc ici la liste des départements dans `choices = ` et indiquer une valeur par défaut dans `selected = ` ; pour cela, on peut indiquer la variable correspondante `choices = tab_proprio$dept`, mais attention si on laisse comme ceci, on va avoir une répétition de noms des départements comme lorsqu'on ouvre la table, ce qu'on veut c'est uniquement les niveaux... deux possibilités alors : soit créer avant l'appel de la fonction **`UI`** une variable avec simplement les niveaux de cette variable ; soit passer par la fonction `unique()` dans l'argument donné. 
+```{r eval=FALSE}
+
+# Quelques modifications du fichier initial de données
+# tab_proprio <- tab_proprio %>% mutate(dept=as.factor(dept))
+# nom_dept <- levels(tab_proprio$dept)
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Nombre de propriétaires par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "classes",
+                  label = "Nombres de classes",
+                  min = 1,
+                  max = 50,
+                  value = 25),
+      radioButtons(inputId = "dept", 
+                   label = "Choix du département",
+                   choices = unique(tab_proprio$dept), #ou indiquer 'nom_dept'
+                   selected = "77"),
+    ),
+    
+    # Graphe montré à l'utilisateur
+    mainPanel(
+      plotOutput("histPlot")
+    )
+  )
+)
+
+  server <- function(input, output) {
+  
+    output$histPlot <- renderPlot({
+      tab_proprio %>%  
+        filter(dept == "77") %>% 
+        ggplot() + aes(x=nb_proprio) + geom_histogram(bins=input$classes)
+    })
+    
+  }
+  
+shinyApp(ui = ui, server = server)
+```
+  
+   
+Enfin, là encore, il faut introduire la réactivité et "connecter" la partie **`UI`** et la partie **`server`**, en remplaçant le nom du département dans le `filter(dept == )` par le nom de l'`inputId` indiqué dans notre "radioButtons" : 
+```{r eval=FALSE}
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Nombre de propriétaires par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "classes",
+                  label = "Nombres de classes",
+                  min = 1,
+                  max = 50,
+                  value = 25),
+      radioButtons(inputId = "dept", 
+                   label = "Choix du département",
+                   choices = unique(tab_proprio$dept), #ou indiquer 'nom_dept'
+                   selected = "77"),
+    ),
+    
+    # Graphe montré à l'utilisateur
+    mainPanel(
+      plotOutput("histPlot")
+    )
+  )
+)
+
+  server <- function(input, output) {
+  
+    output$histPlot <- renderPlot({
+      tab_proprio %>%  
+        filter(dept == input$dept) %>% 
+        ggplot() + aes(x=nb_proprio) + geom_histogram(bins=input$classes)
+    })
+    
+  }
+  
+shinyApp(ui = ui, server = server)
+```
+
+On peut voir que le nombre de classes maximum de 50 n'est absolument pas pertinent pour certains départements qui ont peu de communes, c'est quelque chose qui pourra être modifiée bien sûr ultérieurement.  
+  
+  
+
+
+## Modification du graphique : selon une variable au choix parmi deux
+On peut maintenant vouloir montrer un graphique (toujours le même histogramme) selon au choix deux variables : soit le nombre de propriétaires, soit le nombre de locataires. Il faut donc créer cette dernière variable de la même façon que précédemment pour les propriétaires, et l'ajouter au tableau précédent (qu'on renommera puisqu'il ne concerne plus les seuls propriétaires...). 
+
+```{r}
+tab_locataires_commune_horsparis <- RP %>% 
+  filter(COMMUNE != "75056") %>% 
+  somme(STOCD %in% c("21","22","23"), var_gpe=COMMUNE, 
+        nom_var=nb_locataires, var1=IPONDL) %>% 
+  mutate(nb_locataires=round(nb_locataires, 0))
+tab_locataires_arrdt_paris <- RP %>% 
+  filter(COMMUNE == "75056") %>% 
+  somme(STOCD %in% c("21","22","23"), var_gpe=ARM, 
+        nom_var=nb_locataires, var1=IPONDL) %>% 
+  mutate(nb_locataires=round(nb_locataires, 0))
+tab_st_occ <- tab_locataires_arrdt_paris %>% 
+  rename(COMMUNE = ARM) %>% 
+  rbind(tab_locataires_commune_horsparis) %>% 
+  left_join(tab_proprio, by=join_by("COMMUNE"))
+# pour supprimer les tables intermédiaires
+rm(tab_locataires_commune_horsparis, tab_locataires_arrdt_paris)
+```
+
+
+Procédons comme précédemment : créons un nouveau widget avec par exemple `selectInput()`, dont l'`inputID` sera "variable" et l'argument `choices = ` donne les deux variables choisies ; pour cela, on peut utiliser une fonction `list()` et indiquer le nom des deux variables, soient `total_meuros` et `nombre_entreprises`.  
+Et ensuite, dans la fonction **server**, remplaçons `x=total_meuros` par `x=input$variable` et voyons si cela marche !  
+
+```{r eval=FALSE}
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Statut d'occupation des logements par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "classes",
+                  label = "Nombres de classes",
+                  min = 1,
+                  max = 50,
+                  value = 25),
+      radioButtons(inputId = "dept", 
+                   label = "Choix du département",
+                   choices = unique(tab_st_occ$dept), #ou indiquer 'nom_dept'
+                   selected = "77"),
+      selectInput(inputId = "variable", 
+                  label = "Choix de la variable", 
+                  choices = list("nb_proprio", "nb_locataires"), 
+                  selected = "nb_proprio"),
+    ),
+    
+    # Graphe montré à l'utilisateur
+    mainPanel(
+      plotOutput("histPlot")
+    )
+  )
+)
+
+  server <- function(input, output) {
+  
+    output$histPlot <- renderPlot({
+      tab_st_occ %>%  
+        filter(dept == input$dept) %>% 
+        ggplot() + aes(x=input$variable) + 
+                   geom_histogram(bins=input$classes)
+    })
+    
+  }
+  
+shinyApp(ui = ui, server = server)
+```
+
+Et non cela ne fonctionne pas. En réalité, comme nous avons utilisé dans `choices = ` une fonction `list()` qui fait appel à des variables de type caractère, la fonction `ggplot() + aes(x = )` ne comprend pas que la variable appelée est bien une variable numérique (son contenu), elle croît en quelque sorte que c'est une variable caractère. Il faut donc dire à la fonction `ggplot()` ici que le nom de la variable est de type "string" mais qu'elle comporte bien des valeurs numériques donc compatible avec un histogramme : pour cela, au lieu de `ggplot() + aes(x = )`, il faut utiliser `ggplot() + aes_string(x = )`.  
+
+Réessayons : 
+```{r eval=FALSE}
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Statut d'occupation des logements par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "classes",
+                  label = "Nombres de classes",
+                  min = 1,
+                  max = 50,
+                  value = 25),
+      radioButtons(inputId = "dept", 
+                   label = "Choix du département",
+                   choices = unique(tab_st_occ$dept), #ou indiquer 'nom_dept'
+                   selected = "77"),
+      selectInput(inputId = "variable", 
+                  label = "Choix de la variable", 
+                  choices = list("nb_proprio", "nb_locataires"), 
+                  selected = "nb_proprio"),
+    ),
+    
+    # Graphe montré à l'utilisateur
+    mainPanel(
+      plotOutput("histPlot")
+    )
+  )
+)
+
+  server <- function(input, output) {
+  
+    output$histPlot <- renderPlot({
+      tab_st_occ %>%  
+        filter(dept == input$dept) %>% 
+        ggplot() + aes_string(x=input$variable) + 
+                   geom_histogram(bins=input$classes)
+    })
+    
+  }
+  
+shinyApp(ui = ui, server = server)
+```
+  
+  
+  
+Un autre exemple avec une boîte à moustache plutôt qu'un histogramme : 
+```{r eval=FALSE}
+
+# Définition UI et Server de l'application Shiny
+ui <- fluidPage(
+  # Titre de l'application
+  titlePanel("Statut d'occupation des logements par commune d'Île-de-france"),
+  
+  # Définition du Widget - ici un slider en vue de construire un histogramme
+  sidebarLayout(
+    sidebarPanel(
+      radioButtons(inputId = "dept", 
+                   label = "Choix du département",
+                   choices = unique(tab_st_occ$dept), #ou indiquer 'nom_dept'
+                   selected = "77"),
+      selectInput(inputId = "variable", 
+                  label = "Choix de la variable", 
+                  choices = list("nb_proprio", "nb_locataires"), 
+                  selected = "nb_proprio"),
+    ),
+    
+    # Graphe montré à l'utilisateur
+    mainPanel(
+      plotOutput("histPlot")
+    )
+  )
+)
+
+  server <- function(input, output) {
+    
+    # Base réactive
+    tab_st_occ_react <- reactive({
+      tab_st_occ %>%  
+      filter(dept == input$dept)
+    })
+    
+    output$histPlot <- renderPlot({
+      tab_st_occ_react() %>%  
+        ggplot() + aes_string(y = input$variable) + 
+        geom_boxplot() + coord_flip() +
+        scale_y_continuous(limits=c(0,quantile(tab_st_occ_react()[[input$variable]], 0.75)*2)) +
+        labs(caption="Rq : les valeurs supérieures à 2 fois le Q3 de la distribution ne sont pas affichées sur le graphique")
+    })
+    
+  }
+  
+shinyApp(ui = ui, server = server)
+```
+
+
+
+
+
+
+
+
+```{r eval=FALSE, warning=FALSE, include=FALSE}
+  tab_st_occ %>%  
+  filter(dept == "78") %>% 
+  ggplot() + aes(y = nb_locataires) + 
+  geom_boxplot() + coord_flip() +
+  scale_y_continuous(limits=c(0,quantile(tab_st_occ[tab_st_occ$dept=="78",]$nb_locataires, 0.75)*2))
+
+```
+

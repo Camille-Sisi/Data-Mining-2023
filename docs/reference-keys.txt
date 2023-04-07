@@ -23,3 +23,9 @@ la-partie-ui
 la-partie-server
 la-réactivité
 un-exemple-avec-le-code-du-script-par-défaut
+c07-Intro-a-Shiny-exemples
+application-vide
+ajout-dun-titre-et-dun-widget
+ajout-dun-graphique
+modification-du-graphique-filtrer-selon-une-variable
+modification-du-graphique-selon-une-variable-au-choix-parmi-deux
