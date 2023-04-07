@@ -335,3 +335,230 @@ RP %>%
   #ggplot() + aes(x=nb_proprietaires) + geom_histogram(bins=50)
 ```
 
+
+
+## Systématiser nos procédures : construire une fonction
+<div align="justify">
+
+Pour ré-utiliser un code de façon plus automatique, créer des fonctions est très utile (et on peut même les stocker dans un fichier `.r` pour les réutiliser plus tard pour une autre étude).   
+
+L'idée est qu'à partir d'un bloc d'instructions ou de lignes de codes, on l'intègre dans une fonction qui portera un nom et qui pourra être appliquée sur les paramètres que l'on veut (table/objet différent, variables différentes) et qui nous retournera une valeur en sortie (qu'il faut préciser donc). Par exemple : 
+```{r eval=FALSE}
+# Exemple fonction avec 3 arguments
+nom_fonction <- function(data, var1, var2) {
+  
+  expression...  # Ce que la fonction fait
+  
+  return()  # Optionnel, mais la plupart du temps utilisé (!), 
+               # pour sortir le résultat de la fonction
+  
+}
+
+# L'appel de la fonction devra ainsi préciser la table de données sur laquelle 
+# l'appliquer et les autres arguments : 
+nom_fonction(data = nom_de_ma_table , var1 = nom_de_ma_variable1,  
+             var2 = nom_de_ma_variable2)
+
+# De plus, on pourra créer un nouvel objet (ici "tab_var") pour stocker la table 
+# qui est en valeur de sortie de la fonction : 
+tab_var <- nom_fonction(data = nom_de_ma_table , var1 = nom_de_ma_variable1,
+                        var2 = nom_de_ma_variable2)
+```
+Les arguments doivent donc être précisés en entrée de notre fonction, si on ne les précise pas cela nous retournera une erreur... à moins que l'on ait spécifié des valeurs par défaut (ce qui peut être utile si on utilise souvent les mêmes paramètres, par exemple la même base de données) ; il peut y avoir autant d'arguments que l'on souhaite.  
+
+Si l'on utilise le langage tidyverse, il faut connaître quelques petits "trucs" pour écrire une fonction. Le schéma suivant réalisé par Julien Barnier du CNRS nous sera très utile.  
+
+![Pour une fonction utilisant le langage tidyverse](images/Schéma tidyverse functions_Julien Barnier.jpg)
+<div align="center">
+*Source* : Julien Barnier, <a href="https://twitter.com/lapply/status/1493908215796535296?s=20&t=p4aYIEV4GsGS3TGftPa0Nw" target="_blank">https://twitter.com/lapply/status/1493908215796535296?s=20&t=p4aYIEV4GsGS3TGftPa0Nw</a>.  
+   
+
+<div align="justify"> 
+Vous trouverez également des informations utiles <a href="https://thinkr.fr/comment-creer-des-fonctions-dans-le-tidyverse-avec-la-tidyeval-et-le-stash-stash/" target="_blank">ici</a> ou <a href="https://www.vishalkatti.com/posts/2021-07-17-programmingwithdplyr/" target="_blank">là</a>.  
+
+
+On peut d'abord créer une fonction reprenant le code précédent pour la construction de tableau. On l'appelle `tableau`, et on lui donne comme arguments "data", "filtre_com", "var_quali", "pond" et "nom_var_quali". 
+
+Dans le langage tidyverse, au sein d'une fonction, il faut appeler une variable avec des doubles-accolades `{{  }}`.  
+
+Si l'on utilise une fonction `summarise()`, une autre subtilité à connaître est que cette syntaxe `summarise({{ nom_var }} = mean({{ var }}, na.rm=TRUE))` ne sera pas reconnue, car il faut indiquer non pas un "=" mais un ":=" pour que la fonction puisse être lue lorsque le nom donné à la variable est de type caractère ou "string".    
+
+Enfin, il ne faut pas oublier de retourner un objet en sortie avec `return()`.   
+   
+   
+Essayez donc de créer une fonction `tableau()`, reprenant le premier code de la section précédente et remise ci-dessous pour information : 
+```{r}
+RP %>% 
+  filter(COMMUNE == "75056") %>% 
+  count(TYPL_moda, wt=IPONDL) %>% 
+  mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n, 'Type de logement'=TYPL_moda) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+
+<div class="solution-exo">
+```{r message=FALSE}
+# library(tidyverse)
+# library(janitor)
+# library(gt)
+tableau <- function(data, filtre_com, var_quali, pond=IPONDL, nom_var_quali){
+  
+  tab <- data %>% 
+    filter(COMMUNE == filtre_com) %>% 
+    count({{ var_quali }}, wt={{ pond }}) %>% 
+    mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+    adorn_totals("row") %>% 
+    rename(Effectif=n, {{nom_var_quali}}:={{ var_quali }}) 
+  
+  return(tab)
+  
+}
+```
+</div>
+\fi
+
+On peut vérifier qu'on obtient bien la même chose :
+```{r}
+tableau(data=RP, filtre_com="75056", var_quali=TYPL_moda, nom_var_quali="Type de logement") %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+```
+
+
+
+<!--Et on peut tester cette fonction, par exemple pour calculer la proposition de logements HLM parmi les résidences principales dans Paris :  -->
+```{r eval=FALSE, include=FALSE}
+RP %>% 
+  filter(CATL== "1") %>% 
+  mutate(log_HLM=case_when(HLML=="1" ~ "Logement HLM",
+                           HLML=="2" ~ "Logement non HLM")) %>% 
+  tableau(filtre_com="75056", var_quali=log_HLM, nom_var_quali="Type de logement") %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+# OU :
+RP %>% 
+  filter(COMMUNE == "75056" & CATL=="1" & STOCD != "0") %>% 
+  mutate(st_occupation=case_when(STOCD=="10" ~ "Propriétaire",
+                                 STOCD %in% c("21","22","23") ~ "Locataire",
+                                 STOCD=="30" ~ "Logé gratuitement"),
+         st_occupation=fct_relevel(st_occupation, c("Propriétaire", 
+                                                    "Locataire",
+                                                    "Logé gratuitement")),
+         log_HLM=case_when(HLML=="1" ~ "Logement HLM",
+                           HLML=="2" ~ "Logement non HLM")) %>% 
+  group_by(st_occupation) %>% 
+  count(log_HLM, wt=IPONDL)
+
+  mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+  adorn_totals("row") %>% 
+  rename(Effectif=n) 
+  
+
+Tabcr_pctcol <- function(data, var1, var2, pond=IPONDL, nom_var1){
+  tabcroisefin <- data %>% group_by({{var2}})  %>% 
+    count({{var1}}, wt={{pond}}) %>% pivot_wider(names_from = {{var1}}, values_from = "n", names_prefix = paste0(nom_var1,"_")) %>% 
+    adorn_totals(c("row",'col')) %>% adorn_percentages("col") %>% adorn_pct_formatting(digits=2) 
+  return(tabcroisefin)
+}
+
+RP %>% 
+  filter(COMMUNE=="75056" & CATL=="1" & STOCD != "0" & TYPL_moda != "Autres") %>% 
+  mutate(st_occupation=case_when(STOCD=="10" ~ "Propriétaire",
+                                 STOCD %in% c("21","22","23") ~ "Locataire",
+                                 STOCD=="30" ~ "Logé gratuitement"),
+         st_occupation=fct_relevel(st_occupation, c("Propriétaire", 
+                                                    "Locataire",
+                                                    "Logé gratuitement"))) %>% 
+  Tabcr_pctcol(var1=TYPL_moda, var2=st_occupation, nom_var1="") %>% 
+  rename("Statut d'occupation"=st_occupation, "Maison"='_Maison', "Appartement"='_Appartement') %>%  
+  gt()
+  
+```
+
+
+
+
+```{r eval=FALSE, include=FALSE}
+tableau_bis <- function(data, vars_filtre, var_quali, pond=IPONDL){
+  
+  text_filtre <- paste0("(", vars_filtre, ")", collapse = " & ")
+  
+  tab1 <- data %>% 
+    filter(eval(parse(text = text_filtre))) %>% 
+    count({{ var_quali }}, wt={{ pond }}) %>% 
+    mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+    adorn_totals("row") %>% 
+    rename(Effectif=n, Variable={{ var_quali }})
+  
+  return(tab1)
+  
+}
+
+mes_filtres <- c("COMMUNE == '75056'", "!SANI %in% c('X','Y')")
+tableau_bis(RP, mes_filtres, SANI) %>% 
+  gt() %>% 
+  fmt_number(columns = 2, sep_mark = " ", decimals = 0)
+
+# tableau_bis <- function(data, ..., var_quali, pond=IPONDL){
+#   
+#   tab <- data %>% 
+#     filter(...) %>% 
+#     count({{ var_quali }}, wt={{ pond }}) %>% 
+#     mutate(Pourcentage=prop.table(n)*100, Pourcentage=round(Pourcentage, 1)) %>% 
+#     adorn_totals("row") %>% 
+#     rename(Effectif=n, Variable={{ var_quali }}) 
+#   
+#   return(tab)
+#   
+# }
+
+```
+
+
+
+Essayez d'écrire une seconde fonction `somme()` permettant de systématiser le code suivant qui donne un tableau de contingence du nombre de propriétaires par IRIS (cela nous servira pour plus tard...), en ajoutant une fonction de filtre qui peut contenir plusieurs variables. Pour cela, on va utiliser l'argument "..." (lire "dot") : cet argument est très pratique si l'on ne sait pas combien il y aura de variable(s) dans la fonction à laquelle elle s'applique, c'est-à-dire autant 0 variable, 1 variable ou plus d'une variable ; mais elle peut aussi être "dangereuse" si on ne se souvient plus qu'on l'a créée et/ou si on ne fait pas attention à bien remplir les autres arguments avec les noms correspondants.   
+
+On va également introduire la fonction `group_by()` pour avoir les tableaux de contingence par IRIS.  
+```{r}
+RP %>%
+  filter(COMMUNE == "75056" & STOCD == "10") %>%
+  group_by(IRIS) %>%
+  summarise(nb_proprietaires = sum(IPONDL)) %>% 
+  mutate(nb_proprietaires=round(nb_proprietaires, 0))
+```
+
+<div class="solution-exo">
+```{r}
+somme <- function(data, ..., var_gpe, nom_var, var1){
+  
+  som_1 <- data %>% 
+    filter(...) %>% 
+    group_by({{var_gpe}}) %>% 
+    summarise({{nom_var}}:=sum({{var1}}, na.rm=T)) %>% 
+    mutate({{nom_var}}:=round({{nom_var}}, 0))
+  
+  return(som_1)
+  
+}
+```
+</div>
+\fi 
+
+Vérifions :
+```{r}
+somme(data=RP, COMMUNE == "75056" & STOCD == "10", 
+      var_gpe=IRIS, nom_var=nb_proprietaires, var1=IPONDL) 
+```
+
+
+La création de fonctions est donc très utile pour avoir un code plus efficace ; il faut toutefois réfléchir à son usage avant de la créer pour savoir à quel point il faut systématiser les procédures utilisées, certains éléments devant être laissés probablement en-dehors de la fonction, comme dans l'exemple précédent le fait d'arrondir les chiffres. Il faut par ailleurs toujours vérfier, sur un ou deux exemples, que la fonction fonctionne bien, c'est-à-dire donne les mêmes résultats que le code initial.  
+
+Pour pouvoir les réutiliser ultérieurement, on peut les réécrire dans un nouveau script qu'on enregistre dans un dossier de notre projet qu'on intitule "fonctions" ; il suffira ensuite d'appeler ce programme avec la fonction `source()` :
+```{r eval=FALSE}
+source("fonctions/fonctions.R")
+```
+
+

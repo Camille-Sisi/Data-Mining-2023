@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 4 Récapitulatig séance 1 - Data Wrangling | DATA MINING</title>
   <meta name="description" content="Titre du cours" />
-  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 4 Récapitulatig séance 1 - Data Wrangling | DATA MINING" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
 
 
-<meta name="date" content="2023-03-10" />
+<meta name="date" content="2023-04-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -177,6 +177,18 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="5" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html"><i class="fa fa-check"></i><b>5</b> Quelles questions intéressantes pour une “fouille de données” sur cette base ?</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html#caractéristiques-des-logements-de-la-commune-de-paris"><i class="fa fa-check"></i><b>5.1</b> Caractéristiques des logements de la commune de Paris</a></li>
+<li class="chapter" data-level="5.2" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html#systématiser-nos-procédures-construire-une-fonction"><i class="fa fa-check"></i><b>5.2</b> Systématiser nos procédures : construire une fonction</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 3 : Introduction à ShinyApp</b></span></li>
+<li class="chapter" data-level="6" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html"><i class="fa fa-check"></i><b>6</b> Les applications interactives avec Shiny App</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-structure-générale-dune-application-shiny"><i class="fa fa-check"></i><b>6.1</b> La structure générale d’une application Shiny</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-partie-ui"><i class="fa fa-check"></i><b>6.1.1</b> La partie “UI”</a></li>
+<li class="chapter" data-level="6.1.2" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-partie-server"><i class="fa fa-check"></i><b>6.1.2</b> La partie “Server”</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-réactivité"><i class="fa fa-check"></i><b>6.2</b> La réactivité</a></li>
+<li class="chapter" data-level="6.3" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#un-exemple-avec-le-code-du-script-par-défaut"><i class="fa fa-check"></i><b>6.3</b> Un exemple avec le code du script par défaut</a></li>
 </ul></li>
 </ul>
 
@@ -213,9 +225,6 @@ code span.wa { color: #bf0303; } /* Warning */
 <div id="enregistrement-des-tables" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Enregistrement des tables<a href="04-Récapitulatif.html#enregistrement-des-tables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Et voilà, on a bien “trituré” ces deux bases de données, maintenant on peut les enregistrer dans notre projet pour pouvoir les réutiliser lors de la prochaine séance.</p>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="04-Récapitulatif.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On enregistre la table de données pour l&#39;utiliser ultérieurement</span></span>
-<span id="cb76-2"><a href="04-Récapitulatif.html#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="at">object =</span> RP,  <span class="at">file =</span> <span class="st">&quot;data/menages2019.Rdata&quot;</span>)</span>
-<span id="cb76-3"><a href="04-Récapitulatif.html#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="at">object =</span> meta,  <span class="at">file =</span> <span class="st">&quot;data/menages2019_meta.Rdata&quot;</span>)</span></code></pre></div>
 
 </div>
 </div>

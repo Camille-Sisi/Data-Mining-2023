@@ -16,3 +16,10 @@ ce-quon-a-appris
 enregistrement-des-tables
 c05-Questions-fouille-donnees
 caractéristiques-des-logements-de-la-commune-de-paris
+systématiser-nos-procédures-construire-une-fonction
+c06-Intro-a-Shiny-theorique
+la-structure-générale-dune-application-shiny
+la-partie-ui
+la-partie-server
+la-réactivité
+un-exemple-avec-le-code-du-script-par-défaut
