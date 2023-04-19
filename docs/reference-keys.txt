@@ -29,3 +29,15 @@ ajout-dun-titre-et-dun-widget
 ajout-dun-graphique
 modification-du-graphique-filtrer-selon-une-variable
 modification-du-graphique-selon-une-variable-au-choix-parmi-deux
+c08-Ggplot-theorique
+présentation-générale-de-ggplot2
+les-aesthetics-ou-arguments-esthétiques
+les-géométries
+les-facettes
+les-statistiques
+les-coordonnées
+les-thèmes
+les-autres-options-graphiques-titres-échelles-des-axes-etc.
+code-minimal
+liens-utiles-pour-aller-plus-loin
+les-grands-principes-de-data-visualization
