@@ -5,7 +5,7 @@
 Reprenons la base de données sur les demandes de valeurs foncières sur laquelle vous avez travaillez pour le devoir n°1, et commençons notre analyse descriptive des informations présentes dans cette base en construisant des graphiques pour répondre à certaines questions relatives aux prix auquels se sont vendus les appartements et maisons de la région de Paris et sa petite couronne entre 2014 et 2021. On pourra ainsi étudier l'évolution dans le temps de ces prix.    
 On va repatir pour cela de la table de données sur laquelle vous avez travaillé avec M. Grasland .
 
-```{r include=FALSE}
+```{r}
 # Appelons la table si elle n'est pas déjà dans votre environnement
 dvf <- readRDS("data/dvfclean_V3.RDS")
 
