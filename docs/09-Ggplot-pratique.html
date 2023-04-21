@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 9 Le package Ggplot en pratiques | DATA MINING</title>
+  <meta name="description" content="Titre du cours" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 9 Le package Ggplot en pratiques | DATA MINING" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Titre du cours" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 9 Le package Ggplot en pratiques | DATA MINING" />
+  
+  <meta name="twitter:description" content="Titre du cours" />
+  
+
+<meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
+
+
+<meta name="date" content="2023-04-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="08-Ggplot-theorique.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Data Mining :  <em>Camille Signoretto</em></a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html"><i class="fa fa-check"></i>Présentation</a>
+<ul>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#à-propos-de-ce-document"><i class="fa fa-check"></i>À propos de ce document</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#prérequis"><i class="fa fa-check"></i>Prérequis</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#remerciements"><i class="fa fa-check"></i>Remerciements</a></li>
+<li class="chapter" data-level="" data-path="00-Presentation.html"><a href="00-Presentation.html#licence"><i class="fa fa-check"></i>Licence</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 1 : Data Wrangling</b></span></li>
+<li class="chapter" data-level="1" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html"><i class="fa fa-check"></i><b>1</b> Récupération de la base de données</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html#les-données-du-recensement-de-la-population-rp"><i class="fa fa-check"></i><b>1.1</b> Les données du Recensement de la Population (RP)</a></li>
+<li class="chapter" data-level="1.2" data-path="01-Base-de-donnees.html"><a href="01-Base-de-donnees.html#quelles-informations-intéressantes-dans-cette-base"><i class="fa fa-check"></i><b>1.2</b> Quelles informations intéressantes dans cette base ?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html"><i class="fa fa-check"></i><b>2</b> Manipulation de la base</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html#format-des-données---wide-ou-long"><i class="fa fa-check"></i><b>2.1</b> Format des données - WIDE ou LONG</a></li>
+<li class="chapter" data-level="2.2" data-path="02-Manipulation-base.html"><a href="02-Manipulation-base.html#sélectionner-un-champ-réduit-de-la-base-séparer-les-données"><i class="fa fa-check"></i><b>2.2</b> Sélectionner un champ réduit de la base, séparer les données</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html"><i class="fa fa-check"></i><b>3</b> Manipulation des variables</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#manipulation-des-variables-qualitatives"><i class="fa fa-check"></i><b>3.1</b> Manipulation des variables qualitatives</a></li>
+<li class="chapter" data-level="3.2" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#manipulation-des-variables-quantitatives"><i class="fa fa-check"></i><b>3.2</b> Manipulation des variables quantitatives</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#détecter-et-visualiser-les-valeurs-manquantes"><i class="fa fa-check"></i><b>3.2.1</b> Détecter et “visualiser” les valeurs manquantes</a></li>
+<li class="chapter" data-level="3.2.2" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#gérer-les-valeurs-manquantes"><i class="fa fa-check"></i><b>3.2.2</b> Gérer les valeurs manquantes</a></li>
+<li class="chapter" data-level="3.2.3" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#détecter-et-visualiser-les-valeurs-aberrantes"><i class="fa fa-check"></i><b>3.2.3</b> Détecter et “visualiser” les valeurs aberrantes</a></li>
+<li class="chapter" data-level="3.2.4" data-path="03-Manipulation-variables.html"><a href="03-Manipulation-variables.html#découper-en-classes-une-variable-quantitative"><i class="fa fa-check"></i><b>3.2.4</b> Découper en classes une variable quantitative</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html"><i class="fa fa-check"></i><b>4</b> Récapitulatig séance 1 - Data Wrangling</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#ce-quon-a-appris"><i class="fa fa-check"></i><b>4.1</b> Ce qu’on a appris</a></li>
+<li class="chapter" data-level="4.2" data-path="04-Récapitulatif.html"><a href="04-Récapitulatif.html#enregistrement-des-tables"><i class="fa fa-check"></i><b>4.2</b> Enregistrement des tables</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 2 : Data Mining - Analyse descriptive</b></span></li>
+<li class="chapter" data-level="5" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html"><i class="fa fa-check"></i><b>5</b> Quelles questions intéressantes pour une “fouille de données” sur cette base ?</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html#caractéristiques-des-logements-de-la-commune-de-paris"><i class="fa fa-check"></i><b>5.1</b> Caractéristiques des logements de la commune de Paris</a></li>
+<li class="chapter" data-level="5.2" data-path="05-Questions-fouille-donnees.html"><a href="05-Questions-fouille-donnees.html#systématiser-nos-procédures-construire-une-fonction"><i class="fa fa-check"></i><b>5.2</b> Systématiser nos procédures : construire une fonction</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 3 : Introduction à ShinyApp</b></span></li>
+<li class="chapter" data-level="6" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html"><i class="fa fa-check"></i><b>6</b> Les applications interactives avec Shiny App</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-structure-générale-dune-application-shiny"><i class="fa fa-check"></i><b>6.1</b> La structure générale d’une application Shiny</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-partie-ui"><i class="fa fa-check"></i><b>6.1.1</b> La partie “UI”</a></li>
+<li class="chapter" data-level="6.1.2" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-partie-server"><i class="fa fa-check"></i><b>6.1.2</b> La partie “Server”</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#la-réactivité"><i class="fa fa-check"></i><b>6.2</b> La réactivité</a></li>
+<li class="chapter" data-level="6.3" data-path="06-Intro-a-Shiny-theorique.html"><a href="06-Intro-a-Shiny-theorique.html#un-exemple-avec-le-code-du-script-par-défaut"><i class="fa fa-check"></i><b>6.3</b> Un exemple avec le code du script par défaut</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html"><i class="fa fa-check"></i><b>7</b> La création d’une application Shiny “pas à pas” avec l’une de nos bases de données</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html#application-vide"><i class="fa fa-check"></i><b>7.1</b> Application vide</a></li>
+<li class="chapter" data-level="7.2" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html#ajout-dun-titre-et-dun-widget"><i class="fa fa-check"></i><b>7.2</b> Ajout d’un titre et d’un widget</a></li>
+<li class="chapter" data-level="7.3" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html#ajout-dun-graphique"><i class="fa fa-check"></i><b>7.3</b> Ajout d’un graphique</a></li>
+<li class="chapter" data-level="7.4" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html#modification-du-graphique-filtrer-selon-une-variable"><i class="fa fa-check"></i><b>7.4</b> Modification du graphique : filtrer selon une variable</a></li>
+<li class="chapter" data-level="7.5" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html#modification-du-graphique-selon-une-variable-au-choix-parmi-deux"><i class="fa fa-check"></i><b>7.5</b> Modification du graphique : selon une variable au choix parmi deux</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 4 : Data Visualization</b></span></li>
+<li class="chapter" data-level="8" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html"><i class="fa fa-check"></i><b>8</b> Data Visualization et Ggplot2 : aspects théoriques</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#présentation-générale-de-ggplot2"><i class="fa fa-check"></i><b>8.1</b> Présentation générale de Ggplot2</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-aesthetics-ou-arguments-esthétiques"><i class="fa fa-check"></i><b>8.1.1</b> Les “aesthetics” ou arguments esthétiques</a></li>
+<li class="chapter" data-level="8.1.2" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-géométries"><i class="fa fa-check"></i><b>8.1.2</b> Les géométries</a></li>
+<li class="chapter" data-level="8.1.3" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-facettes"><i class="fa fa-check"></i><b>8.1.3</b> Les facettes</a></li>
+<li class="chapter" data-level="8.1.4" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-statistiques"><i class="fa fa-check"></i><b>8.1.4</b> Les statistiques</a></li>
+<li class="chapter" data-level="8.1.5" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-coordonnées"><i class="fa fa-check"></i><b>8.1.5</b> Les coordonnées</a></li>
+<li class="chapter" data-level="8.1.6" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-thèmes"><i class="fa fa-check"></i><b>8.1.6</b> Les thèmes</a></li>
+<li class="chapter" data-level="8.1.7" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-autres-options-graphiques-titres-échelles-des-axes-etc."><i class="fa fa-check"></i><b>8.1.7</b> Les autres options graphiques : titres, échelles des axes, etc.</a></li>
+<li class="chapter" data-level="8.1.8" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#code-minimal"><i class="fa fa-check"></i><b>8.1.8</b> Code minimal</a></li>
+<li class="chapter" data-level="8.1.9" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#liens-utiles-pour-aller-plus-loin"><i class="fa fa-check"></i><b>8.1.9</b> Liens utiles pour aller plus loin</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-grands-principes-de-data-visualization"><i class="fa fa-check"></i><b>8.2</b> Les grands principes de data visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html"><i class="fa fa-check"></i><b>9</b> Le package Ggplot en pratiques</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#exemple-de-la-construction-dun-graphique-pas-à-pas"><i class="fa fa-check"></i><b>9.1</b> Exemple de la construction d’un graphique pas à pas</a></li>
+<li class="chapter" data-level="9.2" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#dautres-exemples-à-travers-des-exercices"><i class="fa fa-check"></i><b>9.2</b> D’autres exemples à travers des exercices</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#distribution-du-prix-au-m2-pour-les-appartements-selon-les-arrondissements-de-paris"><i class="fa fa-check"></i><b>9.2.1</b> Distribution du prix au m2 pour les appartements, selon les arrondissements de Paris</a></li>
+<li class="chapter" data-level="9.2.2" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#comparaison-des-montants-moyen-et-médian-du-prix-au-m2-par-département-de-paris-et-sa-petite-couronne"><i class="fa fa-check"></i><b>9.2.2</b> Comparaison des montants moyen et médian du prix au m2, par département de Paris et sa petite couronne</a></li>
+<li class="chapter" data-level="9.2.3" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#evolution-du-prix-moyen-au-m2-des-ventes-dappartements-à-paris"><i class="fa fa-check"></i><b>9.2.3</b> Evolution du prix moyen au m2 des ventes d’appartements à Paris</a></li>
+<li class="chapter" data-level="9.2.4" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#top-5-du-prix-au-m2-des-ventes-dappartements-selon-les-communes-ou-arrondissements"><i class="fa fa-check"></i><b>9.2.4</b> Top 5 du prix au m2 des ventes d’appartements selon les communes (ou arrondissements)</a></li>
+<li class="chapter" data-level="9.2.5" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#à-vous-de-jouer"><i class="fa fa-check"></i><b>9.2.5</b> À vous de “jouer” !</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DATA MINING</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="c09-Ggplot-pratique" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Section 9</span> Le package Ggplot en pratiques<a href="09-Ggplot-pratique.html#c09-Ggplot-pratique" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div align="justify">
+
+<p>Reprenons la base de données sur les demandes de valeurs foncières sur laquelle vous avez travaillez pour le devoir n°1, et commençons notre analyse descriptive des informations présentes dans cette base en construisant des graphiques pour répondre à certaines questions relatives aux prix auquels se sont vendus les appartements et maisons de la région de Paris et sa petite couronne entre 2014 et 2021. On pourra ainsi étudier l’évolution dans le temps de ces prix.<br />
+On va repatir pour cela de la table de données sur laquelle vous avez travaillé avec M. Grasland .</p>
+<div id="exemple-de-la-construction-dun-graphique-pas-à-pas" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Exemple de la construction d’un graphique pas à pas<a href="09-Ggplot-pratique.html#exemple-de-la-construction-dun-graphique-pas-à-pas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>On va chercher à représenter la distribution du prix du m2 des ventes d’appartements et de maisons selon le département. Notre variable principale est donc <code>prixm2</code>, et la variable “secondaire” ou fonction de la première est <code>dep</code>.</p>
+<p>Pour représenter la distribution d’une variable quantitative ou continue, on peut utiliser un histogramme (ou/et une courbe de densité), mais comme ici on veut la représenter selon une autre variable peut-être serait-il mieux d’utiliser une boîte à moustache qui donnera les principaux éléments de description de la distribution de cette variable.</p>
+<p>Nous avons déjà vu ces deux graphiques précédemment, mais reprenons-les pour voir dans le détail comment nous les construisons !<br />
+<strong>D’abord</strong>, on va créer une <strong>boîte à moustache pour représenter la distribution de la variable <code>prixm2</code></strong>:</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="09-Ggplot-pratique.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb110-2"><a href="09-Ggplot-pratique.html#cb110-2" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> prixm2) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-91-1.svg" width="672" /></p>
+<p>Comme il reste des valeurs aberrantes (cf. section 3.2.3. de la séance 1 de ce cours) malgré l’élagage déjà effectuée, on va <strong>utiliser une option pour mettre une échelle moins grande en abcisses</strong>. Plusieurs manières de faire existent, mais l’une d’entre elles équivaut à supprimer les valeurs, alors qu’une autre permet de les garder et juste de ne pas les faire apparaître sur le graphique, cela peut-être important si ensuite nous voulons ajoutons des statistiques comme la moyenne sur le boxplot, comme nous allons le voir.<br />
+Pour changer l’échelle des abcisses, une première manière de faire est d’utiliser l’argument <code>scale_x_continuous()</code> et l’option <code>limits=c()</code> pour indiquer les nouvelles valeurs de l’échelle, par exemple ici entre 0 et 20 000 :</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="09-Ggplot-pratique.html#cb111-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> prixm2) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb111-2"><a href="09-Ggplot-pratique.html#cb111-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>))</span></code></pre></div>
+<pre><code>Warning: Removed 3614 rows containing non-finite values
+(`stat_boxplot()`).</code></pre>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-92-1.svg" width="672" /></p>
+<p>Un avertissement est donné : 3 614 lignes ont donc été supprimées (sur 261 848 initiales), si nous ajoutons ensuite la moyenne, elle sera calculée sans ces 3 614 observations, cela peut donc changer les indicateurs de moyenne, voire de médiane, ce n’est donc pas rigoureux.</p>
+<p>Utilisons la seconde méthode maintenant, avec l’option <code>xlim()</code> à intégrer dans la fonction <code>coord_cartesian()</code> qui fait l’équivalent d’un zoom sur le graphique :</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="09-Ggplot-pratique.html#cb113-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> prixm2) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb113-2"><a href="09-Ggplot-pratique.html#cb113-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>))</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-93-1.svg" width="672" />
+Plus de “warning” ! Et donc plus de suppression de ligne et pas de modification des données initiales.</p>
+<p><strong>Ensuite</strong>, nous souhaitons <strong>représenter la distribution de cette variable selon les départements</strong> présents dans le champ (Paris et sa petite couronne) : nous allons pour cela ajouter dans l’<code>aes()</code> une variable <code>y=</code> ; et nous allons en profiter pour préciser un peu l’échelle des abscisses (réduire le “pas” avec l’option <code>breaks=seq()</code>) :</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="09-Ggplot-pratique.html#cb114-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> prixm2, <span class="at">y=</span>dep) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb114-2"><a href="09-Ggplot-pratique.html#cb114-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>))  <span class="sc">+</span> </span>
+<span id="cb114-3"><a href="09-Ggplot-pratique.html#cb114-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">20000</span>,<span class="dv">2000</span>))</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-94-1.svg" width="672" />
+On voit déjà de nettes différents du prix au m2 entre les 4 départements, avec sans surprise Paris, pour laquelle la médiane est la plus forte.</p>
+<p>Nous pouvons <strong>également ajouter la moyenne</strong>, puisqu’ici nous voyons de gauche à droite, le minimum, le 1er quartile, la médiane, le 3ème quartile, le maximum et les “outliers” (points aberrants selon les statistiques de la boxplot). Pour cela, il faut utiliser la “couche” <em>statistiques</em> de <code>ggplot()</code> avec la fonction <code>stat_summary()</code> et les options <code>fun = mean</code> pour la moyenne, <code>geom = point</code> pour qu’elle soit représentée par un point, <code>color="gray50"</code> pour qu’elle se différencie des autres points et soit en gris, et éventuellement <code>size=2</code> pour jouer sur la taille du point.</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="09-Ggplot-pratique.html#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour infos, les options de `geom =` dans `stat_summary()` sont par exemple :  </span></span>
+<span id="cb115-2"><a href="09-Ggplot-pratique.html#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;point&quot;, &quot;pointrange&quot;, &quot;crossbar&quot;, &quot;bar&quot; (cell-ci à ne pas utiliser ici néanmoins !)</span></span>
+<span id="cb115-3"><a href="09-Ggplot-pratique.html#cb115-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-4"><a href="09-Ggplot-pratique.html#cb115-4" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> prixm2, <span class="at">y=</span>dep) <span class="sc">+</span> </span>
+<span id="cb115-5"><a href="09-Ggplot-pratique.html#cb115-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb115-6"><a href="09-Ggplot-pratique.html#cb115-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom=</span><span class="st">&quot;point&quot;</span>, <span class="at">color=</span><span class="st">&quot;gray50&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb115-7"><a href="09-Ggplot-pratique.html#cb115-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>)) <span class="sc">+</span> </span>
+<span id="cb115-8"><a href="09-Ggplot-pratique.html#cb115-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">20000</span>,<span class="dv">2000</span>))</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-95-1.svg" width="672" />
+On observe ainsi des différences entre la moyenne et la médiane pour chacun de ces départements, à chaque fois la moyenne étant plus élevée que la médiane puisque tirée par des valeurs plus souvent très élevées que très faibles (plus de points au-delà du maximum que l’inverse).</p>
+<p>On peut aussi vouloir enlever les outliers avec l’option <code>outlier.shape</code> de <code>geom_boxplot()</code> comme ceci : <code>geom_boxplot(outlier.shape = NA)</code>.</p>
+<p>On peut vouloir encore <strong>ordonner l’affichage des départements par ordre décroissant de la médiane</strong> ou de <strong>la moyenne</strong> (ordre décroissant ici = valeur la plus élevée en haut du graphique). Nous pouvons, entre autres, utiliser pour cela la fonction <code>fct_reorder()</code> du package <strong><code>forcats</code></strong> déjà présenté dans la section 3.2 de ce cours (Séance 1) : nous pouvons alors directement l’intégrer dans l’<code>aes</code> de <strong>ggplot</strong> dans la variable en ordonnée <code>y=fct_reorder()</code>, il faut alors entre parenthèses mettre la variable utilisée en ordonnée, suivie de la variable par laquelle on ordonne (la même que celle utilisée dans <code>x=</code>). Utilisée dans un boxplot, cela ordonne par défaut selon la médiane ; si on veut que les régions soient ordonnées par la moyenne, il faut rajouter l’option <code>.fun=mean</code> dans la fonction <code>fct_reorder()</code>, cf. 2ème graphique ci-dessous.</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="09-Ggplot-pratique.html#cb116-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb116-2"><a href="09-Ggplot-pratique.html#cb116-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> prixm2, <span class="at">y=</span><span class="fu">fct_reorder</span>(dep, prixm2)) <span class="sc">+</span> </span>
+<span id="cb116-3"><a href="09-Ggplot-pratique.html#cb116-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb116-4"><a href="09-Ggplot-pratique.html#cb116-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom=</span><span class="st">&quot;point&quot;</span>, <span class="at">color=</span><span class="st">&quot;gray50&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb116-5"><a href="09-Ggplot-pratique.html#cb116-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>)) <span class="sc">+</span> </span>
+<span id="cb116-6"><a href="09-Ggplot-pratique.html#cb116-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">20000</span>,<span class="dv">2000</span>))</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-96-1.svg" width="672" /></p>
+<p>Ordonnée par la moyenne, cela donnerait ceci :</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="09-Ggplot-pratique.html#cb117-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb117-2"><a href="09-Ggplot-pratique.html#cb117-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> prixm2, <span class="at">y=</span><span class="fu">fct_reorder</span>(dep, prixm2, <span class="at">.fun=</span>mean)) <span class="sc">+</span> </span>
+<span id="cb117-3"><a href="09-Ggplot-pratique.html#cb117-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb117-4"><a href="09-Ggplot-pratique.html#cb117-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom=</span><span class="st">&quot;point&quot;</span>, <span class="at">color=</span><span class="st">&quot;gray50&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb117-5"><a href="09-Ggplot-pratique.html#cb117-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>)) <span class="sc">+</span> </span>
+<span id="cb117-6"><a href="09-Ggplot-pratique.html#cb117-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">20000</span>,<span class="dv">2000</span>))</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-97-1.svg" width="672" />
+Ici, cela ne change rien, la “hiérarchie” des prix au m2 les plus élevés sont les mêmes selon qu’on considère la moyenne ou la médiane.</p>
+<p>Nous arrivons à un graphique intéressant, il faut <strong>maintenant améliorer la description autour</strong> : noms des axes, titres, légende informative sous le graphique (avec notamment un avertissement sur les valeurs non affichées sur le graphique), éventuellement un peu de couleur (avec <code>fill=</code> non pas dans l’<code>aes()</code> mais dans la fonction <code>geom_boxplot()</code> pour qu’elle soit identique quel que soit le département), etc.<br />
+Cela se fait avec la fonction <code>labs()</code>, et ensuite la fonction <code>theme()</code>.<br />
+Une petite astuce pour les titres pour qu’ils ne soient pas coupés sur le graphe : <code>\n</code> collé à un mot (sans espace) permet de mettre à la ligne à partir de ce mot !</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="09-Ggplot-pratique.html#cb118-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb118-2"><a href="09-Ggplot-pratique.html#cb118-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> prixm2, <span class="at">y=</span><span class="fu">fct_reorder</span>(dep, prixm2, <span class="at">.fun=</span>mean)) <span class="sc">+</span> </span>
+<span id="cb118-3"><a href="09-Ggplot-pratique.html#cb118-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">fill=</span><span class="st">&quot;khaki&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb118-4"><a href="09-Ggplot-pratique.html#cb118-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom=</span><span class="st">&quot;point&quot;</span>, <span class="at">color=</span><span class="st">&quot;gray50&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb118-5"><a href="09-Ggplot-pratique.html#cb118-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>)) <span class="sc">+</span> </span>
+<span id="cb118-6"><a href="09-Ggplot-pratique.html#cb118-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">20000</span>,<span class="dv">2000</span>)) <span class="sc">+</span></span>
+<span id="cb118-7"><a href="09-Ggplot-pratique.html#cb118-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Distribution du prix au m2 des ventes d&#39;appartements et de maisons dans Paris et sa </span><span class="sc">\n</span><span class="st">petite couronne sur la période 2014-2021&quot;</span>, </span>
+<span id="cb118-8"><a href="09-Ggplot-pratique.html#cb118-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">&quot;Prix au m2&quot;</span>, <span class="at">y=</span><span class="st">&quot;Département&quot;</span>,</span>
+<span id="cb118-9"><a href="09-Ggplot-pratique.html#cb118-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Remarques : Les valeurs au-delà de 20 000€ au m2 ne sont pas affichées ; les points au-delà du minimum et maximum </span><span class="sc">\n</span><span class="st">non plus ; les points en gris représentent la moyenne pour chaque département. </span><span class="sc">\n</span><span class="st">Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto.&quot;</span>) <span class="sc">+</span></span>
+<span id="cb118-10"><a href="09-Ggplot-pratique.html#cb118-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust=</span><span class="dv">0</span>),</span>
+<span id="cb118-11"><a href="09-Ggplot-pratique.html#cb118-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb118-12"><a href="09-Ggplot-pratique.html#cb118-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb118-13"><a href="09-Ggplot-pratique.html#cb118-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>))</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-98-1.svg" width="672" /></p>
+<p>Allons plus loin et testons d’autres types de graphiques.<br />
+Peut-être, <strong>peut-on utiliser un graphe en violon à la place du boxplot</strong> ?</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="09-Ggplot-pratique.html#cb119-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb119-2"><a href="09-Ggplot-pratique.html#cb119-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> prixm2, <span class="at">y=</span><span class="fu">fct_reorder</span>(dep, <span class="fu">desc</span>(prixm2), <span class="at">.fun=</span>mean)) <span class="sc">+</span> </span>
+<span id="cb119-3"><a href="09-Ggplot-pratique.html#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">fill=</span><span class="st">&quot;khaki&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb119-4"><a href="09-Ggplot-pratique.html#cb119-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom=</span><span class="st">&quot;point&quot;</span>, <span class="at">color=</span><span class="st">&quot;gray50&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb119-5"><a href="09-Ggplot-pratique.html#cb119-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">20000</span>,<span class="dv">2000</span>)) <span class="sc">+</span></span>
+<span id="cb119-6"><a href="09-Ggplot-pratique.html#cb119-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20000</span>)) <span class="sc">+</span> </span>
+<span id="cb119-7"><a href="09-Ggplot-pratique.html#cb119-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Distribution du prix au m2 des ventes d&#39;appartements et de maisons dans Paris et sa </span><span class="sc">\n</span><span class="st">petite couronne sur la période 2014-2021&quot;</span>, </span>
+<span id="cb119-8"><a href="09-Ggplot-pratique.html#cb119-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">&quot;Prix au m2&quot;</span>, <span class="at">y=</span><span class="st">&quot;Département&quot;</span>,</span>
+<span id="cb119-9"><a href="09-Ggplot-pratique.html#cb119-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Remarques : Les valeurs au-delà de 20 000€ au m2 ne sont pas affichées ; les points au-delà du minimum et </span><span class="sc">\n</span><span class="st">maximum non plus ; les points en gris représentent la moyenne pour chaque département. </span><span class="sc">\n</span><span class="st">Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto.&quot;</span>) <span class="sc">+</span></span>
+<span id="cb119-10"><a href="09-Ggplot-pratique.html#cb119-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust=</span><span class="dv">0</span>),</span>
+<span id="cb119-11"><a href="09-Ggplot-pratique.html#cb119-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb119-12"><a href="09-Ggplot-pratique.html#cb119-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb119-13"><a href="09-Ggplot-pratique.html#cb119-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>))</span></code></pre></div>
+<p><img src="Data-Mining_files/figure-html/unnamed-chunk-99-1.svg" width="672" /></p>
+<p>C’est assez intéressant car cela permet de mieux voir (encore) le type de distribution, on observe par exemple que le 93 est le département où le plus gros des ventes se trouve autour de la médiane, contrairement à Paris dont le violon est très étiré ce qui dénote une grande hétérogénéité du prix au m2 des ventes.</p>
+<p>Voilà un premier graphique construit avec la grammaire de <code>ggplot()</code>.<br />
+À vous maintenant de construire vous-mêmes les graphiques qui vous sont suggérés dans la section suivante !</p>
+</div>
+<div id="dautres-exemples-à-travers-des-exercices" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> D’autres exemples à travers des exercices<a href="09-Ggplot-pratique.html#dautres-exemples-à-travers-des-exercices" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="distribution-du-prix-au-m2-pour-les-appartements-selon-les-arrondissements-de-paris" class="section level3 hasAnchor" number="9.2.1">
+<h3><span class="header-section-number">9.2.1</span> Distribution du prix au m2 pour les appartements, selon les arrondissements de Paris<a href="09-Ggplot-pratique.html#distribution-du-prix-au-m2-pour-les-appartements-selon-les-arrondissements-de-paris" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Construisez le même type de graphique mais cette fois pour les seuls appartemments et selon les arrondissements de la ville de Paris. N’hésitez pas à changer les options pour le mettre à votre goût !!</p>
+<img src="Data-Mining_files/figure-html/unnamed-chunk-100-1.svg" width="672" />
+<div class="solution-exo">
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="09-Ggplot-pratique.html#cb120-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(dep<span class="sc">==</span><span class="st">&quot;75&quot;</span> <span class="sc">&amp;</span> type<span class="sc">==</span><span class="st">&quot;Appartement&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb120-2"><a href="09-Ggplot-pratique.html#cb120-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb120-3"><a href="09-Ggplot-pratique.html#cb120-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> prixm2, <span class="at">y=</span><span class="fu">fct_reorder</span>(nom, prixm2, <span class="at">.fun=</span>mean)) <span class="sc">+</span> </span>
+<span id="cb120-4"><a href="09-Ggplot-pratique.html#cb120-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">fill=</span><span class="st">&quot;khaki&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb120-5"><a href="09-Ggplot-pratique.html#cb120-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom=</span><span class="st">&quot;point&quot;</span>, <span class="at">color=</span><span class="st">&quot;gray50&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb120-6"><a href="09-Ggplot-pratique.html#cb120-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">24000</span>)) <span class="sc">+</span> </span>
+<span id="cb120-7"><a href="09-Ggplot-pratique.html#cb120-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">24000</span>,<span class="dv">2000</span>)) <span class="sc">+</span></span>
+<span id="cb120-8"><a href="09-Ggplot-pratique.html#cb120-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Distribution du prix au m2 des ventes d&#39;appartements selon les </span><span class="sc">\n</span><span class="st">arrondissements de Paris sur la période 2014-2021&quot;</span>, </span>
+<span id="cb120-9"><a href="09-Ggplot-pratique.html#cb120-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">&quot;Prix au m2&quot;</span>, <span class="at">y=</span><span class="st">&quot;Département&quot;</span>,</span>
+<span id="cb120-10"><a href="09-Ggplot-pratique.html#cb120-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption=</span><span class="st">&quot;Remarques : Les valeurs au-delà de 24 000€ au m2 ne sont pas affichées ; les points au-delà </span><span class="sc">\n</span><span class="st">du minimum et maximum non plus ; les points en gris représentent la moyenne pour chaque </span><span class="sc">\n</span><span class="st">arrondissement. </span><span class="sc">\n</span><span class="st">Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto.&quot;</span>) <span class="sc">+</span></span>
+<span id="cb120-11"><a href="09-Ggplot-pratique.html#cb120-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust=</span><span class="dv">0</span>),</span>
+<span id="cb120-12"><a href="09-Ggplot-pratique.html#cb120-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb120-13"><a href="09-Ggplot-pratique.html#cb120-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb120-14"><a href="09-Ggplot-pratique.html#cb120-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>))</span></code></pre></div>
+</div>
+</div>
+<div id="comparaison-des-montants-moyen-et-médian-du-prix-au-m2-par-département-de-paris-et-sa-petite-couronne" class="section level3 hasAnchor" number="9.2.2">
+<h3><span class="header-section-number">9.2.2</span> Comparaison des montants moyen et médian du prix au m2, par département de Paris et sa petite couronne<a href="09-Ggplot-pratique.html#comparaison-des-montants-moyen-et-médian-du-prix-au-m2-par-département-de-paris-et-sa-petite-couronne" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Construisez maintenat un graphique mettant côte à côte deux graphes en bâtons représentant respectivement le prix au m2 moyen et le prix au m2 médian des ventes d’appartements et de maisons par <em>département</em>.</p>
+<p>Pour vous aider si besoin, réfléchissez par étapes :</p>
+<ul>
+<li>non obligatoire, mais il est bien de commencer par créer une variable avec les noms des départements et non leur numéro ;</li>
+<li>créer un premier graphe que vous assignerez à un nouvel objet et qui représentera celui de la moyenne par département ;</li>
+<li>vous pouvez pour cela créer une nouvelle variable qui constituera la moyenne pour chaque département (un conseil : arrondir à l’unité) ;</li>
+<li>sélectionnez les variables qui seront utilisées dans le graphique et vérifier (ou corriger sinon) qu’il n’y ait pas des doublons (lignes identiques) car cela peut fausser le graphique ensuite ;</li>
+<li>construisez le graphique avec <code>ggplot()</code> et la bonne fonction <code>geom_***()</code>, les données seront affichées par ordre décroissant ;</li>
+<li>faîtes de même pour la médiane par région ;</li>
+<li>vous pouvez ensuite mettre ces graphiques côte à côté avec le package <strong><code>patchwork</code></strong> (qu’il vous faudra probablement installer si c’est la première fois que vous l’utilisez), recherchez sur internet comment faire ensuite (c’est très simple !), puis ajouter un titre et une légende générale avec la fonction <code>plot_annotation()</code>.</li>
+</ul>
+<img src="Data-Mining_files/figure-html/unnamed-chunk-102-1.svg" width="672" />
+<div class="solution-exo">
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="09-Ggplot-pratique.html#cb121-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="ot">&lt;-</span> dvf <span class="sc">%&gt;%</span> </span>
+<span id="cb121-2"><a href="09-Ggplot-pratique.html#cb121-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nom_dept=</span><span class="fu">as.factor</span>(<span class="fu">case_when</span>(dep<span class="sc">==</span><span class="dv">75</span> <span class="sc">~</span> <span class="st">&quot;Paris&quot;</span>,</span>
+<span id="cb121-3"><a href="09-Ggplot-pratique.html#cb121-3" aria-hidden="true" tabindex="-1"></a>                                      dep<span class="sc">==</span><span class="dv">92</span> <span class="sc">~</span> <span class="st">&quot;Hauts-de-Seine&quot;</span>,</span>
+<span id="cb121-4"><a href="09-Ggplot-pratique.html#cb121-4" aria-hidden="true" tabindex="-1"></a>                                      dep<span class="sc">==</span><span class="dv">93</span> <span class="sc">~</span> <span class="st">&quot;Seine-Saint-Denis&quot;</span>,</span>
+<span id="cb121-5"><a href="09-Ggplot-pratique.html#cb121-5" aria-hidden="true" tabindex="-1"></a>                                      dep<span class="sc">==</span><span class="dv">94</span> <span class="sc">~</span> <span class="st">&quot;Val-de-Marne&quot;</span>)))</span>
+<span id="cb121-6"><a href="09-Ggplot-pratique.html#cb121-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-7"><a href="09-Ggplot-pratique.html#cb121-7" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> dvf <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-8"><a href="09-Ggplot-pratique.html#cb121-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">moy_prixm2 =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prixm2),<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-9"><a href="09-Ggplot-pratique.html#cb121-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(moy_prixm2, nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-10"><a href="09-Ggplot-pratique.html#cb121-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb121-11"><a href="09-Ggplot-pratique.html#cb121-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(nom_dept, <span class="fu">desc</span>(moy_prixm2)), <span class="at">y =</span> moy_prixm2) <span class="sc">+</span></span>
+<span id="cb121-12"><a href="09-Ggplot-pratique.html#cb121-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">fill=</span><span class="st">&quot;honeydew&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb121-13"><a href="09-Ggplot-pratique.html#cb121-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> moy_prixm2), <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>), <span class="at">color=</span><span class="st">&quot;gray25&quot;</span>, <span class="at">size=</span><span class="fl">2.8</span>) <span class="sc">+</span></span>
+<span id="cb121-14"><a href="09-Ggplot-pratique.html#cb121-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Moyenne&quot;</span>, <span class="at">x =</span> <span class="st">&quot; &quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>) <span class="sc">+</span></span>
+<span id="cb121-15"><a href="09-Ggplot-pratique.html#cb121-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size=</span><span class="dv">9</span>),</span>
+<span id="cb121-16"><a href="09-Ggplot-pratique.html#cb121-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="fl">10.5</span>))</span>
+<span id="cb121-17"><a href="09-Ggplot-pratique.html#cb121-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-18"><a href="09-Ggplot-pratique.html#cb121-18" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> dvf <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-19"><a href="09-Ggplot-pratique.html#cb121-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">median_prixm2 =</span> <span class="fu">round</span>(<span class="fu">median</span>(prixm2),<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-20"><a href="09-Ggplot-pratique.html#cb121-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(median_prixm2, nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb121-21"><a href="09-Ggplot-pratique.html#cb121-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb121-22"><a href="09-Ggplot-pratique.html#cb121-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(nom_dept, <span class="fu">desc</span>(median_prixm2)), <span class="at">y =</span> median_prixm2) <span class="sc">+</span></span>
+<span id="cb121-23"><a href="09-Ggplot-pratique.html#cb121-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">fill=</span><span class="st">&quot;honeydew&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb121-24"><a href="09-Ggplot-pratique.html#cb121-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> median_prixm2), <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>), <span class="at">color=</span><span class="st">&quot;gray25&quot;</span>, <span class="at">size=</span><span class="fl">2.8</span>) <span class="sc">+</span></span>
+<span id="cb121-25"><a href="09-Ggplot-pratique.html#cb121-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Médiane&quot;</span>, <span class="at">x =</span> <span class="st">&quot; &quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>) <span class="sc">+</span></span>
+<span id="cb121-26"><a href="09-Ggplot-pratique.html#cb121-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size=</span><span class="dv">9</span>),</span>
+<span id="cb121-27"><a href="09-Ggplot-pratique.html#cb121-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="fl">10.5</span>))</span>
+<span id="cb121-28"><a href="09-Ggplot-pratique.html#cb121-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-29"><a href="09-Ggplot-pratique.html#cb121-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb121-30"><a href="09-Ggplot-pratique.html#cb121-30" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">+</span></span>
+<span id="cb121-31"><a href="09-Ggplot-pratique.html#cb121-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">&quot;Montants moyens et médians du prix au m2 des ventes d&#39;appartements et de maisons sur </span><span class="sc">\n</span><span class="st">Paris et sa petite couronne, par département &quot;</span>, </span>
+<span id="cb121-32"><a href="09-Ggplot-pratique.html#cb121-32" aria-hidden="true" tabindex="-1"></a>                <span class="at">caption =</span> <span class="st">&quot;Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto.&quot;</span>, </span>
+<span id="cb121-33"><a href="09-Ggplot-pratique.html#cb121-33" aria-hidden="true" tabindex="-1"></a>                <span class="at">theme =</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))) <span class="sc">&amp;</span></span>
+<span id="cb121-34"><a href="09-Ggplot-pratique.html#cb121-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>))</span></code></pre></div>
+</div>
+<p>On retrouve bien les mêmes résultats que précédemment mais en ayant les valeurs précises affichées des moyennes et médianes, on retrouve bien Paris en tête que ce soit en moyenne et médiane du prix au m2 des ventes d’appartements et de maisons. On perd toutefois la “tête” de l’ensemble de la distribution.<br />
+Il faut vraiment se demander quel type de public serait visé par ces informations, si c’est le grand public, la moyenne et la médiane suffisent si l’on veut montrer qu’il y a quand même une certaine dispersion des valeurs selon les ventes, souvent seule la moyenne étant représentée.</p>
+On aurait pu sinon utilser un “dot plot”, comme ci-dessous. Cherchez comment l’on peut construire ce type de graphique (rq : cela ne correspond par à une fonction en tant que telle). Le début du code est le même, ce sont les fonctions <code>geom_***</code> qui changent…<br />
+<img src="Data-Mining_files/figure-html/unnamed-chunk-104-1.svg" width="672" />
+<div class="solution-exo">
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="09-Ggplot-pratique.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggrepel&quot;</span>)</span>
+<span id="cb122-2"><a href="09-Ggplot-pratique.html#cb122-2" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> dvf <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb122-3"><a href="09-Ggplot-pratique.html#cb122-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">moy_prixm2 =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prixm2),<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb122-4"><a href="09-Ggplot-pratique.html#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(moy_prixm2, nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb122-5"><a href="09-Ggplot-pratique.html#cb122-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb122-6"><a href="09-Ggplot-pratique.html#cb122-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> moy_prixm2,</span>
+<span id="cb122-7"><a href="09-Ggplot-pratique.html#cb122-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fu">fct_reorder</span>(nom_dept, moy_prixm2)) <span class="sc">+</span></span>
+<span id="cb122-8"><a href="09-Ggplot-pratique.html#cb122-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">&quot;burlywood4&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb122-9"><a href="09-Ggplot-pratique.html#cb122-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">xend=</span>moy_prixm2, </span>
+<span id="cb122-10"><a href="09-Ggplot-pratique.html#cb122-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y=</span><span class="fu">fct_reorder</span>(nom_dept, moy_prixm2),</span>
+<span id="cb122-11"><a href="09-Ggplot-pratique.html#cb122-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend=</span><span class="fu">fct_reorder</span>(nom_dept, moy_prixm2)),</span>
+<span id="cb122-12"><a href="09-Ggplot-pratique.html#cb122-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">&quot;snow4&quot;</span>) <span class="sc">+</span></span>
+<span id="cb122-13"><a href="09-Ggplot-pratique.html#cb122-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> moy_prixm2), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb122-14"><a href="09-Ggplot-pratique.html#cb122-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Prix au m2 moyen&quot;</span>, <span class="at">x =</span> <span class="st">&quot; &quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>) <span class="sc">+</span></span>
+<span id="cb122-15"><a href="09-Ggplot-pratique.html#cb122-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb122-16"><a href="09-Ggplot-pratique.html#cb122-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">9</span>))</span>
+<span id="cb122-17"><a href="09-Ggplot-pratique.html#cb122-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-18"><a href="09-Ggplot-pratique.html#cb122-18" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> dvf <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb122-19"><a href="09-Ggplot-pratique.html#cb122-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">median_prixm2 =</span> <span class="fu">round</span>(<span class="fu">median</span>(prixm2),<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb122-20"><a href="09-Ggplot-pratique.html#cb122-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(median_prixm2, nom_dept) <span class="sc">%&gt;%</span> </span>
+<span id="cb122-21"><a href="09-Ggplot-pratique.html#cb122-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb122-22"><a href="09-Ggplot-pratique.html#cb122-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> median_prixm2,</span>
+<span id="cb122-23"><a href="09-Ggplot-pratique.html#cb122-23" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fu">fct_reorder</span>(nom_dept, median_prixm2)) <span class="sc">+</span></span>
+<span id="cb122-24"><a href="09-Ggplot-pratique.html#cb122-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">&quot;burlywood4&quot;</span>, <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb122-25"><a href="09-Ggplot-pratique.html#cb122-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">xend=</span>median_prixm2, </span>
+<span id="cb122-26"><a href="09-Ggplot-pratique.html#cb122-26" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y=</span><span class="fu">fct_reorder</span>(nom_dept, median_prixm2),</span>
+<span id="cb122-27"><a href="09-Ggplot-pratique.html#cb122-27" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend=</span><span class="fu">fct_reorder</span>(nom_dept, median_prixm2)),</span>
+<span id="cb122-28"><a href="09-Ggplot-pratique.html#cb122-28" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">&quot;snow4&quot;</span>) <span class="sc">+</span></span>
+<span id="cb122-29"><a href="09-Ggplot-pratique.html#cb122-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> median_prixm2), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb122-30"><a href="09-Ggplot-pratique.html#cb122-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Prix au m2 médian&quot;</span>, <span class="at">x =</span> <span class="st">&quot; &quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>) <span class="sc">+</span></span>
+<span id="cb122-31"><a href="09-Ggplot-pratique.html#cb122-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb122-32"><a href="09-Ggplot-pratique.html#cb122-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">9</span>))</span>
+<span id="cb122-33"><a href="09-Ggplot-pratique.html#cb122-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-34"><a href="09-Ggplot-pratique.html#cb122-34" aria-hidden="true" tabindex="-1"></a>(p3 <span class="sc">+</span> p4) <span class="sc">+</span></span>
+<span id="cb122-35"><a href="09-Ggplot-pratique.html#cb122-35" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">&quot;Montants moyens et médians du prix au m2 des ventes d&#39;appartements et de maisons, sur </span><span class="sc">\n</span><span class="st">Paris et sa petite couronne, par département &quot;</span>, </span>
+<span id="cb122-36"><a href="09-Ggplot-pratique.html#cb122-36" aria-hidden="true" tabindex="-1"></a>                <span class="at">caption =</span> <span class="st">&quot;Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto.&quot;</span>, </span>
+<span id="cb122-37"><a href="09-Ggplot-pratique.html#cb122-37" aria-hidden="true" tabindex="-1"></a>                <span class="at">theme =</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))) <span class="sc">&amp;</span></span>
+<span id="cb122-38"><a href="09-Ggplot-pratique.html#cb122-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>))</span></code></pre></div>
+</div>
+</div>
+<div id="evolution-du-prix-moyen-au-m2-des-ventes-dappartements-à-paris" class="section level3 hasAnchor" number="9.2.3">
+<h3><span class="header-section-number">9.2.3</span> Evolution du prix moyen au m2 des ventes d’appartements à Paris<a href="09-Ggplot-pratique.html#evolution-du-prix-moyen-au-m2-des-ventes-dappartements-à-paris" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Changeons un peu de perspective et construisez cette fois un graphique montrant l’évolution du prix moyen au m2 des ventes d’appartements à Paris, de manière générale et ensuite selon 6 arrondissements choisis selon leur prix moyen mis en avant un peu plus haut : les 3 ayant les prix les plus élevés (6ème, 7ème et 8ème arrondissement), et les 3 ayant les prix les moins élevés (18ème, 19ème et 20ème arrdt).</p>
+<p>De même, il faut procéder par étapes :</p>
+<ul>
+<li>ne sélectionner d’abord que le département Paris et les ventes d’appartements ;</li>
+<li>créer ensuite la variable de prix moyen au m2 selon l’année ;</li>
+<li>ne garder que ces variables, supprimer les lignes doublons le cas échéant ;</li>
+<li>construisez un graphique sous forme de courbes avec des points représentants les valeurs.</li>
+</ul>
+<img src="Data-Mining_files/figure-html/unnamed-chunk-106-1.svg" width="672" />
+<div class="solution-exo">
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="09-Ggplot-pratique.html#cb123-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(dep<span class="sc">==</span><span class="dv">75</span> <span class="sc">&amp;</span> type<span class="sc">==</span><span class="st">&quot;Appartement&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb123-2"><a href="09-Ggplot-pratique.html#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ann) <span class="sc">%&gt;%</span> </span>
+<span id="cb123-3"><a href="09-Ggplot-pratique.html#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">moy_prixm2 =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prixm2),<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb123-4"><a href="09-Ggplot-pratique.html#cb123-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(moy_prixm2, ann) <span class="sc">%&gt;%</span> </span>
+<span id="cb123-5"><a href="09-Ggplot-pratique.html#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb123-6"><a href="09-Ggplot-pratique.html#cb123-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>ann, <span class="at">y=</span>moy_prixm2) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">group=</span><span class="dv">1</span>)  <span class="sc">+</span></span>
+<span id="cb123-7"><a href="09-Ggplot-pratique.html#cb123-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">6000</span>,<span class="dv">12000</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">6000</span>,<span class="dv">12000</span>,<span class="dv">500</span>)) <span class="sc">+</span></span>
+<span id="cb123-8"><a href="09-Ggplot-pratique.html#cb123-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Evolution du prix moyen au m2 des appartements vendus à Paris&quot;</span>, <span class="at">x =</span> <span class="st">&quot; &quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>,</span>
+<span id="cb123-9"><a href="09-Ggplot-pratique.html#cb123-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto. </span><span class="sc">\n</span><span class="st">Note : l&#39;axe des ordonnées ne commence qu&#39;à 6000€&quot;</span>) <span class="sc">+</span></span>
+<span id="cb123-10"><a href="09-Ggplot-pratique.html#cb123-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">13</span>), </span>
+<span id="cb123-11"><a href="09-Ggplot-pratique.html#cb123-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust=</span><span class="dv">0</span>))</span></code></pre></div>
+</div>
+<p>Le prix moyen au m2 des appartements vendus à Paris a augmenté entre 2014 et 2021, l’évolution la plus forte étant entre 2016 et 2020. En 2014, les appartements se vendaient en moyenne à quasi 9000€ le m2, en 2021 cette moyenne s’élevait à plus de 11500€ le m2.</p>
+Regardons maintenant selon quelques arrondissements de Paris (dans les 6 mentionnés au-dessus), pour étudier si cette évolution est différente selon la position de l’arrondissement dans l’échelle des prix moyens.
+<img src="Data-Mining_files/figure-html/unnamed-chunk-108-1.svg" width="672" />
+<div class="solution-exo">
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="09-Ggplot-pratique.html#cb124-1" aria-hidden="true" tabindex="-1"></a>dvf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(dep<span class="sc">==</span><span class="dv">75</span> <span class="sc">&amp;</span> type<span class="sc">==</span><span class="st">&quot;Appartement&quot;</span> <span class="sc">&amp;</span> nom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Paris 6e Arrondissement&quot;</span>, <span class="st">&quot;Paris 7e Arrondissement&quot;</span>, </span>
+<span id="cb124-2"><a href="09-Ggplot-pratique.html#cb124-2" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">&quot;Paris 8e Arrondissement&quot;</span>, <span class="st">&quot;Paris 18e Arrondissement&quot;</span>, </span>
+<span id="cb124-3"><a href="09-Ggplot-pratique.html#cb124-3" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">&quot;Paris 19e Arrondissement&quot;</span>, <span class="st">&quot;Paris 20e Arrondissement&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-4"><a href="09-Ggplot-pratique.html#cb124-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ann, nom) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-5"><a href="09-Ggplot-pratique.html#cb124-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">moy_prixm2 =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prixm2),<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-6"><a href="09-Ggplot-pratique.html#cb124-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(moy_prixm2, ann, nom) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-7"><a href="09-Ggplot-pratique.html#cb124-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb124-8"><a href="09-Ggplot-pratique.html#cb124-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nom=</span><span class="fu">factor</span>(nom, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Paris 6e Arrondissement&quot;</span>, <span class="st">&quot;Paris 7e Arrondissement&quot;</span>, <span class="st">&quot;Paris 8e Arrondissement&quot;</span>,</span>
+<span id="cb124-9"><a href="09-Ggplot-pratique.html#cb124-9" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;Paris 18e Arrondissement&quot;</span>,<span class="st">&quot;Paris 20e Arrondissement&quot;</span>,<span class="st">&quot;Paris 19e Arrondissement&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-10"><a href="09-Ggplot-pratique.html#cb124-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>ann, <span class="at">y=</span>moy_prixm2, <span class="at">color=</span>nom) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group=</span>nom), <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb124-11"><a href="09-Ggplot-pratique.html#cb124-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">6000</span>,<span class="dv">18000</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">6000</span>,<span class="dv">18000</span>,<span class="dv">1000</span>)) <span class="sc">+</span></span>
+<span id="cb124-12"><a href="09-Ggplot-pratique.html#cb124-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Evolution du prix moyen au m2 des appartements vendus à Paris, </span><span class="sc">\n</span><span class="st">dans les 3 arrondissements ayant les prix les plus élevés et les </span><span class="sc">\n</span><span class="st">3 arrondissements ayant les prix les moins élevés&quot;</span>, <span class="at">x =</span> <span class="st">&quot; &quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>, <span class="at">color=</span><span class="st">&quot;Arrondissement&quot;</span>,</span>
+<span id="cb124-13"><a href="09-Ggplot-pratique.html#cb124-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto. </span><span class="sc">\n</span><span class="st">Note : l&#39;axe des ordonnées ne commence qu&#39;à 6000€&quot;</span>) <span class="sc">+</span></span>
+<span id="cb124-14"><a href="09-Ggplot-pratique.html#cb124-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>), </span>
+<span id="cb124-15"><a href="09-Ggplot-pratique.html#cb124-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust=</span><span class="dv">0</span>))</span></code></pre></div>
+</div>
+<p>Pour tous les arrondissements, les prix moyens au m2 sont à la hausse entre 2014 et 2021, il ne semble pas y avoir de différences marquantes selon que cet arrondissement est déjà cher ou non. A noter toutefois des différences au moment de la crise sanitaire : alors que les 7ème et 8ème arrdts voient leur prix baisser, ce n’est pas le cas des 18, 19 et 20ème, et encore moins pour celui du 6ème arrdt dont la hausse entre 2020 et 2021 est très forte. De plus, alors que les évolutions sont assez linéaires pour les arrondissements les moins chers, ce n’est pas vraiment le cas pour les trois autres. Cela peut s’expliquer par un effet nombre de ventes ou plutôt ventes singulières ou non, il suffit qu’un ou deux appartements très chers aient été vendus dans le 6ème arrdt pour faire exploser d’un coup la moyenne… Il faudrait creuser plus en détails !</p>
+</div>
+<div id="top-5-du-prix-au-m2-des-ventes-dappartements-selon-les-communes-ou-arrondissements" class="section level3 hasAnchor" number="9.2.4">
+<h3><span class="header-section-number">9.2.4</span> Top 5 du prix au m2 des ventes d’appartements selon les communes (ou arrondissements)<a href="09-Ggplot-pratique.html#top-5-du-prix-au-m2-des-ventes-dappartements-selon-les-communes-ou-arrondissements" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Enfin, construisez un graphique en bâtons indiquant les seules 5 premières communes ayant les prix moyens au m2 des ventes d’appartements les plus élevés, puis des ventes de maisons, et les mettre côte à côte.</p>
+<img src="Data-Mining_files/figure-html/unnamed-chunk-110-1.svg" width="672" />
+<div class="solution-exo">
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="09-Ggplot-pratique.html#cb125-1" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> dvf <span class="sc">%&gt;%</span> </span>
+<span id="cb125-2"><a href="09-Ggplot-pratique.html#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(type<span class="sc">==</span><span class="st">&quot;Appartement&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb125-3"><a href="09-Ggplot-pratique.html#cb125-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nom) <span class="sc">%&gt;%</span>  </span>
+<span id="cb125-4"><a href="09-Ggplot-pratique.html#cb125-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">moy_prixm2 =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prixm2))) <span class="sc">%&gt;%</span> </span>
+<span id="cb125-5"><a href="09-Ggplot-pratique.html#cb125-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(moy_prixm2)) <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb125-6"><a href="09-Ggplot-pratique.html#cb125-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> moy_prixm2, <span class="at">y =</span> <span class="fu">fct_reorder</span>(nom, moy_prixm2))  <span class="sc">+</span> </span>
+<span id="cb125-7"><a href="09-Ggplot-pratique.html#cb125-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">fill=</span><span class="st">&quot;darkgoldenrod1&quot;</span>)  <span class="sc">+</span></span>
+<span id="cb125-8"><a href="09-Ggplot-pratique.html#cb125-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>moy_prixm2), <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust=</span><span class="fl">0.5</span>), <span class="at">size=</span><span class="fl">2.8</span>) <span class="sc">+</span></span>
+<span id="cb125-9"><a href="09-Ggplot-pratique.html#cb125-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Ventes d&#39;appartements&quot;</span>,</span>
+<span id="cb125-10"><a href="09-Ggplot-pratique.html#cb125-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>) <span class="sc">+</span></span>
+<span id="cb125-11"><a href="09-Ggplot-pratique.html#cb125-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb125-12"><a href="09-Ggplot-pratique.html#cb125-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="at">plot.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">9</span>),</span>
+<span id="cb125-13"><a href="09-Ggplot-pratique.html#cb125-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>),</span>
+<span id="cb125-14"><a href="09-Ggplot-pratique.html#cb125-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>),</span>
+<span id="cb125-15"><a href="09-Ggplot-pratique.html#cb125-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>))</span>
+<span id="cb125-16"><a href="09-Ggplot-pratique.html#cb125-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-17"><a href="09-Ggplot-pratique.html#cb125-17" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> dvf <span class="sc">%&gt;%</span> </span>
+<span id="cb125-18"><a href="09-Ggplot-pratique.html#cb125-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(type<span class="sc">==</span><span class="st">&quot;Maison&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb125-19"><a href="09-Ggplot-pratique.html#cb125-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nom) <span class="sc">%&gt;%</span>  </span>
+<span id="cb125-20"><a href="09-Ggplot-pratique.html#cb125-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">moy_prixm2 =</span> <span class="fu">round</span>(<span class="fu">mean</span>(prixm2))) <span class="sc">%&gt;%</span> </span>
+<span id="cb125-21"><a href="09-Ggplot-pratique.html#cb125-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(moy_prixm2)) <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb125-22"><a href="09-Ggplot-pratique.html#cb125-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> moy_prixm2, <span class="at">y =</span> <span class="fu">fct_reorder</span>(nom, moy_prixm2))  <span class="sc">+</span> </span>
+<span id="cb125-23"><a href="09-Ggplot-pratique.html#cb125-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">fill=</span><span class="st">&quot;coral1&quot;</span>)  <span class="sc">+</span></span>
+<span id="cb125-24"><a href="09-Ggplot-pratique.html#cb125-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>moy_prixm2), <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust=</span><span class="fl">0.5</span>), <span class="at">size=</span><span class="fl">2.8</span>) <span class="sc">+</span></span>
+<span id="cb125-25"><a href="09-Ggplot-pratique.html#cb125-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Ventes de maisons&quot;</span>,</span>
+<span id="cb125-26"><a href="09-Ggplot-pratique.html#cb125-26" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot; &quot;</span>) <span class="sc">+</span></span>
+<span id="cb125-27"><a href="09-Ggplot-pratique.html#cb125-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb125-28"><a href="09-Ggplot-pratique.html#cb125-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="at">plot.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">9</span>),</span>
+<span id="cb125-29"><a href="09-Ggplot-pratique.html#cb125-29" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>),</span>
+<span id="cb125-30"><a href="09-Ggplot-pratique.html#cb125-30" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>),</span>
+<span id="cb125-31"><a href="09-Ggplot-pratique.html#cb125-31" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>))</span>
+<span id="cb125-32"><a href="09-Ggplot-pratique.html#cb125-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-33"><a href="09-Ggplot-pratique.html#cb125-33" aria-hidden="true" tabindex="-1"></a>(p5 <span class="sc">+</span> p6) <span class="sc">+</span></span>
+<span id="cb125-34"><a href="09-Ggplot-pratique.html#cb125-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">title =</span>  <span class="st">&quot;Top 5 des communes ayant les prix moyens au m2 des ventes d&#39;appartements ou de maisons les </span><span class="sc">\n</span><span class="st">plus élevés sur la période 2014-2021&quot;</span>, </span>
+<span id="cb125-35"><a href="09-Ggplot-pratique.html#cb125-35" aria-hidden="true" tabindex="-1"></a>                <span class="at">caption =</span> <span class="st">&quot;Source : Base &#39;demande de valeurs foncières&#39;, 2014-2021. </span><span class="sc">\n</span><span class="st">Calculs : Camille Signoretto.&quot;</span>, </span>
+<span id="cb125-36"><a href="09-Ggplot-pratique.html#cb125-36" aria-hidden="true" tabindex="-1"></a>                <span class="at">theme =</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))) <span class="sc">&amp;</span></span>
+<span id="cb125-37"><a href="09-Ggplot-pratique.html#cb125-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>))</span></code></pre></div>
+</div>
+<p>concernant les appartements, on retrouve 5 arrondissements de Paris, ce qui est cohérent avec la hiérarchie mise en avant sur l’ensemble des départements précédemment ; mais c’est aussi le cas pour les maisons, dont les ventes sont pourtant moins nombreuses dans Paris, mais elles coûtent chères ! Seule la commune d’Issy-les-Moulineaux apparaît pour atteindre la 5ème position.</p>
+</div>
+<div id="à-vous-de-jouer" class="section level3 hasAnchor" number="9.2.5">
+<h3><span class="header-section-number">9.2.5</span> À vous de “jouer” !<a href="09-Ggplot-pratique.html#à-vous-de-jouer" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Bien sûr, vous pouvez créer des fonctions sur ces graphiques ; puis “jouez” avec d’autres variables, notamment la surface et le nombre de pièces ; ou encore construire des cartes sur le niveau commune ; utiliser d’autres types de graphiques ; etc. ; etc.</p>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<script src="js/tidyverse.js"></script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="08-Ggplot-theorique.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/Camille-Sisi/github.io-Data-Mining-2023/master/09-Ggplot-pratique.Rmd",
+"text": "Source"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

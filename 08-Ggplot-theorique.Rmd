@@ -38,7 +38,7 @@ C'est la différence entre le "mapping" et les "settings".
 
 
 Chacune de ces options ont des modalités différentes, il peut être bien d'avoir des mémos rangés dans un dossier créé pour cela pour éviter de les chercher à chaque fois.  
-Par exemple, pour les couleurs, vous trouverez un mémo pdf <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" target="_blank">ici</a>, ou un bon récapitulatif <a href="https://larmarange.github.io/analyse-R/couleurs.html" target="_blank">là</a>. On peut également utiliser la fonction `colours()` pour voir la liste complète des couleurs standard.  
+Par exemple, pour les couleurs, vous trouverez un mémo pdf <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" target="_blank">ici</a>, ou un bon récapitulatif <a href="https://larmarange.github.io/analyse-R/couleurs.html" target="_blank">là</a>. On peut également utiliser la fonction `colours()` dans `R` pour voir la liste complète des couleurs standard.  
 
 Pour la liste des symboles ("shape") et le numéro correspondant que l'on appelera avec l'argument `shape=`, ci-dessous un récapitulatif :
 ![ ](images/Liste symboles Ggplot2.png)
@@ -155,8 +155,8 @@ Nous privilégierons ici la 1ère d'entre elles, mais vous pouvez en choisir une
 ### Liens utiles pour aller plus loin
 Nous ne pouvons pas résumer l'ensemble des possibilités données par **ggplot2** ; il faudra donc rechercher par soi-même si besoin. Voici pour cela deux sites très complets sur le package : 
 
-- <a href="https://ggplot2-book.org/toolbox.html">https://ggplot2-book.org/toolbox.html" target="_blank"</a>  
-- <a href="https://bookdown.org/ael/rexplor/chap8.html#aes">https://bookdown.org/ael/rexplor/chap8.html#aes" target="_blank"</a>  
+- <a href="https://ggplot2-book.org/toolbox.html">https://ggplot2-book.org/toolbox.html</a>  
+- <a href="https://bookdown.org/ael/rexplor/chap8.html#aes">https://bookdown.org/ael/rexplor/chap8.html#aes</a>  
 
 
 

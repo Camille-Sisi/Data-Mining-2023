@@ -23,7 +23,7 @@
 <meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
 
 
-<meta name="date" content="2023-04-19" />
+<meta name="date" content="2023-04-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="07-Intro-a-Shiny-exemples.html"/>
-
+<link rel="next" href="09-Ggplot-pratique.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -215,6 +215,18 @@ code span.wa { color: #bf0303; } /* Warning */
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#les-grands-principes-de-data-visualization"><i class="fa fa-check"></i><b>8.2</b> Les grands principes de data visualization</a></li>
 </ul></li>
+<li class="chapter" data-level="9" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html"><i class="fa fa-check"></i><b>9</b> Le package Ggplot en pratiques</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#exemple-de-la-construction-dun-graphique-pas-à-pas"><i class="fa fa-check"></i><b>9.1</b> Exemple de la construction d’un graphique pas à pas</a></li>
+<li class="chapter" data-level="9.2" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#dautres-exemples-à-travers-des-exercices"><i class="fa fa-check"></i><b>9.2</b> D’autres exemples à travers des exercices</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#distribution-du-prix-au-m2-pour-les-appartements-selon-les-arrondissements-de-paris"><i class="fa fa-check"></i><b>9.2.1</b> Distribution du prix au m2 pour les appartements, selon les arrondissements de Paris</a></li>
+<li class="chapter" data-level="9.2.2" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#comparaison-des-montants-moyen-et-médian-du-prix-au-m2-par-département-de-paris-et-sa-petite-couronne"><i class="fa fa-check"></i><b>9.2.2</b> Comparaison des montants moyen et médian du prix au m2, par département de Paris et sa petite couronne</a></li>
+<li class="chapter" data-level="9.2.3" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#evolution-du-prix-moyen-au-m2-des-ventes-dappartements-à-paris"><i class="fa fa-check"></i><b>9.2.3</b> Evolution du prix moyen au m2 des ventes d’appartements à Paris</a></li>
+<li class="chapter" data-level="9.2.4" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#top-5-du-prix-au-m2-des-ventes-dappartements-selon-les-communes-ou-arrondissements"><i class="fa fa-check"></i><b>9.2.4</b> Top 5 du prix au m2 des ventes d’appartements selon les communes (ou arrondissements)</a></li>
+<li class="chapter" data-level="9.2.5" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#à-vous-de-jouer"><i class="fa fa-check"></i><b>9.2.5</b> À vous de “jouer” !</a></li>
+</ul></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -265,7 +277,7 @@ Mais on peut aussi ajouter des variables supplémentaires qui seront différenci
 <p>La <strong>nuance à bien comprendre</strong> est qu’utiliser ces options à l’intérieur de la fonction <code>aes()</code> revient à ajouter une 3ème variable (une légende apparaîtra alors automatiquement), alors que si l’on veut simplement changer l’aspect des points, lignes, barres, etc., d’une variable déjà projetée, il faut appeler (souvent) ces mêmes options après la fonction <code>aes()</code> à l’intérieur de la fonction <code>geom_***()</code> par exemple. Dans ce cas-là, on peut changer la couleur des points avec <code>color=</code> , la taille des points ou lignes avec <code>size=</code>, l’épaisseur des barres avec <code>width=</code>, etc.
 C’est la différence entre le “mapping” et les “settings”.</p>
 <p>Chacune de ces options ont des modalités différentes, il peut être bien d’avoir des mémos rangés dans un dossier créé pour cela pour éviter de les chercher à chaque fois.<br />
-Par exemple, pour les couleurs, vous trouverez un mémo pdf <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" target="_blank">ici</a>, ou un bon récapitulatif <a href="https://larmarange.github.io/analyse-R/couleurs.html" target="_blank">là</a>. On peut également utiliser la fonction <code>colours()</code> pour voir la liste complète des couleurs standard.</p>
+Par exemple, pour les couleurs, vous trouverez un mémo pdf <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" target="_blank">ici</a>, ou un bon récapitulatif <a href="https://larmarange.github.io/analyse-R/couleurs.html" target="_blank">là</a>. On peut également utiliser la fonction <code>colours()</code> dans <code>R</code> pour voir la liste complète des couleurs standard.</p>
 <p>Pour la liste des symboles (“shape”) et le numéro correspondant que l’on appelera avec l’argument <code>shape=</code>, ci-dessous un récapitulatif :
 <img src="images/Liste%20symboles%20Ggplot2.png" /></p>
 <p>Et voici pour la liste des types de lignes, avec <code>linetype=</code> :
@@ -416,9 +428,9 @@ La figure ci-dessous est une bonne synthèse de la manière dont il faut program
 <h3><span class="header-section-number">8.1.9</span> Liens utiles pour aller plus loin<a href="08-Ggplot-theorique.html#liens-utiles-pour-aller-plus-loin" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Nous ne pouvons pas résumer l’ensemble des possibilités données par <strong>ggplot2</strong> ; il faudra donc rechercher par soi-même si besoin. Voici pour cela deux sites très complets sur le package :</p>
 <ul>
-<li><a href="https://ggplot2-book.org/toolbox.html"><a href="https://ggplot2-book.org/toolbox.html" class="uri">https://ggplot2-book.org/toolbox.html</a>” target=“_blank”</a><br />
+<li><a href="https://ggplot2-book.org/toolbox.html">https://ggplot2-book.org/toolbox.html</a><br />
 </li>
-<li><a href="https://bookdown.org/ael/rexplor/chap8.html#aes"><a href="https://bookdown.org/ael/rexplor/chap8.html#aes" class="uri">https://bookdown.org/ael/rexplor/chap8.html#aes</a>” target=“_blank”</a></li>
+<li><a href="https://bookdown.org/ael/rexplor/chap8.html#aes">https://bookdown.org/ael/rexplor/chap8.html#aes</a></li>
 </ul>
 </div>
 </div>
@@ -438,20 +450,14 @@ La figure ci-dessous est une bonne synthèse de la manière dont il faut program
 
 </div>
 </div>
-
-
-
-
-
-
 <script src="js/tidyverse.js"></script>
             </section>
 
           </div>
         </div>
       </div>
-<a href="07-Intro-a-Shiny-exemples.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="07-Intro-a-Shiny-exemples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="09-Ggplot-pratique.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

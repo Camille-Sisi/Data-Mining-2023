@@ -17,3 +17,5 @@ janitor
 rstatix
 lubridate
 shiny
+patchwork
+ggrepel
