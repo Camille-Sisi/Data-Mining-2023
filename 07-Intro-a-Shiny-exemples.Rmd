@@ -21,6 +21,14 @@ server <- function(input,
 shinyApp(ui = ui, server = server)
 ```
 
+```{r eval=FALSE, include=FALSE}
+library(tidyverse)
+library(janitor)
+library(gt)
+RP <- readRDS(file = "data/menages2019.Rdata")
+```
+
+
 ## Ajout d'un titre et d'un widget
 Ajoutons un titre et un widget, par exemple une barre "slider" : 
 ```{r eval=FALSE}
@@ -319,6 +327,11 @@ tab_locataires_arrdt_paris <- RP %>%
   somme(STOCD %in% c("21","22","23"), var_gpe=ARM, 
         nom_var=nb_locataires, var1=IPONDL) %>% 
   mutate(nb_locataires=round(nb_locataires, 0))
+
+# Création de la variable et donc remplacement de la table de données
+# tab_proprio <- tab_proprio %>%
+#   mutate(dept=substr(COMMUNE, 1,2))
+
 tab_st_occ <- tab_locataires_arrdt_paris %>% 
   rename(COMMUNE = ARM) %>% 
   rbind(tab_locataires_commune_horsparis) %>% 
@@ -428,7 +441,7 @@ shinyApp(ui = ui, server = server)
   
   
   
-Un autre exemple avec une boîte à moustache plutôt qu'un histogramme : 
+Un autre exemple avec une boîte à moustache plutôt qu'un histogramme, et l'introduction d'une réactivité sur la base de données, ce qui permet un gain d'efficacité (en particulier en cas de base de données volumineuse) : 
 ```{r eval=FALSE}
 
 # Définition UI et Server de l'application Shiny
@@ -469,7 +482,8 @@ ui <- fluidPage(
         ggplot() + aes_string(y = input$variable) + 
         geom_boxplot() + coord_flip() +
         scale_y_continuous(limits=c(0,quantile(tab_st_occ_react()[[input$variable]], 0.75)*2)) +
-        labs(caption="Rq : les valeurs supérieures à 2 fois le Q3 de la distribution ne sont pas affichées sur le graphique")
+        labs(caption="Rq : les valeurs supérieures à 2 fois le Q3 de la distribution ne sont pas affichées sur le graphique", x="", y="") +
+        theme(plot.caption = element_text(hjust=0, size=11.5))
     })
     
   }

@@ -456,17 +456,17 @@ p5 <- dvf %>%
   filter(type=="Appartement") %>% 
   group_by(nom) %>%  
   summarise(moy_prixm2 = round(mean(prixm2))) %>% 
-      arrange(desc(moy_prixm2)) %>% slice(1:5) %>% 
-      ggplot() + aes(x = moy_prixm2, y = fct_reorder(nom, moy_prixm2))  + 
-      geom_bar(stat="identity", fill="darkgoldenrod1")  +
-      geom_text(aes(label=moy_prixm2), position = position_stack(vjust=0.5), size=2.8) +
-      labs(title="Ventes d'appartements",
-           x = "", y = " ") +
-      theme_classic() +
-      theme(legend.position = "none", plot.title=element_text(size=9),
-            axis.text.y = element_text(size=8),
-            axis.text.x = element_text(size=8),
-            axis.title.x = element_text(size=8))
+  arrange(desc(moy_prixm2)) %>% slice(1:5) %>% 
+  ggplot() + aes(x = moy_prixm2, y = fct_reorder(nom, moy_prixm2))  + 
+  geom_bar(stat="identity", fill="darkgoldenrod1")  +
+  geom_text(aes(label=moy_prixm2), position = position_stack(vjust=0.5), size=2.8) +
+  labs(title="Ventes d'appartements",
+       x = "", y = " ") +
+  theme_classic() +
+  theme(legend.position = "none", plot.title=element_text(size=9),
+        axis.text.y = element_text(size=8),
+        axis.text.x = element_text(size=8),
+        axis.title.x = element_text(size=8))
 
 p6 <- dvf %>% 
   filter(type=="Maison") %>% 
@@ -485,7 +485,7 @@ p6 <- dvf %>%
             axis.title.x = element_text(size=8))
 
 (p5 + p6) +
-  plot_annotation(title =  "Top 5 des communes ayant les prix moyens au m2 des ventes d'appartements ou de maisons les \nplus élevés", 
+  plot_annotation(title =  "Top 5 des communes ayant les prix moyens au m2 des ventes d'appartements ou de maisons \nles plus élevés", 
                 caption = "Source : Base 'demande de valeurs foncières', 2014-2021. \nCalculs : Camille Signoretto.", 
                 theme = theme(plot.title = element_text(size = 12))) &
   theme(plot.caption = element_text(hjust = 0))
@@ -541,4 +541,13 @@ concernant les appartements, on retrouve 5 arrondissements de Paris, ce qui est 
 Bien sûr, vous pouvez créer des fonctions sur ces graphiques ; puis "jouez" avec d'autres variables, notamment la surface et le nombre de pièces ; ou encore construire des cartes sur le niveau commune ; utiliser d'autres types de graphiques ; etc. ; etc. 
 
 
+
+
+
+
+
+```{r eval=FALSE, include=FALSE}
+saveRDS(object = dvf,
+        file = "data/dvfclean_V3.RDS")
+```
 

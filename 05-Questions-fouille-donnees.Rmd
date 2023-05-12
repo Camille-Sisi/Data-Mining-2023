@@ -479,8 +479,6 @@ RP %>%
 ```
 
 
-
-
 ```{r eval=FALSE, include=FALSE}
 tableau_bis <- function(data, vars_filtre, var_quali, pond=IPONDL){
   
