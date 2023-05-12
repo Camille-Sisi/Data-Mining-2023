@@ -23,7 +23,7 @@
 <meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
 
 
-<meta name="date" content="2023-04-21" />
+<meta name="date" content="2023-05-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -227,6 +227,12 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="9.2.5" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#à-vous-de-jouer"><i class="fa fa-check"></i><b>9.2.5</b> À vous de “jouer” !</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html"><i class="fa fa-check"></i><b>10</b> Application sur Shiny</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#application-avec-un-tableau-et-un-graphique"><i class="fa fa-check"></i><b>10.1</b> Application avec un tableau et un graphique</a></li>
+<li class="chapter" data-level="10.2" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#introduction-dune-réactivité-appliquée-à-la-table-de-données"><i class="fa fa-check"></i><b>10.2</b> Introduction d’une réactivité appliquée à la table de données</a></li>
+<li class="chapter" data-level="10.3" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#introduction-dune-réactivité-sur-les-inputs-contexte-réactif"><i class="fa fa-check"></i><b>10.3</b> Introduction d’une réactivité sur les inputs (contexte réactif)</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -269,7 +275,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <span id="cb3-2"><a href="01-Base-de-donnees.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
 <span id="cb3-3"><a href="01-Base-de-donnees.html#cb3-3" aria-hidden="true" tabindex="-1"></a>RP <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">&quot;data/FD_LOGEMTZA_2019.csv&quot;</span>, <span class="at">stringsAsFactors=</span><span class="cn">TRUE</span>)</span>
 <span id="cb3-4"><a href="01-Base-de-donnees.html#cb3-4" aria-hidden="true" tabindex="-1"></a>RP <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(RP)</span></code></pre></div>
-<p>On a donc 69 variables et 2 850 830 observations.</p>
+<p>On a donc 70 variables et 2 850 830 observations.</p>
 <p>Pour se renseigner sur les variables de la table, on peut télécharger également le fichier des métadonnées, avec la commande <code>read.csv</code> cette fois, ce qui nous permet de voir quelles options sont utiles ici : l’argument <code>sep =</code> nous permet d’indiquer comment sont séparées les informations dans le fichier initial, l’argument <code>encoding =</code> permet que les accents aigus soient compris par <code>R</code> comme tel, et enfin la même option <code>stringsAsFactors=TRUE</code> peut être utilisée ici.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="01-Base-de-donnees.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lecture du fichier de métadonnées</span></span>
 <span id="cb4-2"><a href="01-Base-de-donnees.html#cb4-2" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">&#39;data/Varmod_LOGEMT_2019.csv&#39;</span>,</span>

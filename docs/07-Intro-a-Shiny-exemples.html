@@ -23,7 +23,7 @@
 <meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
 
 
-<meta name="date" content="2023-04-21" />
+<meta name="date" content="2023-05-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -226,6 +226,12 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="9.2.4" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#top-5-du-prix-au-m2-des-ventes-dappartements-selon-les-communes-ou-arrondissements"><i class="fa fa-check"></i><b>9.2.4</b> Top 5 du prix au m2 des ventes d’appartements selon les communes (ou arrondissements)</a></li>
 <li class="chapter" data-level="9.2.5" data-path="09-Ggplot-pratique.html"><a href="09-Ggplot-pratique.html#à-vous-de-jouer"><i class="fa fa-check"></i><b>9.2.5</b> À vous de “jouer” !</a></li>
 </ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html"><i class="fa fa-check"></i><b>10</b> Application sur Shiny</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#application-avec-un-tableau-et-un-graphique"><i class="fa fa-check"></i><b>10.1</b> Application avec un tableau et un graphique</a></li>
+<li class="chapter" data-level="10.2" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#introduction-dune-réactivité-appliquée-à-la-table-de-données"><i class="fa fa-check"></i><b>10.2</b> Introduction d’une réactivité appliquée à la table de données</a></li>
+<li class="chapter" data-level="10.3" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#introduction-dune-réactivité-sur-les-inputs-contexte-réactif"><i class="fa fa-check"></i><b>10.3</b> Introduction d’une réactivité sur les inputs (contexte réactif)</a></li>
 </ul></li>
 </ul>
 
@@ -524,12 +530,17 @@ code span.wa { color: #bf0303; } /* Warning */
 <span id="cb104-8"><a href="07-Intro-a-Shiny-exemples.html#cb104-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">somme</span>(STOCD <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;21&quot;</span>,<span class="st">&quot;22&quot;</span>,<span class="st">&quot;23&quot;</span>), <span class="at">var_gpe=</span>ARM, </span>
 <span id="cb104-9"><a href="07-Intro-a-Shiny-exemples.html#cb104-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">nom_var=</span>nb_locataires, <span class="at">var1=</span>IPONDL) <span class="sc">%&gt;%</span> </span>
 <span id="cb104-10"><a href="07-Intro-a-Shiny-exemples.html#cb104-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb_locataires=</span><span class="fu">round</span>(nb_locataires, <span class="dv">0</span>))</span>
-<span id="cb104-11"><a href="07-Intro-a-Shiny-exemples.html#cb104-11" aria-hidden="true" tabindex="-1"></a>tab_st_occ <span class="ot">&lt;-</span> tab_locataires_arrdt_paris <span class="sc">%&gt;%</span> </span>
-<span id="cb104-12"><a href="07-Intro-a-Shiny-exemples.html#cb104-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">COMMUNE =</span> ARM) <span class="sc">%&gt;%</span> </span>
-<span id="cb104-13"><a href="07-Intro-a-Shiny-exemples.html#cb104-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(tab_locataires_commune_horsparis) <span class="sc">%&gt;%</span> </span>
-<span id="cb104-14"><a href="07-Intro-a-Shiny-exemples.html#cb104-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(tab_proprio, <span class="at">by=</span><span class="fu">join_by</span>(<span class="st">&quot;COMMUNE&quot;</span>))</span>
-<span id="cb104-15"><a href="07-Intro-a-Shiny-exemples.html#cb104-15" aria-hidden="true" tabindex="-1"></a><span class="co"># pour supprimer les tables intermédiaires</span></span>
-<span id="cb104-16"><a href="07-Intro-a-Shiny-exemples.html#cb104-16" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tab_locataires_commune_horsparis, tab_locataires_arrdt_paris)</span></code></pre></div>
+<span id="cb104-11"><a href="07-Intro-a-Shiny-exemples.html#cb104-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-12"><a href="07-Intro-a-Shiny-exemples.html#cb104-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Création de la variable et donc remplacement de la table de données</span></span>
+<span id="cb104-13"><a href="07-Intro-a-Shiny-exemples.html#cb104-13" aria-hidden="true" tabindex="-1"></a><span class="co"># tab_proprio &lt;- tab_proprio %&gt;%</span></span>
+<span id="cb104-14"><a href="07-Intro-a-Shiny-exemples.html#cb104-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(dept=substr(COMMUNE, 1,2))</span></span>
+<span id="cb104-15"><a href="07-Intro-a-Shiny-exemples.html#cb104-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-16"><a href="07-Intro-a-Shiny-exemples.html#cb104-16" aria-hidden="true" tabindex="-1"></a>tab_st_occ <span class="ot">&lt;-</span> tab_locataires_arrdt_paris <span class="sc">%&gt;%</span> </span>
+<span id="cb104-17"><a href="07-Intro-a-Shiny-exemples.html#cb104-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">COMMUNE =</span> ARM) <span class="sc">%&gt;%</span> </span>
+<span id="cb104-18"><a href="07-Intro-a-Shiny-exemples.html#cb104-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(tab_locataires_commune_horsparis) <span class="sc">%&gt;%</span> </span>
+<span id="cb104-19"><a href="07-Intro-a-Shiny-exemples.html#cb104-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(tab_proprio, <span class="at">by=</span><span class="fu">join_by</span>(<span class="st">&quot;COMMUNE&quot;</span>))</span>
+<span id="cb104-20"><a href="07-Intro-a-Shiny-exemples.html#cb104-20" aria-hidden="true" tabindex="-1"></a><span class="co"># pour supprimer les tables intermédiaires</span></span>
+<span id="cb104-21"><a href="07-Intro-a-Shiny-exemples.html#cb104-21" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tab_locataires_commune_horsparis, tab_locataires_arrdt_paris)</span></code></pre></div>
 <p>Procédons comme précédemment : créons un nouveau widget avec par exemple <code>selectInput()</code>, dont l’<code>inputID</code> sera “variable” et l’argument <code>choices =</code> donne les deux variables choisies ; pour cela, on peut utiliser une fonction <code>list()</code> et indiquer le nom des deux variables, soient <code>total_meuros</code> et <code>nombre_entreprises</code>.<br />
 Et ensuite, dans la fonction <strong>server</strong>, remplaçons <code>x=total_meuros</code> par <code>x=input$variable</code> et voyons si cela marche !</p>
 <div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="07-Intro-a-Shiny-exemples.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Définition UI et Server de l&#39;application Shiny</span></span>
@@ -618,7 +629,7 @@ Et ensuite, dans la fonction <strong>server</strong>, remplaçons <code>x=total_
 <span id="cb106-40"><a href="07-Intro-a-Shiny-exemples.html#cb106-40" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb106-41"><a href="07-Intro-a-Shiny-exemples.html#cb106-41" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb106-42"><a href="07-Intro-a-Shiny-exemples.html#cb106-42" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
-<p>Un autre exemple avec une boîte à moustache plutôt qu’un histogramme :</p>
+<p>Un autre exemple avec une boîte à moustache plutôt qu’un histogramme, et l’introduction d’une réactivité sur la base de données, ce qui permet un gain d’efficacité (en particulier en cas de base de données volumineuse) :</p>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="07-Intro-a-Shiny-exemples.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Définition UI et Server de l&#39;application Shiny</span></span>
 <span id="cb107-2"><a href="07-Intro-a-Shiny-exemples.html#cb107-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
 <span id="cb107-3"><a href="07-Intro-a-Shiny-exemples.html#cb107-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Titre de l&#39;application</span></span>
@@ -657,12 +668,13 @@ Et ensuite, dans la fonction <strong>server</strong>, remplaçons <code>x=total_
 <span id="cb107-36"><a href="07-Intro-a-Shiny-exemples.html#cb107-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">aes_string</span>(<span class="at">y =</span> input<span class="sc">$</span>variable) <span class="sc">+</span> </span>
 <span id="cb107-37"><a href="07-Intro-a-Shiny-exemples.html#cb107-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
 <span id="cb107-38"><a href="07-Intro-a-Shiny-exemples.html#cb107-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fu">quantile</span>(<span class="fu">tab_st_occ_react</span>()[[input<span class="sc">$</span>variable]], <span class="fl">0.75</span>)<span class="sc">*</span><span class="dv">2</span>)) <span class="sc">+</span></span>
-<span id="cb107-39"><a href="07-Intro-a-Shiny-exemples.html#cb107-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">caption=</span><span class="st">&quot;Rq : les valeurs supérieures à 2 fois le Q3 de la distribution ne sont pas affichées sur le graphique&quot;</span>)</span>
-<span id="cb107-40"><a href="07-Intro-a-Shiny-exemples.html#cb107-40" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb107-41"><a href="07-Intro-a-Shiny-exemples.html#cb107-41" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb107-42"><a href="07-Intro-a-Shiny-exemples.html#cb107-42" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb107-43"><a href="07-Intro-a-Shiny-exemples.html#cb107-43" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb107-44"><a href="07-Intro-a-Shiny-exemples.html#cb107-44" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
+<span id="cb107-39"><a href="07-Intro-a-Shiny-exemples.html#cb107-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">caption=</span><span class="st">&quot;Rq : les valeurs supérieures à 2 fois le Q3 de la distribution ne sont pas affichées sur le graphique&quot;</span>, <span class="at">x=</span><span class="st">&quot;&quot;</span>, <span class="at">y=</span><span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb107-40"><a href="07-Intro-a-Shiny-exemples.html#cb107-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust=</span><span class="dv">0</span>, <span class="at">size=</span><span class="fl">11.5</span>))</span>
+<span id="cb107-41"><a href="07-Intro-a-Shiny-exemples.html#cb107-41" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb107-42"><a href="07-Intro-a-Shiny-exemples.html#cb107-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb107-43"><a href="07-Intro-a-Shiny-exemples.html#cb107-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb107-44"><a href="07-Intro-a-Shiny-exemples.html#cb107-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb107-45"><a href="07-Intro-a-Shiny-exemples.html#cb107-45" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
 
 </div>
 </div>

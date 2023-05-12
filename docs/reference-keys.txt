@@ -49,3 +49,7 @@ comparaison-des-montants-moyen-et-médian-du-prix-au-m2-par-département-de-pari
 evolution-du-prix-moyen-au-m2-des-ventes-dappartements-à-paris
 top-5-du-prix-au-m2-des-ventes-dappartements-selon-les-communes-ou-arrondissements
 à-vous-de-jouer
+c10-Retour-sur-Shiny
+application-avec-un-tableau-et-un-graphique
+introduction-dune-réactivité-appliquée-à-la-table-de-données
+introduction-dune-réactivité-sur-les-inputs-contexte-réactif
