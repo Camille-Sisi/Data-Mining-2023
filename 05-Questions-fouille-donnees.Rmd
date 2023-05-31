@@ -238,13 +238,6 @@ Ainsi, si l'on veut créer des tableaux de répartition à une seule variable, o
 
 
 
-
-
-
-
-
-
-
 ```{r eval=FALSE, include=FALSE}
 RP %>% 
   filter(COMMUNE == "75056" & !SANI %in% c("X","Y","Z")) %>% 

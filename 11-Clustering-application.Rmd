@@ -1,0 +1,647 @@
+
+
+# (PART\*) Séance 7 : Data Mining {-}
+
+
+# Clustering : application sur le RP 2019 {#c11-Clustering-application}
+<div align="justify">
+
+Pour un rappel des fondements théoriques des techniques de clustering, voir par exemple <a href="https://camille-sisi.github.io/Data-Mining-2022/14-Clustering-theorique.html" target="_blank">ici</a>, ou <a href="https://larmarange.github.io/analyse-R/classification-ascendante-hierarchique.html" target="_blank">là</a>.  
+Ces techniques font partie des méthodes d'apprentissage dit non supervisé, il n'y a pas de variable d'intérêt ou variable cible, on cherche plutôt à rassembler des observations qui "se ressemblent" mais pas d'expliquer une variable/un phénomène par rapport à d'autres.
+
+
+## Choix des variables et préparation du tableau final
+A partir de la base du RP2019, l'objectif de notre analyse est de décrire une commune ou un groupe de communes, en rassemblant des zones infracommunales (IRIS) qui se ressemblent ou sont relativement homogènes, c'est-à-dire qui ont des caractéristiques proches. Mais, bien sûr, les méthodes de clustering peuvent être appliquées à toutes sortes de problématiques et de données.  
+
+Pour cela, on doit avoir un tableau avec **n** individus ou observations (lignes) et **p** variables (colonnes), la mesure des variables peut être des effectifs, mais aussi des proportions. L'idée étant de regrouper nos IRIS en classes homogènes (=*clusters*) en un nombre plus restreint, nos observations sont donc constituées ici par les IRIS. Il faut ensuite choisir sur quelles caractéristiques on va les regrouper et chercher une certaine homogénéité. Cela peut être à partir de différentes choses selon notre base de données : caractéristiques socio-professionnelles de la personne de référence du ménage, caractéristiques des logements.  
+
+
+### Variables socio-professionnelles caractérisant la personne de référence du ménage
+On va dans cet exemple (communes de l'Est parisien constitué des 11ème, 12ème et 20ème arrondissements de Paris) s'intéresser aux caractéristiques socio-professionnelles de la population, ici néanmoins par la seule personne de référence du ménage : on aura en lignes nos **n** IRIS des 3 arrondissements et en colonnes nos variables d'entrées, soient par exemple le nombre d'habitants, le nombre d'individus qui sont actuellement chômeurs, le nombre de personnes en emploi, le nombre d'individus qui ont moins de 15 ans, etc.   
+
+On va alors réutiliser la fonction créée précédemment `somme()` et on va en créer une autre pour avoir des tableaux de contingence dans le cas de variables ave plusieurs modalités.   
+
+Pour caractériser la population par IRIS à partir de variables socio-professionnnelles, on peut choisir des variables classiques du type : - diplôme le plus élevé (`DIPLM`, à recoder pour avoir moins de modalités) ; - type d'activité (`TACTM`) pour différencier les actifs des inactifs ; - condition d'emploi (`EMPLM`) ; - situation quant à l'immigration (`IMMIM`) ; - sexe (`SEXEM`).  
+Il faudra néanmoins faire attention à ce que certaines modalités ne se recoupent pas entre elles, notamment quand l'information sur la population de plus de 14 ans est rassemblée dans une modalité spécifique, ou quand l'information est trop proche - par exemple la conditions d'emploi et le type d'activité. Mais on pourra le faire dans un second temps en étudiant les corrélations entre les variables finalement obtenues.  
+
+Regardons d'abord pour quelles variables un regroupement et un recodage des modalités est nécessaire, avant d'appliquer nos fonctions de tableaux de contingence.  
+  
+Pour la variable de diplôme :
+```{r Recod_dipl, message=FALSE}
+# Chargement des librairies
+# library(tidyverse)
+# library(janitor)
+# library(gt)
+
+meta %>% 
+  select(COD_VAR, COD_MOD, LIB_MOD) %>% 
+  filter(COD_VAR=="DIPLM")
+```
+Ici, il faut regrouper les modalités comme ceci par exemple : "Peu ou pas diplomés" (toutes les modalités en-dessous du Bac : "1","2","3", "11", "12" et "13"), "Bac" (quel que soit le type : modalités "14" et "15"), "Bac+2à4" (modalités "16" et "17"), "Bac+5ou+" (modalités "18" et "19")
+
+Pour la variable du type d'activités :
+```{r Recod_tact}
+meta %>% 
+  select(COD_VAR, COD_MOD, LIB_MOD) %>% 
+  filter(COD_VAR=="TACTM")
+```
+On peut regrouper les 4 dernières modalités (hors "YY") comme une catégorie large d'inactifs ("21","22","24" et "25"), ce qui permet d'avoir une distinction entre "en emploi", "chômeurs" et "inactifs". Il faudra faire attention néanmoins si on utilise également la condition d'emploi pour que cette variable ne soit pas redondante avec la modalité "en emploi".    
+
+
+Et enfin, pour la condition d'emploi :
+```{r Recod_condempl}
+meta %>% 
+  select(COD_VAR, COD_MOD, LIB_MOD) %>% 
+  filter(COD_VAR=="EMPLM")
+```
+Cette variable peut permettre de distinguer au sein des personnes en emploi, celles en contrat à durée indéterminée (ici modalités "16") par rapport à celles avec d'autres types de contrats ou statuts (intérim - "12", CDD - "15", mais aussi stage - "14", apprentissage - "11"  ou encore emploi aidé - "13"), ou encore celles qui sont indépendants (ici "21", "22", "23"). C'est donc comme cela qu'on pourra regrouper ces modalités.
+
+  
+  
+
+### Création des différents tableaux de contingence
+On crée notre nouvelle fonction qu'on va appeler `tab_cont_n_iris`, pour avoir en ligne les IRIS et en colonne chaque modalité de la variable en question :
+```{r Fonction_suppl}
+tab_cont_n_iris <- function(data, arrdt_filtre, ..., nom_var, var, prefix_var)
+{
+  tab_n <- data %>% 
+            filter(ARM %in% arrdt_filtre) %>%
+            group_by(...) %>%
+            summarise({{ nom_var }} := round(sum(IPONDL))) %>% 
+            pivot_wider(names_from = {{ var }}, values_from = {{ nom_var }},
+                        values_fill = 0, names_prefix = prefix_var)
+  
+  return(tab_n)
+}
+```
+
+
+On crée maintenant nos différents tableaux de contingence.  
+```{r Tab_cont, message=FALSE, warning=FALSE}
+# On retire les résidences non principales (par n'importe quelle variable 
+# qui a cette modalité)
+RP_1 <- RP %>% filter(SEXEM!="Y")
+
+# Pour la variable du nombre d'habitants
+Nbhab <- RP_1 %>% somme(ARM %in% c("75111", "75112", "75120"), 
+                      var_gpe=IRIS, nom_var=nb_hab, var1=round(IPONDL)) 
+
+# Pour la variable de diplôme : 
+dipl <- RP_1 %>% 
+         mutate(dipl=as.factor(case_when(DIPLM %in% c("01", "02", "03", "11", "12", "13") ~ "Peu_pas_dipl",
+                                     DIPLM %in% c("14", "15") ~ "Bac",
+                                     DIPLM %in% c("16", "17") ~ "Bac+2ou4",
+                                     DIPLM %in% c("18", "19") ~ "Bac+5ou+"))) %>%
+         tab_cont_n_iris(arrdt_filtre=c("75111", "75112", "75120"), IRIS, dipl,
+                         nom_var=diplome, var=dipl, prefix_var="nb_")
+
+# Pour la variable de type d'activité 
+activite <- RP_1 %>% 
+         mutate(typ_act = as.factor(case_when(TACTM == "11" ~ "en emploi",
+                              TACTM == "12" ~ "chômeurs",
+                              TACTM %in% c("21","22","24","25") ~ "inactifs"))) %>% 
+        tab_cont_n_iris(arrdt_filtre=c("75111", "75112", "75120"), IRIS, typ_act,
+                        nom_var=activite, var=typ_act, prefix_var="nb_")
+
+# Pour la variable de condition d'emploi 
+cond_empl <- RP_1 %>% 
+         mutate(cond_empl = as.factor(case_when(EMPLM == "16" ~ "CDI",
+                              EMPLM %in% c("11","12","13","14","15") ~ "EDDouautres",
+                              EMPLM %in% c("21","22","23") ~ "independants",
+                              EMPLM == "ZZ" ~ "sans_emploi"))) %>% 
+        tab_cont_n_iris(arrdt_filtre=c("75111", "75112", "75120"), IRIS, cond_empl,
+                        nom_var=condempl, var=cond_empl, prefix_var="nb_")
+
+# Pour la variable de sexe : 
+sexe <- RP_1 %>%  
+         mutate(SEXEM = factor(SEXEM, labels=c("Homme", "Femme"))) %>%
+         tab_cont_n_iris(arrdt_filtre=c("75111", "75112", "75120"), IRIS, SEXEM,
+                        nom_var=sexe, var=SEXEM, prefix_var="nb_")
+
+# Pour la variable renseignant du nombre d'immigrés :
+immi <- RP %>%
+         filter(IMMIM=="1") %>%
+         somme(ARM %in% c("75111", "75112", "75120"), 
+               var_gpe=IRIS, nom_var=nb_immi, var1=round(IPONDL))
+
+# On supprime la table RP_1 pour ne pas surcharger l'environnement
+rm(RP_1)
+```
+
+
+### Création du tableau final
+On va rassembler tous ces tableaux et donc ces informations en un seul tableau. Comme on a plus de 2 tableaux à fusionner, on utilise une liste dans laquelle on stocke l'ensemble de nos tableaux, et ensuite on réalise une jointure avec `left_join`, mais en passant par la fonction `reduce()` du package `purr()` qui est inclus dans `tidyverse` pour l'appliquer à notre liste de tableaux.
+```{r Tab_final}
+list_tab <- list(data.frame(Nbhab), data.frame(dipl), data.frame(activite), 
+                 data.frame(cond_empl), data.frame(sexe), data.frame(immi)) 
+
+clust <- data.frame(purrr::reduce(list_tab, left_join, by='IRIS'))
+head(clust)
+
+# On supprime les tables intermédiaires pour ne pas surchager notre environnement
+rm(Nbhab, dipl, activite, cond_empl, sexe, immi)
+```
+
+
+On va rajouter le nom des IRIS pour chaque commune et l'inclure comme identifiant dans le tableau, c'est-à-dire dans le nom de la 1ère colonne (avec la fonction `row.names()`), cela peut être conseillé pour la procédure de clustering, afin que chaque IRIS soit bien identifié par son nom (label) ; on verra toutefois dans notre exemple que cela devient illisible si on a trop d'IRIS/individus. Pour cela, on va récupérer le nom des IRIS dans le fichier de métadonnées "meta", en supprimant l'information entre parenthèses avec la fonction `str_replace()` pour n'avoir que le numéro de l'IRIS :
+```{r Row_names}
+# On récupère les noms des IRIS dans le fichier de métadonnées "meta"
+list_nom_IRIS <- meta %>% 
+  mutate(COM = substr(COD_MOD, 1, 5)) %>% 
+  select(COD_VAR, COD_MOD, LIB_MOD, COM) %>% 
+  filter(COD_VAR == "IRIS" & COM %in% c("75111", "75112", "75120")) %>% 
+  rename(IRIS = COD_MOD) %>% 
+  select(LIB_MOD, IRIS) 
+
+# On supprime la fin du nom qui est entre parenthèse gràce à une expression régulière
+list_nom_IRIS$LIB_MOD <- str_replace(list_nom_IRIS$LIB_MOD, " \\s*\\([^\\)]+\\)", "")
+
+clust <- left_join(clust, list_nom_IRIS, by="IRIS")
+row.names(clust) <- clust$LIB_MOD
+head(clust)
+```
+   
+
+Une dernière étape est de faire attention aux IRIS qui compte trop peu d'habitants ; dans le 12ème arrondissement par exemple, il y a le Bois de Vincennes, donc il faut probablement le supprimer. On va regarder combien et quel IRIS est concerné. Il y aura donc des données manquantes pour ces 2 quartiers dans la carte finale qu'on réalisera avec la répartition des IRIS selon les clusters obtenus...
+```{r suppr IRIS trop peu deffectifs}
+clust %>% filter(nb_hab<=250)
+
+# On supprime donc ces 4 IRIS
+clust <- clust %>% filter(!IRIS %in% c("751124577", "751124677", "751124707", "751207917"))
+```
+
+
+
+
+### choix des variables actives dans le clustering
+Il nous reste, en dernière étape, de choisir les variables à inclure dans le clustering et vérifier si certaines d'entre elles ne sont pas corrélées, c'est-à-dire ne donnent pas la même information. Cela est important car sinon dans la procédure de clustering, cela s'apparente à donner un poids supérieur à une information si on la met en double voire en triple par exemple. C'est typiquement le cas pour les modalités de la variable de type d'activité "inactifs" ou "chômeurs" et la modalité de la variable de condition d'emploi  "sans_emploi" : si on les laisse toutes les deux, la même information va peser 2 fois dans l'analyse.   
+
+Pour simplifier la procédure et surtout l'interprétation des résultats, on va réaliser un clustering avec quelques variables socio-professionnelles.  
+
+On peut vérifier la corrélation à l'aide d'une fonction comme `cor()` combinées avec la fonction `symnum()`, ou `rcorr()` du package `Hmisc`, ou `corrplot()` du package du même nom, ou encore `pairs()`. Attention toutefois, ces fonctions ne s'appliquent que sur des variables numériques, il nous faut donc sélectionner les colonnes sans la première (code IRIS), ni la dernière (libellé IRIS), ou en sélectionnant les seules variables qui nous intéressent. Attention bis (!) : comme ici nous avons beaucoup de variables, il vaut mieux sélectionner des variables par groupe de 10 ou 15 par exemple car sinon cela peut-être illisible selon les fonctions !
+```{r Corr, warning=FALSE, message=FALSE}
+# names(clust)
+cor(clust[, c("nb_hab" , "nb_Bac", "nb_Bac.2ou4" , "nb_Bac.5ou.", "nb_Peu_pas_dipl", "nb_chômeurs", "nb_en.emploi",
+              "nb_inactifs", "nb_CDI", "nb_EDDouautres",  "nb_independants", "nb_sans_emploi", "nb_Homme", "nb_Femme", "nb_immi")])
+
+# On va retirer : "nb_hab" , "nb_en.emploi", "nb_sans_emploi","nb_Homme",
+# "nb_Femme", "nb_CDI","nb_Bac.2ou4" 
+
+# Pour voir plus rapidement avec des indications les fortes corrélations et 
+# sans les variables mentionnées ci-dessous :
+symnum(cor(clust[ , c("nb_Bac",  "nb_Bac.5ou.", "nb_Peu_pas_dipl", "nb_chômeurs", "nb_CDI",
+              "nb_inactifs", "nb_EDDouautres",  "nb_independants",  "nb_immi")]))
+
+
+# Pour info avec le package `corrplot`
+library(corrplot)
+corrplot(cor(clust[, c("nb_Bac",  "nb_Bac.5ou.", "nb_Peu_pas_dipl", "nb_chômeurs", "nb_CDI", "nb_inactifs", "nb_EDDouautres",  "nb_independants", "nb_immi")]), 
+         type="upper", method="number", tl.col="black", tl.srt=40)
+```
+
+Pour le dernier graphique, si la couleur est bleu foncé, ou si le coefficient est proche de 1, cela signifie que les variables sont corrélées (la statistique utilisée est le coefficient de corrélation de Pearson qui indique une relation linéaire entre deux variables continues, il varie entre -1 et 1 comme on peut le remarquer sur les premières matrices obtenues avec `corrplot()`).    
+
+On remarque ainsi que les variables de nombre d'habitants, nombre de personnes en emploi, nombre de personnes sans emploi, les deux variables de sexe, le nombre de CDI ou encore le nombre de bac +2 à 4 sont trop corrélées (cf. 1er tableau général des corrélations), soit entre elles soit avec d'autres variables. On décide donc de ne pas les retenir.  
+
+On va donc procéder à la suppression de certaines colonnes de notre table finale.  
+```{r Suppr_var}
+clust_socioprof <- clust[, c("nb_Bac",  "nb_Bac.5ou.", "nb_Peu_pas_dipl", 
+                             "nb_chômeurs", "nb_CDI", "nb_inactifs", 
+                             "nb_EDDouautres",  "nb_independants",  "nb_immi")]
+```
+
+  
+
+  
+Il peut être également plus pertinent de ne pas raisonner en nombre mais plutôt en proportion, pour éviter de capter un effet taille du nombre d'habitants dans un quartier donné. Dans ce cas, on calcule les proportions pour chacune de nos variables finales et on crée un nouvel objet pour cela.   
+```{r Suppr_var_bis}
+clust_socioprof_prop <- clust %>% 
+  select(c("nb_hab", "nb_Bac",  "nb_Bac.5ou.", "nb_Peu_pas_dipl", "nb_chômeurs",
+           "nb_CDI", "nb_inactifs", "nb_EDDouautres",  "nb_independants",  
+           "nb_immi")) %>% 
+  mutate(pct_Bac = (nb_Bac / nb_hab)*100,
+         pct_Bac5ouplus = (nb_Bac.5ou./ nb_hab)*100,
+         pct_Peu_pas_dipl = (nb_Peu_pas_dipl / nb_hab)*100,
+         pct_chômeurs = (nb_chômeurs / nb_hab)*100,
+         pct_CDI = (nb_CDI / nb_hab)*100,
+         pct_inactifs = (nb_inactifs / nb_hab)*100,
+         pct_EDDouautres = (nb_EDDouautres / nb_hab)*100,
+         pct_independants = (nb_independants / nb_hab)*100,
+         pct_immi = (nb_immi / nb_hab)*100) %>% 
+  select(pct_Bac, pct_Bac5ouplus, pct_Peu_pas_dipl, pct_chômeurs, pct_CDI, 
+         pct_inactifs, pct_EDDouautres, pct_independants, pct_immi)
+```
+
+
+
+
+## La méthode de la CAH appliquée à nos données
+
+### Constitution des classes
+On reprend les étapes de la méthode décrite <a href="https://camille-sisi.github.io/Data-Mining-2022/14-Clustering-theorique.html" target="_blank">ici</a>, une par une. 
+Pour la classification réalisée sur le tableau de contingence en effectifs, on utilise la méthode euclidienne pour la matrice des distances ; mais pour la classification réalisée sur le tableau de contingence en pourcentage (pour éviter un effet taille de nos IRIS), il faut utiliser la distance du khi-2. Pour cette dernière, nous avons besoin du package **`ade4`** (à installer avant de le charger) et de sa fonction `dist.dudi`. Attention, cette fonction doit être utilisée sur un format particulier c'est pourquoi on l'utilise avec la fonction `dudi.coa`. Enfin, l'option `amongrow=TRUE` de la fonction `dist.dudi` permet de préciser que les distances doivent être calculées entre lignes, c'est-à-dire ici entre nos individus constitués par les IRIS (`FALSE` si on veut que la distance soit calculée entre colonnes).
+
+
+```{r Etapes_CAH, warning=FALSE}
+#Etape 1 : on centre et réduit les variables si on prend la table en nombre
+clust_socioprof_sc <- as.data.frame(scale(clust_socioprof)) 
+# on n'applique pas cette procédure sur la table en proportion
+
+
+#install.packages("ade4")
+library(ade4)
+#Etape 2 : on crée la matrice de distance, en utilisant la distance euclidienne 
+#standard pour la table en nombre, et la distance du khi-2 pour la table en %
+dist_mat_socioprof_n <- dist(clust_socioprof_sc, method = 'euclidean')
+dist_mat_socioprof_p <- dist.dudi(dudi.coa(clust_socioprof_prop, scannf=FALSE, nf=10),
+                                  amongrow=TRUE)
+
+# si vous souhaitez voir et comparer les matrices de distances, 
+# vous devez les transformer en matrix avec la fonction 'as.matrix', par exemple :
+# as.matrix(dist_mat_socioprof_n)
+
+
+#Etape 3 : on choisit la méthode d'agrégation, ici la plus standard, le critère de Ward
+classif_socioprof_n <- hclust(dist_mat_socioprof_n, method = "ward.D2")
+classif_socioprof_p <- hclust(dist_mat_socioprof_p, method = "ward.D2")
+
+
+#Etape 4 : on visualise l'arbre de classification ou dendogramme
+plot(classif_socioprof_n, xlab="IRIS",  main="Dendogramme table effectifs")
+plot(classif_socioprof_p, xlab="IRIS",  main="Dendogramme table proportion")
+# plot(classif_socioprof_n, xlab="IRIS",  main="Dendogramme", labels=FALSE)
+```
+
+On remarque ici que comme nous avons mis en label (*row.names*) le nom des IRIS, on peut tout de suite savoir quels IRIS sont proches et vont former des classes. Toutefois, avec 190 IRIS ce n'est absolument pas lisible !! Donc on peut aussi les enlever avec l'option `label=FALSE` dans la fonction `plot()`.    
+Il existe aussi une fonction *via* **`ggplot2`** pour dessiner l'abre, mais il faut installer avant le package **`ggdendro`**.  
+```{r warning=FALSE, message = FALSE}
+library(ggdendro)
+ggdendrogram(classif_socioprof_n, labels=FALSE)
+ggdendrogram(classif_socioprof_p, labels=FALSE)
+```
+
+Il faut maintenant prendre une décision : où coupe-t-on l'arbre pour obtenir une partition de la population (ici nos IRIS), autrement dit combien de classes choisissons-nous ?  
+On peut d'abord s'appuyer sur la forme du dendogramme : plus une "branche" est haute et plus on perd en distance ou ici (critère de Ward) en inertie interclasse[^nb1], il faudra donc couper l'arbre au niveau de cette branche. Il faut également prendre en compte ce qui peut être le mieux pour l'analyse : si on aboutit à une classification en 2 classes, cela risque d'être peu intéressant à analyser, mais si on a une classification en 5 classes ou plus, cela va devenir compliqué à interpréter...  
+Ici, dans les deux cas, il semble que choisir 2 classes soit très pertinent, mais on voit qu'on pourrait aussi choisir 3 ou 4 classes si l'on veut rentrer un peu plus dans le détail de l'analyse.   
+  
+  
+On peut également s'aider de représentations des sauts d'inertie du dendrogramme selon le nombre de classes qui peut être retenu, avec la fonction plot et en récupérant l'information sur l'inertie (`height`). Ci-dessous, trois types de graphes qui représentent exactement la même chose, mais selon des formes différentes : retenez celle que vous préférez et qui vous parle le plus !
+```{r Plot_inertie}
+#on stocke l'attribut `$height` dans l'objet `inertie` en triant les valeurs par ordre décroissant.
+inertie_socioprof_n <- sort(classif_socioprof_n$height, decreasing=TRUE)
+plot(inertie_socioprof_n, type="s", xlab="Nombre de classes", ylab="Inertie", 
+     xlim = c(1,15), xaxp = c(1,15,14))
+points(c(2, 3, 4), inertie_socioprof_n[c(2,3, 4)], 
+       col = c("blue3", "brown3", "chartreuse3"), cex = 2, lwd = 2)
+#plot(inertie_socioprof_n, type="h", xlab="Nombre de classes", ylab="Inertie", 
+#     xlim = c(1,15), xaxp = c(1,15,14))
+#plot(inertie_socioprof_n, type="b", xlab="Nombre de classes", ylab="Inertie", 
+#     xlim = c(1,15), xaxp = c(1,15,14))
+
+inertie_socioprof_p <- sort(classif_socioprof_p$height, decreasing=TRUE)
+plot(inertie_socioprof_p, type="s", xlab="Nombre de classes", ylab="Inertie", 
+     xlim = c(1,15), xaxp = c(1,15,14))
+points(c(2, 3, 4), inertie_socioprof_p[c(2, 3, 4)], 
+       col = c("blue3", "brown3", "chartreuse3"), cex = 2, lwd = 2)
+```
+  
+Ou encore créer d'autres indicateurs plus rigoureux, comme la part de la perte d'inertie interclasse dans l'inertie totale (on parle aussi de "semi-partial R-squared").
+```{r Plot_inertie_bis}
+#on crée un indicateur de part en %
+partinertie_socioprof_n <- inertie_socioprof_n/sum(inertie_socioprof_n)*100
+plot(partinertie_socioprof_n, type="b", xlab="Nombre de classes", 
+     ylab="Part dans l'inertie totale en %", xlim = c(1,15), xaxp = c(1,15,14))
+
+partinertie_socioprof_p <- inertie_socioprof_p/sum(inertie_socioprof_p)*100
+plot(partinertie_socioprof_p, type="b", xlab="Nombre de classes", 
+     ylab="Part dans l'inertie totale en %", xlim = c(1,15), xaxp = c(1,15,14))
+```
+On voit que les graphiques sont assez proches, qu'ils soient construits à partir de la mesure en valeur absolue ou en valeur relative.  
+   
+  
+Enfin, à savoir que des fonctions existent qui donnent une indication de la "meilleure" partition à choisir, mais attention le choix se fait aussi (et peut-être surtout) en fonction de l'analyse que l'on veut mener et de l'interprétation que l'on pourra faire des classes obtenues ! Pour l'exemple, je vous mets ci-dessous le code de Julien Larmarange pour tester ce type de fonctions ; la "meilleure" partition selon la perte d'inertie relative est représentée par un point noir et la seconde par un point gris. On voit qu'ici il est bien indiqué d'abord 2 classes, puis comme seconde "meilleure" partition 3 classes, ce qui correspond plutôt bien au premier graphique qu'on avait construit.  
+```{r Best_cutree, warning=FALSE, message=FALSE}
+library(devtools)
+source(url("https://raw.githubusercontent.com/larmarange/JLutils/master/R/clustering.R"))
+#On a choisit un maximum de 15 classes ici...
+best.cutree(classif_socioprof_n, min=2, max=15, graph = TRUE, 
+            xlab = "Nombre de classes", ylab = "Inertie relative")
+best.cutree(classif_socioprof_p, min=2, max=15, graph = TRUE, 
+            xlab = "Nombre de classes", ylab = "Inertie relative")
+```
+  
+ 
+Finalement, au vu de la forme du dendogramme et des graphes sur l'inertie (et de la fonction d'aide à la décision précédente), on choisit de prendre 3 classes pour une analyse plus fine, mais on va stocker également les résultats pour 2 classes pour les 2 analyses. On peut de nouveau visualiser le dendogramme en matérialisant les différents choix du nombre de classes.  
+```{r Choix_cut}
+par(mfrow = c(1, 1), mar=c(5, 9, 1, 1))
+plot(classif_socioprof_n, xlab="IRIS",  main="Dendogramme", label=FALSE)
+rect.hclust(classif_socioprof_n, k=2, border = 'blue3')
+rect.hclust(classif_socioprof_n, k=3, border = 'brown3')
+
+# On peut aussi couper l'arbre vers la hauteur en ajoutant une ligne sur le graphe 
+# avec la fonction `abline`  et l'option `h = 19` pour le graphe précédent :
+# abline(h = 19, col = 'darkred')
+
+par(mfrow = c(1, 1), mar=c(5, 9, 1, 1))
+plot(classif_socioprof_p, xlab="IRIS",  main="Dendogramme", label=FALSE)
+rect.hclust(classif_socioprof_p, k=2, border = 'blue3')
+rect.hclust(classif_socioprof_p, k=3, border = 'brown3')
+```
+
+
+On peut  également utiliser la fonction `color_branches()` du package `dendextend()`, mais il faut appeler de nouveau `ggplot2` après.
+```{r dendogramme coloré, warning=FALSE, message=FALSE}
+# On peut encore également utiliser la fonction `color_branches()` du package `dendextend()`
+# mais il faut appeler de nouveau `ggplot2` après
+library(dendextend)
+library(ggplot2)
+ggplot(color_branches(classif_socioprof_n, k = 3), labels = FALSE)
+```
+
+
+On choisit donc d'abord d'analyser nos deux clustering en 2 ou 3 classes : pour découper l'arbre et obtenir la partition souhaitée, on utilise la fonction `cutree()`, et on peut ensuite visualiser quelle zone infracommunale IRIS est dans quelle classe et le nombre d'IRIS par classe.    
+On intègre ensuite la variable au tableau initial "clust" qui contient les variables utilisées, mais on pourra ensuite fusionner la table avec notre table initiale "RP" pour mener des analyses plus approfondies des classes, y compris avec des variables non utilisées dans le clustering.
+```{r Cut_dendo}
+#Découpage en k classes
+classe3_soprof_n <- cutree(classif_socioprof_n, k=3)
+classe2_soprof_n <- cutree(classif_socioprof_n, k=2)
+
+classe3_soprof_p <- cutree(classif_socioprof_p, k=3)
+classe2_soprof_p <- cutree(classif_socioprof_p, k=2)
+
+#Liste des groupes
+#library(janitor)
+tabyl(classe3_soprof_n) %>% adorn_pct_formatting() %>% gt()
+tabyl(classe2_soprof_n) %>% adorn_pct_formatting() %>% gt()
+
+tabyl(classe3_soprof_p) %>% adorn_pct_formatting() %>% gt()
+tabyl(classe2_soprof_p) %>% adorn_pct_formatting() %>% gt()
+sort(classe3_soprof_p) 
+
+#Ajout des variables de classe dans la table initiale de clustering
+clust_socioprof_n_cl <- cbind.data.frame(clust, classe3_soprof_n=as.factor(classe3_soprof_n),
+                                         classe2_soprof_n=as.factor(classe2_soprof_n))
+clust_socioprof_p_cl <- cbind.data.frame(clust, classe3_soprof_p=as.factor(classe3_soprof_p),
+                                         classe2_soprof_p=as.factor(classe2_soprof_p))
+```
+
+
+
+###  Visualisation sur la carte de la commune
+Enfin, on peut visualiser sur la carte de la commune - ici 3 arrondissements de Paris - les trois classes construites et choisies.
+```{r carto_clust, warning=FALSE, message=FALSE}
+library(geojsonsf)
+library(sf)
+library(mapsf)
+
+# on charge le fonds de carte des IRIS
+map_iris <- geojson_sf("data/map_iris.geojson") 
+# on charge le fonds de carte des arrdts de Paris
+map_arrdt <- geojson_sf("data/arrondissements.geojson") 
+map_iris <- map_iris %>% 
+  filter(insee_com %in% c("75111", "75112", "75120")) %>%  
+  mutate(iris_code = as.character(code_iris)) %>% 
+  rename(IRIS = iris_code) %>%
+  select(IRIS, nom_iris, nom_com, geometry)
+map_arrdt <- map_arrdt %>% 
+  filter(c_arinsee %in% c("75111", "75112", "75120")) %>%  
+  mutate(c_arinsee = as.character(c_arinsee)) %>% 
+  select(c_arinsee, geometry)
+coord <- st_coordinates(st_centroid(map_iris))
+map_iris <- cbind(map_iris, coord)
+
+clust_map_socioprof_n <- clust_socioprof_n_cl %>%
+  select(IRIS, classe3_soprof_n) %>%
+  left_join(map_iris)
+clust_map_socioprof_n <- st_as_sf(clust_map_socioprof_n)
+mf_theme("agolalight")
+mf_map(clust_map_socioprof_n, type="typo", var="classe3_soprof_n", col = "lightyellow", 
+       border="gray80", lwd=0.4, pal = c("aquamarine3", "coral", "skyblue3"),
+       leg_pos = "bottomleft", leg_title="Cluster")
+mf_map(map_arrdt,  type = "base", col = NA, border="gray41",lwd=1,
+       add = TRUE)
+mf_layout(title = "Quartiers de l'Est parisien découpés selon le cluster obtenu", 
+          credits=" ")
+
+clust_map_socioprof_p <- clust_socioprof_p_cl %>%
+  select(IRIS, classe3_soprof_p) %>%
+  left_join(map_iris)
+clust_map_socioprof_p <- st_as_sf(clust_map_socioprof_p)
+mf_theme("agolalight")
+mf_map(clust_map_socioprof_p, type="typo", var="classe3_soprof_p", col = "lightyellow", 
+       border="gray80", lwd=0.4, pal = c("aquamarine3", "coral", "skyblue3", "hotpink3", "wheat4"),
+       leg_pos = "bottomleft", leg_title="Cluster")
+mf_map(map_arrdt,  type = "base", col = NA, border="gray41",lwd=1,
+       add = TRUE)
+mf_layout(title = "Quartiers de l'Est parisien découpés selon le cluster obtenu", 
+          credits=" ")
+```
+On voit que les 2 cartes sont très proches ; mais il nous reste à comprendre les classes, c'est-à-dire à les interpréter, à partir des variables mises en *input* dans un premier temps.  
+
+
+
+### Interprétation
+Il faut maintenant comprendre la partition obtenue et interpréter nos 3 classes en les décrivant principalement ici à partir des variables utilisées dans le clustering. On peut pour cela utiliser le package `FactoMiner` qui permet avec la fonction `catdes` de sortir des résultats sur, d'une part, les liens les plus significatifs entre les variables actives de la CAH et la variable globale de cluster/classes, et, d'autre part de manière plus précise, sur les liens les plus significatifs entre les variables et chacune des classes.  
+
+```{r Cat_desc, warning=FALSE, message=FALSE}
+library(FactoMineR)
+desc_cl_soprof_n <- catdes(clust_socioprof_n_cl[, c("nb_Bac",  "nb_Bac.5ou.",
+                                                    "nb_Peu_pas_dipl",
+                                                    "nb_chômeurs", "nb_CDI",
+                                                    "nb_inactifs", "nb_EDDouautres",
+                                                    "nb_independants","nb_immi", 
+                                                    "classe3_soprof_n")], 
+                           num.var = 10)
+desc_cl_soprof_n
+
+clust_socioprof_p_cl <- clust_socioprof_p_cl %>% 
+  mutate(pct_Bac = (nb_Bac / nb_hab)*100,
+         pct_Bac5ouplus = (nb_Bac.5ou./ nb_hab)*100,
+         pct_Peu_pas_dipl = (nb_Peu_pas_dipl / nb_hab)*100,
+         pct_chômeurs = (nb_chômeurs / nb_hab)*100,
+         pct_CDI = (nb_CDI / nb_hab)*100,
+         pct_inactifs = (nb_inactifs / nb_hab)*100,
+         pct_EDDouautres = (nb_EDDouautres / nb_hab)*100,
+         pct_independants = (nb_independants / nb_hab)*100,
+         pct_immi = (nb_immi / nb_hab)*100) 
+
+desc_cl_soprof_p <- catdes(clust_socioprof_p_cl[, c("pct_Bac", "pct_Bac5ouplus", 
+                                                    "pct_Peu_pas_dipl", "pct_chômeurs", 
+                                                    "pct_CDI", "pct_inactifs",
+                                                    "pct_EDDouautres", "pct_independants",
+                                                    "pct_immi", "classe3_soprof_p")],
+                           num.var = 10)
+desc_cl_soprof_p
+```
+Pour le 1er clustering/typologie, on peut voir que la 1ère classe est marquée par une surreprésentation du nombre personnes (de référence du ménage) en CDI, de bac+5 ou plus, mais aussi d'inactifs et de personnes ayant le bac, ou encore d'indépendants, et dans une moindre mesure de chômeurs, d'employés en CDD, d'immigrés, ou de peu diplômés. Au contraire, la 3ème classe se caractérise par une surreprésentation des peu ou pas diplômés, des immigrés et des chômeurs, et une, elle aussi, marquée par une surreprésentation des personnes de bac+5 ou plus, d'indépendants et de personnes employées en CDI, mais aussi, si ce n'est surtout, par une sous-représentation d'un ensemble d'autres variables.
+
+Pour le 2ème clustering/typologie, la 1ère classe est caractérisée par une surreprésentation des peu ou pas diplômés et des immigrés, et une sous-représentation des indépendants, des personnes employés en CDI et des personnes ayant un bac+5 ; elle semble donc proche de la 3ème classe de la 1ère typologie mais pas dans les quartiers/IRIS concernés : elle correspond en effet à plusieurs quartiers du nord du 20ème arrondissement et quelques uns du 12ème en encore moins du 11ème, alors que la 3ème classe de la 1ère typologie est présente essentiellement sur les boulevards périphériques. Quant à la 2ème classe, elle est marquée par une surreprésentation de bac+5 ou plus, d'indépendants et de personnes employés en CDI, et au contraire par une sous-représentation des personnes ayant un bac, des inactifs, des chômeurs, des immigrés et des peu ou pas diplômés ; c'est la classe qui rassemble le plus d'IRIS sur la carte des 3 arrondissements, probablement la plus hétérogène donc. Enfin, la classe 3 est caractérisée par une surreprésentation des personnes peu ou pas diplômés, des immigrés, des chômeurs, des personnes ayant le bac ou encore des inactifs, et une sous-représentation des personnes employés en CDI, mais aussi en contrats courts ou d'autres statuts, des indépendants et des bac+5 ou plus ; sur la carte elle correspondait à des quartiers situés sur les boulevards périphériques intérieurs. 
+
+Cette typologie semble ainsi plus claire, la classe 2 correspond plutôt aux quartiers des catégories sociales supérieures ou moyennes-supérieures (professions intermédiaires), la classe 4 aux quartiers plutôt avec des retraités mais aussi des cadres ou encore des femmes, ces deux classes s'opposent semble-t-il à la 3ème classe qui correspond plutôt aux quartiers plus modestes socialement ; la classe 1 peut rassembler les quartiers constitués des autres inactifs, comme les étudiants, et des ouvriers. Il nous faudrait nénmoins d'autres variables pour arriver à davantage les caractériser.  
+  
+  
+On peut recupérer les statistiques de la moyenne de ces variables pour les visualiser sur un graphique comparant les 3 classes, ainsi que l'ensemble des IRIS.
+```{r Compar_mean_bis}
+stats_var_CAH <- desc_cl_soprof_p$call$X
+
+mean_var_CAH_a <- stats_var_CAH %>% group_by(classe3_soprof_p) %>% summarise_all(mean)
+mean_var_CAH_b <- stats_var_CAH %>% select(-classe3_soprof_p) %>% 
+  summarise_all(mean) %>% mutate(classe3_soprof_p="Ensemble")
+mean_var_CAH <- rbind(mean_var_CAH_a, mean_var_CAH_b)
+rm(mean_var_CAH_a, mean_var_CAH_b)
+
+mean_var_CAH %>%  pivot_longer(cols=-classe3_soprof_p,  names_to="Variable",
+                               values_to="Value") %>% 
+  mutate(Value=round(Value, 0)) %>% 
+  ggplot() + aes(x=Variable, y=Value, fill=classe3_soprof_p) + 
+  geom_bar(stat="identity") + facet_wrap(~classe3_soprof_p) +  
+  scale_fill_brewer(palette = "Set2") +
+  geom_text(aes(label = Value), position = position_stack(vjust = 0.5), 
+            color="gray35", size=2.5) +
+  theme_grey() + 
+  labs(title = "Moyenne des variables actives selon les classes et pour l'ensemble", 
+       x=" ", y="") +
+  scale_x_discrete(labels=c("% de Bac","% de Bac+5 ou plus", "% de peu ou pas diplômés",
+                            "% de chômeurs","% de salariés en CDI", "% d'inactifs",
+                            "% de salariés en EDD", "% d'indépendants","% d'immigrés")) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 75, hjust=1, size=7))
+```
+
+Pour aller plus loin dans la compréhension des classes, il faut utiliser d'autres variables et procéder de même à des analyses descriptives croisant ces variables avec les 3 classes de la typologie obtenue. Pour cela, il faut récupérer des variables de la table initiale du RP et sortir des tableaux de statistiques ou des graphiques comme précédemment.
+
+<!--On peut aussi construire d'autres graphiques plus généraux et sur d'autres variables.-->
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+# Pour d'autres variables, tableau croisé simple
+clust_socioprof_p_cl %>% left_join(RP_1[, c("IRIS","HLML","AGEMEN8","ANEMR", "DIPLM", "EMPLM", "NBPI", "RECHM", 
+                                            "STAT_CONJM", "STOCD", "SURF", "TACTM", "TPM", "TRANSM", "TYPL", "VOIT", "INP17M")]) %>% 
+  tabyl(INP17M, classe3_soprof_p) %>% 
+  adorn_totals("col") %>% adorn_percentages("col")  %>% adorn_pct_formatting()
+```
+
+<!--On observe en plus des résultats précédents que les jeunes de moins de 30 ans constituent une part plus importante de la population de la classe 2, alors qu'ils constituent une part se situant dans la moyenne (ensemble) pour la classe 1. Cette dernière classe comptent un peu plus de 30-39 ans dans sa population.Deux autres classes se distinguent : la classe 3 comprend davantage de personnes âgés entre 40 et 64 ans ; alors que la classe 4 comprend beaucoup plus de personnes âgées de plus de 64 ans par rapport à l'ensemble, ce qui paraît logique puisqu'on a vu qu'elle était caractérisée par une surreprésentation des retraités. En revanche, contrairement à ce qu'on pouvait penser, c'est davantage la classe 2 qui rassemble plus de jeunes par rapport à la classe 1 (alors qu'il y avait une surreprésentation des autres inactifs, laissant penser à plus d'étudiants...).   
+Par rapport au lieu de naissance des habitants de chaque classe, on confirme que la classe 3 comporte une part plus importante de personnes nées à l'étranger (plus de 30%, par rapport à environ 24% dans l'ensemble). Dans le même temps, c'est aussi dans cette classe que l'on note une part de personnées nées dans le même département,  donc peu mobiles, plus importante par rapport à l'ensemble. Au contraire, la classe 2, et dans une moins mesure la classe 4, ont des part de personnées nées dans une autre région plus importante : cela est assez cohérent avec le fait que ce sont les 2 classes qui rassemblent une population plus favorisée, traditionnellement plus mobile.  
+Ensuite, la répartition des habitants selon le diplôme confirme plutôt les résultats précédents notamment par  rapport aux PCS. Le classe 3 se caractérise par une forte proportion de personnes peu ou pas diplômés, mais aussi de niveau Bac ou encore de jeunes (moins de 14 ans) ; alors qu'au contraire la classe 2, et dans une moindre  mesure 4, rassemble une part plus importante de Bac+5 ou plus. La classe 1 comprend également un peu plus de  jeunes de moins de 14 ans, et moins de Bac+5 ou plus.  
+Enfin, on trouve une part plus importante d'actifs occupés chez les habitants de la classe 2 ; une part plus importante d'autres inactifs chez les habitants de la classe 3, mais également chez ceux de la classe 4  (retraités) ; une part plus importante de chômeurs dans la classe 3 ; et enfin une part un peu plus importante d'élèves ou étudiants dans les classe 1 et 3.   
+  
+    
+Ainsi, ce 2nd clustering, qui semble plus pertinent que le 1er, a permis de regrouper les quartiers de l'Est parisien en 4 grandes classes selon leurs caractéristiques socio-professionnelles : 
+
+- une 1ère classe rassemblant des habitants de quartiers présents surtout dans le 20ème et le 12ème arrondissement, qui sont un peu plus souvent inactifs hors retraités et ouvriers, et avec un peu plus  d'enfants, elle rassemble également des quartiers particuliers avec le cimetière du Père Lachaise ou encore le Par de Bercy ; 
+- une seconde classe qui regrouperait donc des individus de milieux plutôt favorisés, plus jeunes, plus diplômés, dans des quartiers principalement du 11ème arrondissement, et du nord-est du 12ème arrondissement (Roquette, Charonne, Bastille - Sainte-Marguerite et Quinze-vingt) ; 
+- une troisième classe, qui s'oppose à cette 2ème classe ainsi que la dernière, rassemble au contraire desquartiers plus défavorisés qui se situent en majorité sur les boulevards périphériques et davantage dans le 20ème ;
+- enfin une 4ème classe qui elle aussi rassemble une population plus favorisée avec surtout davantage de retraités dans des quartiers principalement du 12ème arrondissement (Bel-Air, Picpus).
+
+Si l'on avait choisi 3 classes, on aurait eu un regroupement de la classe 2 et 4 (les 2 classes à droite du dendogramme ; la classe 3 étant celle le plus à gauche du dendogramme).-->
+
+
+
+```{r desc_var, eval=FALSE, include=FALSE}
+library(gtsummary)
+clust_socioprof_p_cl %>% select(-c(IRIS, LIB_MOD)) %>% 
+  tbl_summary(classe3_soprof_p)
+```
+
+
+
+
+<!-- Enfin, on a vu qu'il y avait plusieurs méthodes d'agrégation, ici nous avons utilisé le critère de Ward. Il est possible de tester d'autres méthodes et de comparer les dendogrammes alors obtenus. -->
+```{r Cght_agr, eval=FALSE, include=FALSE}
+#Etape 3 bis : on choisit d'autres méthodes d'agrégation
+classif1.s <- hclust(dist_mat, method = "single")
+classif1.c <- hclust(dist_mat, method = "complete")
+classif1.a <- hclust(dist_mat, method = "average")
+classif1.cd <- hclust(dist_mat, method = "centroid")
+
+#Etape 4 bis : on "plot" les dendogrammes des 4 nouvelles méthodes + la 1ère utilisée précédemment, et on les compare sur un même graphique
+par(mfrow = c(2, 3), mar=c(2, 3, 1, 1))
+plot(classif1.s, xlab="IRIS", main = "Single", label=FALSE)
+plot(classif1.c, xlab="IRIS", main = "Complete", label=FALSE)
+plot(classif1.a, xlab="IRIS", main = "Average", label=FALSE)
+plot(classif1.cd, xlab="IRIS", main = "Centroid", label=FALSE)
+plot(classif1, xlab="IRIS", main = "Ward", label=FALSE)
+#par(mfrow = c(1, 1), mar=c(6, 5, 2, 1))
+```
+
+<!-- On observe donc de fortes différences entre les dendogrammes. Par exemple, la méthode du "lien simple" ou "minimum" va avoir tendance à construire une grosse classe et une autre plus petite, c'est bien ce que l'on voit ici ; alors qu'au contraire, la méthode d'agrégation dite "complete" tend à construire des groupes plutôt de taille égale, en revanche, il faut savoir qu'elle est sensible aux points aberrants (on voit que ce n'est pas le cas ici). Enfin, on voit également que la méthode du "centroïd" (barycentre/centre de gravité des classes) produit un dendogramme particulier et déséquilibré comme le premier graphe (méthode du "lien simple").  C'est bien la méthode de Ward qui est la plus utilisée en pratique.   -->
+
+
+
+
+## La méthode des *k-means* appliquée à nos données
+
+On repart de notre table de données centrées et réduites ("clust_sc") et on lui applique la fonction `kmeans` de `R`. Comme décrit <a href="https://camille-sisi.github.io/Data-Mining-2022/14-Clustering-theorique.html" target="_blank">ici</a> de manière théorique, il faut : i) choisir le nombre de classes que l'on souhaite avoir avec l'option `centers=k`, pour pouvoir comparer avec la méthode précédente de la CAH, on va donc choisir le même nombre de groupe, soit 3 ; ii) et réitérer toute la procédure plusieurs fois avec des individus pris au départ qui soient différents, avec l'option `nstart=`, ici on choisit 100 essais, et la fonction prendra le meilleur pour l'algorithme.
+
+```{r K-means}
+clust.kmeans <- kmeans(clust_socioprof_prop, centers=3, nstart=100)
+
+# On affiche ensuite les résultats principaux : effectif des classes, moyenne des 
+# variables actives (centrées réduites), groupes d'affectation des individus, 
+# proportion d'inertie expliquée par la partition (ici 62%)
+clust.kmeans
+```
+
+On peut comparer avec les classes obtenues précédemment avec la CAH, simplement en croisant les deux variables de classe :
+```{r Compar_méthodes}
+#correspondance avec les groupes de la CAH
+table(classe3_soprof_p, clust.kmeans$cluster) 
+```
+On voit ainsi que la classe 1 obtenue avec la CAH (1ère ligne du tableau) coïncide quasi-exactement avec la classe 2 de la méthode des *K-means*, de même la classe 3 de la CAH est la même que la classe 3 des *K-means* à 1 IRIS près, la classe 2 de la CAH est en revanche distribuée entre les classes 1 et 2 de la typologie des *K-means* . Autrement dit, on conclut à un changement de classes surtout pour des communes de la classe 2 précédente.
+
+```{r carto kmeans, eval=FALSE, include=FALSE}
+clust_kmeans <- clust.kmeans$cluster %>% as.data.frame() %>% rename("classe3_soprof_p"=".") %>% rownames_to_column("IRIS")
+
+# marche pas !!
+kmeans_map_socioprof_p <- clust_kmeans %>%
+  left_join(map_iris, by="IRIS")
+kmeans_map_socioprof_p <- st_as_sf(kmeans_map_socioprof_p)
+mf_theme("agolalight")
+mf_map(kmeans_map_socioprof_p, type="typo", var="classe3_soprof_p", col = "lightyellow", 
+       border="gray80", lwd=0.4, pal = c("aquamarine3", "skyblue3", "coral"),
+       leg_pos = "bottomleft", leg_title="Cluster")
+mf_map(map_arrdt,  type = "base", col = NA, border="gray41",lwd=1,
+       add = TRUE)
+mf_layout(title = "Quartiers de l'Est parisien découpés selon le cluster obtenu", 
+          credits=" ")
+```
+
+
+On a vu avec la description de la méthode, que ce qui est difficile ici c'est qu'on choisit nous-mêmes le nombre de classes dans une première étape sans savoir parfois pourquoi. Il faut donc souvent faire varier le nombre de classes de départ (`centers=k`), à ne pas confondre avec les individus centres initiaux de classes (ce que l'on a fait précédemment en indiquant l'option `nstart=100`). A partir d'un exemple de code récupéré sur un document de cours externe ([ici](https://eric.univ-lyon2.fr/~ricco/cours/didacticiels/R/cah_kmeans_avec_r.pdf)), on peut créer une boucle pour répéter la procédure en changeant le nombre de classes, et ensuite construire un graphique visualisant l'indicateur de pourcentage d'inertie expliquée. Plus précisément, on fait tourner plusieurs fois la méthode des K-means sur notre base de données centrées-réduites pour un nombre de classes souhaitées variant entre 2 et 6, et on récupère la part de l'inertie expliquée par la partition obtenue (indicateur `between_SS / total_SS` que l'on a vu dans la sortie précédente). Puis, on crée un graphique représentant cette part pour chacune des partitions construites.
+```{r Compar_clK-means}
+#Boucle pour calculer la part de l'inertie expliquée par la partition, selon le nombre de classes souhaitées
+inertie.expl <- rep(0,times=6)
+for (k in 2:6){
+  clus <- kmeans(clust_socioprof_prop, centers=k, nstart=100)  
+  inertie.expl[k] <- clus$betweenss/clus$totss}
+
+#Création du graphique
+plot(1:6, inertie.expl, type="b", xlab="Nombre de classes choisies", ylab="Pourcentage d'inertie expliquée par la partition")
+```
+On observe sur ce graphique qu'à partir de k=3, autrement dit de 3 classes, la "création" d'une classe supplémentaire ne semble pas augmenter significativement la part d'inertie expliquée par la partition. Pour comprendre ce que revêt ce "significativement", on peut regarder notamment la pente de chaque droite reliant les points d'une partition à une autre : pour la droite reliant le nombre de classes "2" et "3", on voit que sa pente diminue déjà pas mal par rapport à la droite reliant les deux classes précédentes, et cela est encore plus visible pour les pentes suivantes.
+
+Une autre méthode évoquée par le même document de cours propose d'utiliser le package `fpc` qui propose une fonction `kmeansruns` évaluant les différentes partitions à partir de 2 critères à choisir : l'indice de Calinski Harabasz - option `criterion="ch"`, ou celui de la "average silhouette width" (largeur moyenne de la silhouette) - option `criterion="asw"`. On peut ensuite construire un graphique comme précédemment pour visualiser l'évolution de cet indice selon le nombre de classes de la partition.
+```{r  Compar_clK-means_bis, message=FALSE, warning=FALSE}
+# OU utilisation du package fpc et de l'indice de Calinski Harabasz  
+library(fpc)
+#Evaluation des solutions
+eval.kmeans <- kmeansruns(clust_socioprof_prop,
+                         krange=2:6,
+                         criterion="ch",)
+
+#Graphique
+plot(1:6, eval.kmeans$crit,type="b", xlab="Nombre de classes", ylab="Indice de Calinski Harabasz ")
+```
+Pour lire et choisir le "bon" nombre de classes selon ce critère, il faut maximiser l'indice donc trouver le point le plus haut : ici, c'est la partition à 2 classes qui semble la "meilleure" typologie comme on l'avait vu dans la CAH avec le dendogramme, mais une partition en 3 classes semble plus intéressante pour l'interprétation.
+
+
+
+
+
+<!-- permet d'écrire du texte sans qu'il soit affiché, sorte de commentaires dans le script sans qu'il soit publié dans le doc final ! -->
+
+
+
+
+
+
+[^nb1]: Plus précisément, à chaque étape d'agrégation, la part de l'inertie interclasse passe en inertie intraclasse.

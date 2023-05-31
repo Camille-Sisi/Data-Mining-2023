@@ -1,0 +1,308 @@
+
+# Modèles de régression : application sur le RP 2019 {#c12-Modeles-regression}
+<div align="justify">
+
+On cherche maintenant à expliquer un phénomène ou une variable par rapport à d'autres. On va ici s'intéresser au fait d'être en emploi plutôt que de ne pas l'être (regroupant 2 situations : au chômage et inactif).    
+
+On va repartir de la base RP2019, mais comme elle porte sur les logements, pour être cohérent, on va utiliser les variables se rapportant à la personne de référence du ménage. Si ce n'est pas idéal (car le mieux aurait été d'utiliser plutôt la base des individus, ce qui aurait permis d'avoir davantage de variables individuelles), cela permet quand même de réaliser quelques modèles descriptifs et prédictifs.  
+
+
+## La création des bases d'apprentissage et de test
+On crée notre base de travail en ne prenant que les variables qui nous intéressent et le champ le plus pertinent pour cette analyse : on ne travaillera que sur Paris et le 12ème arrondissement et sur les logements en résidence principale (on supprime la modalité "Y" des variables).  
+```{r}
+RP_Paris <- RP %>% 
+  filter(COMMUNE=="75056" & HLML!="Y" & DIPLM!="YY" & IMMIM !="Y" 
+                          & RECHM !="Y" &  !AGEMEN8 %in% c("00",  "YY") & 
+           ARM == "75112") %>% 
+  mutate(diplome=as.factor(case_when(DIPLM %in% c("01", "02", "03", "11", "12",
+                                                  "13") ~ "Peu_pas_dipl",
+                                     DIPLM %in% c("14", "15") ~ "Bac",
+                                     DIPLM %in% c("16", "17", "18", "19") ~ "Sup_Bac")),
+         emploi=as.factor(case_when(RECHM %in% c( "Z") ~ "oui",
+                                    TRUE ~ "non")),
+         immigres=as.factor(case_when(IMMIM=="1" ~"Oui",
+                                      IMMIM=="2" ~ "Non")),
+         proprio=as.factor(case_when(STOCD == "10" ~ "Oui",
+                                     TRUE ~ "Non")),
+         voiture=as.factor(case_when(VOIT == "0" ~ "Non",
+                                     TRUE ~ "Oui")),
+         celibataire=as.factor(case_when(STAT_CONJM=="6" ~ "Oui",
+                                         TRUE ~ "Non"))) %>% 
+  select(immigres, proprio, diplome, emploi, voiture, SEXEM, celibataire)
+```
+
+
+On divise ensuite notre base de données en deux pour avoir un échantillon dit d'apprentissage ou d'entraînement, et un autre dit test.  
+On utilise pour cela la fonction `sample` (mais d'autres fonctions existent) en lui spécifiant la façon de diviser la base avec l'argument `prob=` : ici on choisit de diviser notre base selon un rapport 70% *vs* 30%, autrement dit notre base d'apprentissage comprendra 70% des données de la base initiale, alors que la base de test comprendra les 30% restants. On pourrait procéder à un rapport du type 80% *vs* 20%, ou 75% *vs* 25%, etc.
+```{r}
+# On choisit la façon de diviser notre base et on l'applique en créant 2 bases
+sample <- sample(c(TRUE, FALSE), nrow(RP_Paris), replace=TRUE, prob=c(0.70,0.3))
+RP_Paris_train <- RP_Paris[sample, ]
+RP_Paris_test <- RP_Paris[!sample, ]
+
+# On regarde quelle est la taille de nos deux bases
+dim(RP_Paris_train)
+dim(RP_Paris_test)
+
+# On vérifie que les proportions de notre variable d'intérêt est assez
+# proche entre les deux bases
+RP_Paris_train %>% tabyl(emploi) %>% adorn_pct_formatting() %>% 
+  adorn_totals("row") %>% gt()
+RP_Paris_test %>% tabyl(emploi) %>% adorn_pct_formatting() %>% 
+  adorn_totals("row") %>% gt()
+```
+
+Les deux bases présentent une répartition emploi/non emploi très proche donc pas de biais par rapport à cela.  
+
+
+## Un modèle à visée principale descriptive/explicative : la régression logistique
+La fonction `glm` du package **`stats`** (à installer avant appel dans la librarie) est principalement utilisée pour modéliser différents types de régression : l'argument `family=binomial("logit")` permet d'utiliser un modèle logit.    
+```{r}
+# install.packages("stats")
+library(stats)
+```
+
+### Le modèle initial
+On crée le modèle en spécifiant la variable d'intérêt puis les variables explicatives ou l'ensemble des variables présentes dans la base si nous avons déjà procédé à une sélection des variables : c'est le cas ici donc c'est pour cela que l'on indique juste un "." après le "~", sinon on devrait écrire les variables une par une, ou les sctoker dans une liste et appeler la liste.
+```{r}
+logit_1 <- glm (emploi ~ ., data=RP_Paris_train, family = binomial("logit"))
+summary(logit_1)
+```
+Toutes les variables sont significatives.
+
+<!--On peut ensuite évaluer la significativité globale du modèle, : -->
+```{r eval=FALSE, include=FALSE}
+chi2 <- logit_1$null.deviance - logit_1$deviance
+ddl <- logit_1$df.null - logit_1$df.residual
+pvalue <- pchisq(chi2, ddl, lower.tail = F)
+chi2
+ddl
+pvalue
+```
+
+
+Même si ce modèle doit permettre essentiellement d'expliquer un phénomène, ici être en emploi par rapport à ne pas l'être (soit au chômage, soit inactif), on peut l'utiliser aussi pour prédire les données. C'est pour quoi nous avons d'abord appliqué le logit sur la base (réduite) d'apprentissage.  
+
+On va donc l'appliquer maintenant à la base test, en créant des indicateurs mesurant le taux de prédiction ou au contraire d'erreur.  
+Le modèle `predict` permet d'abord d'abord de calculer la probabilité d'être en emploi pour chaque individu, l'argument `type="response"` permettant d'appliquer le modèle logistique. Il est plus intéressant d'avoir la probabilité d'une variable de type qualitative, "oui"/"non" comme la variable d'intérêt du modèle, il faut donc procéder à une transformation aboutissant à une nouvelle variable. Enfin, on crée une matrice de confusion qui est en réalité un tableau croisé entre les valeurs observées et les prédicitions du modèle ; et on calcule un taux d'erreur en rapportant la somme des éléments hors diagonale principale à la somme des observations totales (de la matrice donc).
+```{r}
+# Modèle de prédiction pour récupérer les probabilités individuelles d'être en emploi
+pred.proba <- predict(logit_1, newdata = RP_Paris_test, type="response")
+
+# On transforme les probas en variable qualitative
+pred.moda <- factor(case_when(pred.proba>0.5 ~ "oui",
+                              TRUE ~ "non"))
+
+# On crée la matrice de confusion
+matrice_conf <- table(RP_Paris_test$emploi, pred.moda)
+matrice_conf
+
+# On calcule le taux d'erreur
+tx_erreur <- (matrice_conf[2,1]+matrice_conf[1,2])/sum(matrice_conf)
+tx_erreur * 100
+```
+On voit que parmi la modalité observée "non" de la base de données, le modèle prédit en réalité plus de "oui" que de "non", donc il prédit assez mal ici cette modalité ; en revanche, la prédiction est meilleure si on regarde la modalité "oui", puisque la majorité des prédictions se retrouvent bien en "oui". Le taux d'erreur de 30% montre bien que le modèle ne prédit pas hyper bien.  
+
+  
+  
+### L'évaluation du modèle et la recherche éventuelle d'un "meilleur" modèle
+On peut améliorer le modèle en recherchant celui qui est le "meilleur" en faisant une sélection sur les variables, plus précisément en demandant au modèle de choisir les variables les plus explicatives, car peut-être que certaines ne sont pas nécessaires à l'explication du modèle (dans notre cas, nous avons néanmoins vu que toutes les variables étaient significatives donc probablement nécessaires). Pour une sélection "pas à pas", il faut utiliser le package **`MASS`** et la fonction `stepAIC` car c'est à travers le critère AIC ("Akaike Information Criterion", plus il sera faible, meilleur sera le modèle) que le modèle va chercher à être "meilleur". On va d'abord faire cette sélection de façon "descendante" c'est-à-dire en partant du modèle initial "logit_1" ici : on part du modèle avec l'ensemble des variables et on en supprime une au fur et à mesure pour voir si le modèle est "meilleur".
+```{r warning=FALSE, message=FALSE}
+# install.packages("MASS)
+library(MASS)
+logit_backward <- stepAIC(logit_1, 
+                          scope=list(lower="emploi ~ 1", 
+                          upper="emploi ~ immigres + proprio + diplome +
+                          voiture + SEXEM + celibataire"),
+                          direction="backward")
+logit_backward
+```
+
+Le "meilleur" modèle semble bien être celui qu'on utilise avec l'ensemble des variables qu'on avait mis.  
+
+Pour une sélection des variables de façon "ascendante", en partant d'un modèle sans variable puis on ajoute une à une les variables. On utilise la même fonction mais en changeant les paramètres et en créant un modèle "vide" avant : 
+```{r}
+logit_0 <- glm(emploi ~1, data=RP_Paris_train, family=binomial("logit"))
+logit_forward <- stepAIC(logit_0, 
+                         scope=list(lower="emploi ~ 1", 
+                                    upper="emploi ~ immigres + proprio + diplome + 
+                                           voiture + SEXEM + celibataire"),
+                         direction="forward")
+logit_forward
+```
+
+Le taux d'AIC diminue à chaque variable ajoutée donc le meilleur modèle est bien celui avec l'ensemble des variables explicatives mises dans le modèle initial.  
+
+```{r eval=FALSE, include=FALSE}
+# Autre façon de tester le modèle avec la fonction drop1:
+drop1(logit_1, test="Chisq")
+```
+
+
+
+### Le modèle final et l'interprétation des résultats
+Finalement, on peut estimer notre modèle sur l'ensemble de la base et étudier plus précisément les résultats avec les odds-ratios par exemple pour commenter plus facilement les coefficients.
+```{r warning=FALSE, message=FALSE}
+logit_VF <- glm (emploi ~ ., data=RP_Paris, family = binomial("logit"))
+summary(logit_VF)
+
+# Résumé des résultats sous forme de tableau avec les odds-ratio
+# avec la librairie "questionr" d'abord
+library(questionr)
+odds.ratio(logit_VF)
+
+# puis avec la librarie "forestmodel" pour avoir un meilleur rendu
+#install.packages("forestmodel")
+library(forestmodel)
+forest_model(logit_VF)
+
+# ou encore avec "gt_summary" pour avoir un meilleur rendu
+library(gtsummary)
+theme_gtsummary_language("fr", decimal.mark = ",", big.mark=" ")
+logit_VF %>% 
+  tbl_regression(exponentiate = TRUE) %>% 
+  add_global_p(keep=TRUE) %>% 
+  modify_header(label ~ "**Variable**") %>% 
+  modify_caption("**Tableau de résultats. Variables expliquant le fait d'être en emploi**")
+```
+  
+On privilégiera plutôt les deux derniers types de tableaux : ainsi, on note que le fait d'être immigré augmente de 1,17 fois (ou de 17%) la probabilité d'être en emploi, tandis qu'être propriétaire diminue de 55% (1-0,45 * 100) cette probabilité, probablement car c'est un proxy de l'âge puisqu'on trouve plus de propriétaires chez les retraités qui sont donc inactifs. Le diplôme joue un rôle important, comme attendu : par rapport à avoir le bac, être peu ou pas diplômé diminue la probabilité d'être en emploi, d'environ 46%, alors qu'avoir un diplôme supérieur au bac augmente cette même probabilité, elle la multiplie par 2,62. Ensuite, on observe qu'avoir une voiture augmente aussi la probabilité d'être en emploi, être célibataire également, tandis qu'être une femme diminue cette même probabilité.    
+
+On peut aussi vouloir visualiser ces résultats, on peut pour cela utiliser la librarie **`GGally`** et la fonction `ggcoef_model()`.
+``` {R}
+# Résumé des résultats sous forme graphqiue
+library(GGally)
+ggcoef_model(logit_VF, exponentiate = TRUE) +
+  ggtitle("Varibles expliquant le fait d'être en emploi") 
+
+```
+C'est peut-être le meilleur rendu...
+  
+
+  
+
+
+## Un modèle à visée principale prédictive : l'abre de décision
+On va procéder à la même analyse en cherchant, cette fois, à prédire si un individu sera en emploi ou non à partir des variables sélectionnées précédemment.  
+On repart donc des deux tables créées et on va utiliser un modèle dit d'apprentissage supervisé, l'abre de décision. Sa construction repose sur un partitionnement récursif des observations qui se fait à partir de noeuds coupés, ces coupures pourront répondre à des règles et des conditions à spécifier ou faire varier pour avoir un meilleur modèle.  
+Ici on va utiliser un arbre de classification puisque notre variable est qualitative (binaire).  
+  
+C'est le package **`rpart`** qui est spécialisé dans les modèles d'arbres de décision, à installer donc d'abord puis à appeler dans la librairie ; et **`rpart.plot`** permettra d'avoir un arbre plus esthétique et informatif.    
+```{r warning=FALSE, message=FALSE}
+# install.packages("rpart")
+# install.packages("rpart.plot")
+library(rpart)
+library(rpart.plot)
+```
+  
+
+### Le modèle initial
+La spécification du modèle est assez simple, on précise la variable d'intérêt, les éventuelles variables explicatives ou toutes celles qui sont dans la table avec le `.` (comme précédemment pour le modèle logit), la base de données sur laquelle appliquer le modèle, et dans l'argument `method=` on spécifie le type de modèle, soit "class" pour une variable d'intérêt qualitative ou binaire, soit "anova" pour une variable d'intérêt quantitative ou continue.  
+
+On va d'abord appliquer le modèle sur notre échantillon d'apprentissage ou d'entraînement : 
+```{r}
+arbre_1 <- rpart(emploi ~ ., data=RP_Paris_train, method="class")
+arbre_1
+```
+Le modèle nous donne d'abord les résultats en format texte, ce sont des indications sur les différentes "noeuds" puis "branches" de l'arbre, etc. : "node" pour noeud et son numéro, "split" pour la condition de coupure/le critère de décision, "n" pour le nombre total d'observations dans un noeud, "loss" le nombre d'observations qui n'appartient pas à la modalité prédite, "yval" la modalité prédite (majoritaire en fait) pour les individus présents à l'étape du noeud, et "yprob" la proportion d'observations pour les individus présents à l'étape du noeud qui prend la valeur prédite en seconde position. Le petit astérix "*" précise que le noeud est une feuille ("terminal").   
+
+Par exemple, ici le premier noeud indiqué "root" représente l'ensemble de l'échantillon (c'est la "racine" de l'arbre), soit 20818 observations, et il y a 64% d'observations qui auront la modalité "oui" (donc qui seront/seraient en emploi). La première variable discriminante est le diplôme : ceux ayant un bac ou étant peu ou pas diplômés (moins que le bac) forment une première branche avec un groupe qui n'est pas en emploi, alors que les diplômés supérieurs au bac forment l'autre branche et un groupe qui est en emploi. Etc.   
+
+On peut regarder quelles sont les variables les plus importantes dans le modèle par ordre : 
+```{r}
+arbre_1$variable.importance
+```
+Le diplôme est la variable la plus discriminante, comme on l'avait supposé puisque c'était la première variable qui divisait notre échantillon, ensuite vient le fait d'être propriétaire ou non (qui est en réalité ici une variable qui indique aussi l'âge car on a plus de probabilité d'être propriétaire une fois à la retraite, et donc d'être inactif), etc., et en tout dernier le fait d'être immigré ou non.  
+
+
+On va mieux étudier cela avec le résultat visuel.  
+Pour avoir ainsi graphiquement l'arbre, il faut appeler la fonction `rpart.plot()` du même package, l'argument "extra" permettant de préciser le type de modèle : "106" pour des modèles en classes avec une variable qualitative et binaire, "104" pour des modèles en classes mais avec une variable d'intérêt qualitative avec plus de 2 modalités, et "100" pour les autres modèles.
+```{r}
+# On dessine l'arbre
+rpart.plot(arbre_1, extra=106)
+
+# ou avec la librarie `rattle`
+#library(rattle)
+#fancyRpartPlot(arbre_1)
+```
+Au sommet de l'arbre on a donc la racine (qui est le 1er noeud), puis il se divise en 2 branches pour aboutir à deux autres noeuds, etc.  
+On voit donc que la branche partant sur la gauche, c'est le cas où la variable de diplôme est égale à la modalité "Bac" ou "Peu ou pas diplôme" car on voit le "yes" qui est encadré (et ça sera le cas à chaque fois même si ce n'est pas de nouveau inscrit), la modalité prédite est alors le "non" donc pas en emploi qui est constitué de 38% des individus du noeud précédent (donc de l'échantillon total) et les individus de ce groupe (=bacheliers ou peu/pas diplômés) ont une probabilité de 47% d'être dans la situation prédite c'est-à-dire en emploi. L'autre branche indique les individidus ou observations qui prennent toutes les autres modalités de la variable. 
+Tout en bas, se trouvent les feuilles de l'arbre, c'est lorsqu'il n'y a plus aucune branche qui part du noeud en question.  
+Ainsi, un individu qui aurait le bac ou un diplôme inférieur, ne serait pas propriétaire, n'aurait pas de voiture et serait une femme, il serait en emploi avec une probabilité de 41% et ce groupe constitue 12% de l'échantillon utilisé soit du total des observations.
+
+ 
+
+### L'évaluation du modèle
+On peut vérifier la bonne (ou non) prédiction du modèle en l'appliquant sur l'échantillon dit test, puis en comparant les proportions prédites avec celles effectivement observées dans la base dans la matrice de confusion (construite de la même façon que précédemment), et enfin en calculant un taux de concordance ou au contraire un taux d'erreur à partir de cette une matrice de confusion : 
+```{r}
+# Modèle appliqué sur l'échantillon test
+predict_test <- predict(arbre_1, RP_Paris_test, type="class")
+
+# Comparaison des résultats - Matrice de confusion
+mat_confusion <- table(RP_Paris_test$emploi, predict_test)
+mat_confusion
+
+# Taux de concordance : rapport entre la somme des éléments 
+# de la diagonale principale et la somme des observations 
+# totales (soit de la matrice)
+tx_concordance <- sum(diag(mat_confusion) / sum(mat_confusion))
+tx_concordance * 100
+# Taux d'erreur
+tx_erreur <- (mat_confusion[2,1] + mat_confusion[1, 2]) / sum(mat_confusion)
+tx_erreur * 100
+```
+
+On peut regarder aussi ce que cela donner sur la base d'apprentissage.
+```{r}
+predict_train <- predict(arbre_1, RP_Paris_train, type="class")
+mat_confusion_1 <- table(RP_Paris_train$emploi, predict_train)
+mat_confusion_1
+tx_erreur_1 <- (mat_confusion_1[2,1] + mat_confusion_1[1, 2]) / sum(mat_confusion_1)
+tx_erreur_1 * 100
+```
+
+Dans les deux cas, les taux d'erreur sont assez élevés, d'environ 29%. Le modèle ne prédit pas hyper bien. On peut noter qu'on a pratiquement le même taux d'erreur que le modèle logit réalisé précédemment...  
+
+
+Vérifions si nous pouvons l'améliorer en modifiant les paramètres de construction de l'arbre, c'est-à-dire en jouant sur les conditions de coupure d'un noeud et sur les règles d'arrêt de ces coupures. On l'effectue avec la fonction `rpart.control()` avec les arguments suivants (règles d'arrêt principalement) : `minsplit=` donne le nombre minimum d'observations (individus) présentes à l'étape d'un noeud pour envisager une coupure ; `minbucket=` qui donne le nombre minimum d'observations/individus présentes à l'étape d'un noeud qu'engendrerait la coupure du noeud parent ; `maxdepth` qui donne la profondeur de l'arbre ; et `cp=` qui est un paramètre de complexité (plus il est petit, plus grand est l'abre de régression).  
+
+```{r}
+# Définition des règles de décision
+ajust_param <- rpart.control(minsplit=50, minbucket = 50, maxdepth = 7, cp=0)
+
+# Ajustement du modèle en indiquant le paramètre "control"
+arbre_2 <- rpart(emploi~., data=RP_Paris_train, method="class", 
+                 control = ajust_param)
+
+# On étudie de nouveau la matrice de confusion et 
+# le taux d'erreur associé au nouveau modèle
+predict_train <- predict(arbre_2, RP_Paris_train, type="class")
+mat_confusion_ajust <- table(RP_Paris_train$emploi, predict_train)
+mat_confusion_ajust
+tx_erreur_1 <- (mat_confusion_ajust[2,1] + 
+                  mat_confusion_ajust[1, 2]) / sum(mat_confusion_ajust)
+tx_erreur_1 * 100
+```
+Le taux d'erreur est un peu plus faible, mais la différence est très légère !  
+
+On cherche à minimiser l'erreur de prédicition de l'arbre afin de définir le niveau d'élagage optimal permettant ensuite de simplifier l'arbre.
+``` {R}
+# 2 fonctions liées à l'argument "cp=" de notre modèle
+printcp(arbre_1)
+plotcp(arbre_1)
+```
+Ici il faut donc indiquer la valeur 0.017 dans l'argument `cp=` pour minimiser l'erreur relative, c'est notre nouvelle règle d'arrêt. On va par conséquent reconstruire l'abre à partir de la fonction `prune()` en indiquant cette valeur optimale pour l'élaguer :  
+```{r}
+arbre_VF <- prune(arbre_1, cp=0.017)
+rpart.plot(arbre_VF)
+```
+Cela ne change en réalité rien ici !  
+
+
+Pour aller plus loin, on utilise maintenant beaucoup en analyse prédictive les forêts d'arbre de décision, qui constituent comme son nom l'indique, un ensemble d'arbres de régression, ce qui permet d'avoir un taux d'erreur global moindre, car la principale critique de l'arbre de décision est son potentiel d'erreur.
+
+
+  
+
+
+
