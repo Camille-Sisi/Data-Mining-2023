@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 7 La création d’une application Shiny “pas à pas” avec l’une de nos bases de données | DATA MINING</title>
   <meta name="description" content="Titre du cours" />
-  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 7 La création d’une application Shiny “pas à pas” avec l’une de nos bases de données | DATA MINING" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Camille Signoretto, Maîtresse de conférences en économie, Université Paris Cité" />
 
 
-<meta name="date" content="2023-05-12" />
+<meta name="date" content="2023-05-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -122,6 +122,10 @@ code span.vs { color: #bf0303; } /* VerbatimString */
 code span.wa { color: #bf0303; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="css/tidyverse.css" type="text/css" />
 </head>
@@ -198,7 +202,7 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="7.4" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html#modification-du-graphique-filtrer-selon-une-variable"><i class="fa fa-check"></i><b>7.4</b> Modification du graphique : filtrer selon une variable</a></li>
 <li class="chapter" data-level="7.5" data-path="07-Intro-a-Shiny-exemples.html"><a href="07-Intro-a-Shiny-exemples.html#modification-du-graphique-selon-une-variable-au-choix-parmi-deux"><i class="fa fa-check"></i><b>7.5</b> Modification du graphique : selon une variable au choix parmi deux</a></li>
 </ul></li>
-<li class="part"><span><b>Séance 4 : Data Visualization</b></span></li>
+<li class="part"><span><b>Séances 4 à 6 : Data Visualization</b></span></li>
 <li class="chapter" data-level="8" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html"><i class="fa fa-check"></i><b>8</b> Data Visualization et Ggplot2 : aspects théoriques</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="08-Ggplot-theorique.html"><a href="08-Ggplot-theorique.html#présentation-générale-de-ggplot2"><i class="fa fa-check"></i><b>8.1</b> Présentation générale de Ggplot2</a>
@@ -232,6 +236,39 @@ code span.wa { color: #bf0303; } /* Warning */
 <li class="chapter" data-level="10.1" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#application-avec-un-tableau-et-un-graphique"><i class="fa fa-check"></i><b>10.1</b> Application avec un tableau et un graphique</a></li>
 <li class="chapter" data-level="10.2" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#introduction-dune-réactivité-appliquée-à-la-table-de-données"><i class="fa fa-check"></i><b>10.2</b> Introduction d’une réactivité appliquée à la table de données</a></li>
 <li class="chapter" data-level="10.3" data-path="10-Retour-sur-Shiny.html"><a href="10-Retour-sur-Shiny.html#introduction-dune-réactivité-sur-les-inputs-contexte-réactif"><i class="fa fa-check"></i><b>10.3</b> Introduction d’une réactivité sur les inputs (contexte réactif)</a></li>
+</ul></li>
+<li class="part"><span><b>Séance 7 : Data Mining</b></span></li>
+<li class="chapter" data-level="11" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html"><i class="fa fa-check"></i><b>11</b> Clustering : application sur le RP 2019</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#choix-des-variables-et-préparation-du-tableau-final"><i class="fa fa-check"></i><b>11.1</b> Choix des variables et préparation du tableau final</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#variables-socio-professionnelles-caractérisant-la-personne-de-référence-du-ménage"><i class="fa fa-check"></i><b>11.1.1</b> Variables socio-professionnelles caractérisant la personne de référence du ménage</a></li>
+<li class="chapter" data-level="11.1.2" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#création-des-différents-tableaux-de-contingence"><i class="fa fa-check"></i><b>11.1.2</b> Création des différents tableaux de contingence</a></li>
+<li class="chapter" data-level="11.1.3" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#création-du-tableau-final"><i class="fa fa-check"></i><b>11.1.3</b> Création du tableau final</a></li>
+<li class="chapter" data-level="11.1.4" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#choix-des-variables-actives-dans-le-clustering"><i class="fa fa-check"></i><b>11.1.4</b> choix des variables actives dans le clustering</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#la-méthode-de-la-cah-appliquée-à-nos-données"><i class="fa fa-check"></i><b>11.2</b> La méthode de la CAH appliquée à nos données</a>
+<ul>
+<li class="chapter" data-level="11.2.1" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#constitution-des-classes"><i class="fa fa-check"></i><b>11.2.1</b> Constitution des classes</a></li>
+<li class="chapter" data-level="11.2.2" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#visualisation-sur-la-carte-de-la-commune"><i class="fa fa-check"></i><b>11.2.2</b> Visualisation sur la carte de la commune</a></li>
+<li class="chapter" data-level="11.2.3" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#interprétation"><i class="fa fa-check"></i><b>11.2.3</b> Interprétation</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="11-Clustering-application.html"><a href="11-Clustering-application.html#la-méthode-des-k-means-appliquée-à-nos-données"><i class="fa fa-check"></i><b>11.3</b> La méthode des <em>k-means</em> appliquée à nos données</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html"><i class="fa fa-check"></i><b>12</b> Modèles de régression : application sur le RP 2019</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#la-création-des-bases-dapprentissage-et-de-test"><i class="fa fa-check"></i><b>12.1</b> La création des bases d’apprentissage et de test</a></li>
+<li class="chapter" data-level="12.2" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#un-modèle-à-visée-principale-descriptiveexplicative-la-régression-logistique"><i class="fa fa-check"></i><b>12.2</b> Un modèle à visée principale descriptive/explicative : la régression logistique</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#le-modèle-initial"><i class="fa fa-check"></i><b>12.2.1</b> Le modèle initial</a></li>
+<li class="chapter" data-level="12.2.2" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#lévaluation-du-modèle-et-la-recherche-éventuelle-dun-meilleur-modèle"><i class="fa fa-check"></i><b>12.2.2</b> L’évaluation du modèle et la recherche éventuelle d’un “meilleur” modèle</a></li>
+<li class="chapter" data-level="12.2.3" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#le-modèle-final-et-linterprétation-des-résultats"><i class="fa fa-check"></i><b>12.2.3</b> Le modèle final et l’interprétation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#un-modèle-à-visée-principale-prédictive-labre-de-décision"><i class="fa fa-check"></i><b>12.3</b> Un modèle à visée principale prédictive : l’abre de décision</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#le-modèle-initial-1"><i class="fa fa-check"></i><b>12.3.1</b> Le modèle initial</a></li>
+<li class="chapter" data-level="12.3.2" data-path="12-Modeles-regression.html"><a href="12-Modeles-regression.html#lévaluation-du-modèle"><i class="fa fa-check"></i><b>12.3.2</b> L’évaluation du modèle</a></li>
+</ul></li>
 </ul></li>
 </ul>
 

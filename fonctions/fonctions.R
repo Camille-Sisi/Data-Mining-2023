@@ -26,3 +26,20 @@ somme <- function(data, ..., var_gpe, nom_var, var1){
   return(som_1)
   
 }
+
+
+# Fonction tableau de contingence
+tab_cont_n_iris <- function(data, arrdt_filtre, ..., nom_var, var, prefix_var)
+{
+  tab_n <- data %>% 
+            filter(ARM %in% arrdt_filtre) %>%
+            group_by(...) %>%
+            summarise({{ nom_var }} := round(sum(IPONDL))) %>% 
+            pivot_wider(names_from = {{ var }}, values_from = {{ nom_var }},
+                        values_fill = 0, names_prefix = prefix_var)
+  
+  return(tab_n)
+}
+
+
+
